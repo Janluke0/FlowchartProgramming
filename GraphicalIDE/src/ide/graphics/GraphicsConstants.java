@@ -1,4 +1,4 @@
-package ide;
+package ide.graphics;
 
 import java.awt.Color;
 import java.awt.Font;

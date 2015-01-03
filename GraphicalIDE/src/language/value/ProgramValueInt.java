@@ -8,4 +8,8 @@ public class ProgramValueInt extends ProgramValue {
 		this.value = value;
 	}
 
+	public int getValue() {
+		return value;
+	}
+
 }

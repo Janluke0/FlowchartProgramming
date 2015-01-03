@@ -1,8 +1,10 @@
 package language;
 
-import ide.GraphicsConstants;
+import ide.graphics.GraphicsConstants;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.RoundRectangle2D;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +20,16 @@ import language.value.ProgramValue;
  * */
 public abstract class Piece {
 
-	public static String MAX_LENGTH_STRING = "";
+	public static final String MAX_LENGTH_STRING;
 	private static List<Class<? extends Piece>> pieces = new ArrayList<>();
 	private static Map<Class<? extends Piece>, String> pieceNames = new HashMap<>();
 
 	private final ProgramValue[] inputs;
 	private final Connection[] outputs;
+
+	private int x;
+	private int y;
+	private int nameWidth;
 
 	static {
 		addPiece(NumberConstant.class);
@@ -39,12 +45,14 @@ public abstract class Piece {
 		MAX_LENGTH_STRING = longestString;
 	}
 
-	protected Piece(final int inputs, final int outputs) {
+	protected Piece(final int inputs, final int outputs, final int x, final int y) {
 		this.inputs = new ProgramValue[inputs];
 		this.outputs = new Connection[outputs];
 		for (int i = 0; i < outputs; i++) {
 			getOutputs()[i] = new Connection(this, i, null, 0);
 		}
+		this.x = x;
+		this.y = y;
 	}
 
 	// Piece should take inputs and figure out its output
@@ -53,12 +61,13 @@ public abstract class Piece {
 	/**
 	 * Assumes that this should draw at (0,0)
 	 * */
-	public void draw(final Graphics g) {
-		final String name = pieceNames.get(getClass());
-		final int nameWidth = (int) (g.getFontMetrics().stringWidth(name) * 1.5);
+	public void draw(final Graphics2D g) {
+		g.translate(x, y);
 		g.setColor(GraphicsConstants.PIECE_BACKGROUND);
-		final int curve = 10;
-		g.fillRoundRect(0, 0, nameWidth, 50, curve, curve);
+		final String name = pieceNames.get(getClass());
+		nameWidth = (int) (g.getFontMetrics().stringWidth(name) * 1.5);
+		g.fill(getBodyShape(nameWidth));
+
 		g.setColor(GraphicsConstants.PIECE_TEXT);
 		g.drawString(name, 5, g.getFontMetrics().getMaxAscent());
 	}
@@ -87,6 +96,18 @@ public abstract class Piece {
 		}
 	}
 
+	private RoundRectangle2D getBodyShape(final int nameWidth) {
+		final int curve = 5;
+		return new RoundRectangle2D.Float(0, 0, nameWidth, 50, curve, curve);
+	}
+
+	public boolean containsPoint(final Point worldCoord) {
+		final Point worldCoordCopy = new Point(worldCoord);
+		// the body shape is at 0,0 so we have to translate that by its x and y OR translate our point by -x and -y
+		worldCoordCopy.translate(-x, -y);
+		return getBodyShape(nameWidth).contains(worldCoordCopy);
+	}
+
 	public static Map<Class<? extends Piece>, String> getPieceNames() {
 		return pieceNames;
 	}
@@ -96,8 +117,17 @@ public abstract class Piece {
 		inputs[inputPort] = value;
 	}
 
-	public Connection[] getOutputs() {
+	protected Connection[] getOutputs() {
 		return outputs;
+	}
+
+	public void setPosition(final int x, final int y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public Point getPosition() {
+		return new Point(x, y);
 	}
 
 }

@@ -6,8 +6,8 @@ public class NumberConstant extends Piece {
 
 	private ProgramValueInt value;
 
-	public NumberConstant(final int value) {
-		super(0, 1);
+	public NumberConstant(final int value, final int x, final int y) {
+		super(0, 1, x, y);
 		this.value = new ProgramValueInt(value);
 	}
 

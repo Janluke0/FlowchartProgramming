@@ -1,6 +1,10 @@
 package ide;
 
+import ide.graphics.GraphicsConstants;
+import ide.graphics.GraphicsUtils;
+
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,7 @@ public class MainPanel extends JPanel {
 
 	public MainPanel() {
 		super();
-		pieces.add(new NumberConstant(5));
+		pieces.add(new NumberConstant(5, 100, 10));
 		x = y = 0;
 		final MainInputHandler input = new MainInputHandler(this);
 
@@ -31,6 +35,8 @@ public class MainPanel extends JPanel {
 
 	@Override
 	protected void paintComponent(final Graphics g) {
+		GraphicsUtils.prettyGraphics((Graphics2D) g);
+
 		super.paintComponent(g);
 		g.setColor(GraphicsConstants.MAIN_BACKROUND_COLOR);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -72,7 +78,7 @@ public class MainPanel extends JPanel {
 
 		g.translate(-x, -y);
 		for (final Piece p : pieces) {
-			p.draw(g);
+			p.draw((Graphics2D) g);
 		}
 
 	}
@@ -97,6 +103,14 @@ public class MainPanel extends JPanel {
 
 	public Point getSpacePosition() {
 		return new Point(x, y);
+	}
+
+	public Point getWorldCoordFromMouse(final Point p) {
+		return new Point(x + p.x, y + p.y);
+	}
+
+	public List<Piece> getPieces() {
+		return pieces;
 	}
 
 }

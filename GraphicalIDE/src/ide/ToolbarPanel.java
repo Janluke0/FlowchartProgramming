@@ -1,9 +1,12 @@
 package ide;
 
+import ide.graphics.GraphicsConstants;
+
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class ToolbarPanel extends JPanel {
 	@Override
 	protected void paintComponent(final Graphics g) {

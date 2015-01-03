@@ -1,5 +1,7 @@
 package ide;
 
+import ide.graphics.GraphicsConstants;
+
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.util.Enumeration;
@@ -66,7 +68,7 @@ public class WindowFrame extends JFrame {
 
 			@Override
 			public String getElementAt(final int i) {
-				return Piece.getPieceNames().get(i);
+				return Piece.getPieceNames().get(Piece.values().get(i));
 			}
 		});
 		jScrollPane1.setViewportView(pieceList);
@@ -112,7 +114,7 @@ public class WindowFrame extends JFrame {
 	}
 
 	public static void setUIFont(final FontUIResource f) {
-		final Enumeration keys = UIManager.getDefaults().keys();
+		final Enumeration<Object> keys = UIManager.getDefaults().keys();
 		while (keys.hasMoreElements()) {
 			final Object key = keys.nextElement();
 			final Object value = UIManager.get(key);
@@ -148,13 +150,10 @@ public class WindowFrame extends JFrame {
 		}
 		// </editor-fold>
 		/* Create and display the form */
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				final WindowFrame frame = new WindowFrame();
-				frame.setVisible(true);
+		EventQueue.invokeLater(() -> {
+			final WindowFrame frame = new WindowFrame();
+			frame.setVisible(true);
 
-			}
 		});
 	}
 

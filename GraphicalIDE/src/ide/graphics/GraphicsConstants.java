@@ -15,4 +15,6 @@ public final class GraphicsConstants {
 	public static final Color PIECE_TEXT = new Color(0, 10, 10);
 	public static final Color MAIN_GRID_COLOR = new Color(180, 220, 220);
 	public static final Color MAIN_GRID_ORIGIN_COLOR = new Color(150, 74, 89);
+	public static final Color LINE_DRAG_COLOR = Color.GREEN;
+	public static final Color PORT_COLOR = Color.RED;
 }

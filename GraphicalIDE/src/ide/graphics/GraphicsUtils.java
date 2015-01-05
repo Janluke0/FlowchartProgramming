@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
@@ -103,15 +104,15 @@ public final class GraphicsUtils {
 			for (int x = 0; x < width; x++) {
 				final int rgb1 = inPixels[index];
 				int r1 = rgb1 >> 16 & 0xff;
-			int g1 = rgb1 >> 8 & 0xff;
-			int b1 = rgb1 & 0xff;
+				int g1 = rgb1 >> 8 & 0xff;
+				int b1 = rgb1 & 0xff;
 
-			r1 = clampPixel((int) (r1 * a));
-			g1 = clampPixel((int) (g1 * a));
-			b1 = clampPixel((int) (b1 * a));
+				r1 = clampPixel((int) (r1 * a));
+				g1 = clampPixel((int) (g1 * a));
+				b1 = clampPixel((int) (b1 * a));
 
-			inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
-			index++;
+				inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
+				index++;
 			}
 		}
 	}
@@ -124,6 +125,11 @@ public final class GraphicsUtils {
 			return 255;
 		}
 		return i;
+	}
+
+	// for now, just draws a line
+	public static void drawBezierCurve(final Graphics2D g, final Point p1, final Point p2) {
+		g.drawLine(p1.x, p1.y, p2.x, p2.y);
 	}
 
 	public static void prettyGraphics(final Graphics2D g) {

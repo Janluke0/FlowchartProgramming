@@ -87,20 +87,20 @@ public abstract class Piece {
 		for (int i = 0; i < getInputs().length; i++) {
 			g.drawOval(BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
 		}
+		g.translate(-getX(), -getY());
+
 		for (int i = 0; i < outputs.length; i++) {
-			g.drawOval(nameWidth - PORT_SIZE - BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
+			g.drawOval(x + nameWidth - PORT_SIZE - BORDER_SPACE, y + nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
 			if (outputs[i] != null && outputs[i].getOutput() != null) {
 				g.setColor(GraphicsConstants.LINE_DRAG_COLOR);
-				final Point p1 = new Point(nameWidth - PORT_SIZE - BORDER_SPACE + PORT_SIZE / 2, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
+				final Point p1 = new Point(x + nameWidth - PORT_SIZE - BORDER_SPACE + PORT_SIZE / 2, y + nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
 				final Point p2 = outputs[i].getOutput().getPosition();
-				p2.translate(-x, -y);
-				p2.translate(BORDER_SPACE + PORT_SIZE / 2, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
-				GraphicsUtils.drawBezierCurve(g, p1, p2);
+				final int inputIndex = outputs[i].getOutputPort();
+				p2.translate(BORDER_SPACE + PORT_SIZE / 2, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * inputIndex + PORT_SIZE / 2);
+				GraphicsUtils.drawCurve(g, p1, p2);
 				g.setColor(GraphicsConstants.PORT_COLOR);
 			}
 		}
-
-		g.translate(-getX(), -getY());
 	}
 
 	/**

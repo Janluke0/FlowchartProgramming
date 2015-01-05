@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
+import java.awt.geom.CubicCurve2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
@@ -104,15 +105,15 @@ public final class GraphicsUtils {
 			for (int x = 0; x < width; x++) {
 				final int rgb1 = inPixels[index];
 				int r1 = rgb1 >> 16 & 0xff;
-				int g1 = rgb1 >> 8 & 0xff;
-				int b1 = rgb1 & 0xff;
+			int g1 = rgb1 >> 8 & 0xff;
+			int b1 = rgb1 & 0xff;
 
-				r1 = clampPixel((int) (r1 * a));
-				g1 = clampPixel((int) (g1 * a));
-				b1 = clampPixel((int) (b1 * a));
+			r1 = clampPixel((int) (r1 * a));
+			g1 = clampPixel((int) (g1 * a));
+			b1 = clampPixel((int) (b1 * a));
 
-				inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
-				index++;
+			inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
+			index++;
 			}
 		}
 	}
@@ -128,8 +129,13 @@ public final class GraphicsUtils {
 	}
 
 	// for now, just draws a line
-	public static void drawBezierCurve(final Graphics2D g, final Point p1, final Point p2) {
-		g.drawLine(p1.x, p1.y, p2.x, p2.y);
+	public static void drawCurve(final Graphics2D g, final Point2D p1, final Point2D p2) {
+		final CubicCurve2D c = new CubicCurve2D.Double();
+		// right in between the two pieces on the x axis
+		final double lessX = Math.min(p1.getX(), p2.getX());
+		final double midX = lessX + Math.abs(p2.getX() - p1.getX()) / 2f;
+		c.setCurve(p1.getX(), p1.getY(), midX, p1.getY(), midX, p2.getY(), p2.getX(), p2.getY());
+		g.draw(c);
 	}
 
 	public static void prettyGraphics(final Graphics2D g) {

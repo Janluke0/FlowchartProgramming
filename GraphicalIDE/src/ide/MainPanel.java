@@ -59,7 +59,8 @@ public class MainPanel extends JPanel {
 
 		if (getPortToMouse().isPresent()) {
 			g.setColor(GraphicsConstants.LINE_DRAG_COLOR);
-			g.draw(getPortToMouse().get());
+			final Line2D line = getPortToMouse().get();
+			GraphicsUtils.drawCurve(g, line.getP1(), line.getP2());
 		}
 
 	}

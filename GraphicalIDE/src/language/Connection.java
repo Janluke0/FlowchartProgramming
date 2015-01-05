@@ -20,7 +20,7 @@ public class Connection {
 
 	public void changeInput(final ProgramValue value) {
 		if (output != null) {
-			output.changeInput(outputPort, value);
+			output.changeInput(getOutputPort(), value);
 		}
 	}
 
@@ -38,6 +38,10 @@ public class Connection {
 
 	public void setOutput(final Piece output) {
 		this.output = output;
+	}
+
+	public int getOutputPort() {
+		return outputPort;
 	}
 
 }

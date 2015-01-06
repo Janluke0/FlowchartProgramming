@@ -3,6 +3,7 @@ package language.pieces;
 import ide.graphics.GraphicsConstants;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import language.Piece;
 import language.ProgramContext;
@@ -23,13 +24,20 @@ public class Display extends Piece {
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(getInputs()[0].toString(), BORDER_SPACE * 2 + PORT_SIZE, 3 * fontMetrics.getMaxAscent());
+		g.drawString(getInputs()[0].toString(), BORDER_SPACE * 2 + PORT_SIZE,
+				3 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
 
 	@Override
 	public void update(final ProgramContext pc) {
+	}
+
+	@Override
+	public void doubleClicked(final Point p) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

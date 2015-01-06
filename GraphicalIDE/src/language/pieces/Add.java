@@ -1,5 +1,7 @@
 package language.pieces;
 
+import java.awt.Point;
+
 import language.Connection;
 import language.Piece;
 import language.ProgramContext;
@@ -21,11 +23,19 @@ public class Add extends Piece {
 		final ProgramValue v1 = getInputs()[0];
 		final ProgramValue v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueInt && v2 instanceof ProgramValueInt) {
-			final ProgramValueInt v3 = new ProgramValueInt(((ProgramValueInt) v1).getValue() + ((ProgramValueInt) v2).getValue());
+			final ProgramValueInt v3 = new ProgramValueInt(
+					((ProgramValueInt) v1).getValue()
+							+ ((ProgramValueInt) v2).getValue());
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
 		}
+
+	}
+
+	@Override
+	public void doubleClicked(final Point p) {
+		// TODO Auto-generated method stub
 
 	}
 

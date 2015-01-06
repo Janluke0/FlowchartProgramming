@@ -3,6 +3,9 @@ package language.pieces;
 import ide.graphics.GraphicsConstants;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
+
+import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
@@ -32,7 +35,8 @@ public class NumberConstant extends Piece {
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(value.toString(), BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
+		g.drawString(value.toString(), BORDER_SPACE,
+				2 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
@@ -46,6 +50,16 @@ public class NumberConstant extends Piece {
 
 	public void setValue(final int value) {
 		this.value = new ProgramValueInt(value);
+	}
+
+	@Override
+	public void doubleClicked(final Point p) {
+		try {
+			setValue(Integer.parseInt(JOptionPane.showInputDialog(
+					"Set Value: ", String.valueOf(value))));
+		} catch (final NumberFormatException e) {
+			// If the input is malformed, we don't have to do anything
+		}
 	}
 
 }

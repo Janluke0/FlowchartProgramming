@@ -21,28 +21,32 @@ public class ListInputHandler implements ListSelectionListener {
 
 	@Override
 	public void valueChanged(final ListSelectionEvent e) {
-		// Only add once for every selection
-		if (!e.getValueIsAdjusting()) {
-			final Class<? extends Piece> c = Piece.getPieces().get(list.getSelectedIndex());
+		// Only add once for every selection, and make sure that at least one is
+		// selected
+		if (!e.getValueIsAdjusting() && list.getSelectedIndex() != -1) {
+			final Class<? extends Piece> c = Piece.getPieces().get(
+					list.getSelectedIndex());
+			list.clearSelection();
 			Constructor<? extends Piece> ctor = null;
 			try {
 				// type is because its int, not Integer
 				ctor = c.getConstructor(Integer.TYPE, Integer.TYPE);
 			} catch (NoSuchMethodException | SecurityException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				return;
 			}
-			Object object = null;
+			Object createdPiece = null;
 			try {
-				object = ctor.newInstance(new Object[] { 0, 0 });
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
-				// TODO Auto-generated catch block
+				// create piece in center of screen
+				createdPiece = ctor.newInstance(new Object[] {
+						panel.getSpaceX() + panel.getWidth() / 2,
+						panel.getSpaceY() + panel.getHeight() / 2 });
+			} catch (InstantiationException | IllegalAccessException
+					| IllegalArgumentException | InvocationTargetException e1) {
 				e1.printStackTrace();
 				return;
 			}
-			panel.createPiece((Piece) object);
+			panel.createPiece((Piece) createdPiece);
 		}
 	}
-
 }

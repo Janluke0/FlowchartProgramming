@@ -17,21 +17,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import language.pieces.Add;
-import language.pieces.Display;
-import language.pieces.NumberConstant;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 
+import org.reflections.Reflections;
+
 /**
  * Abstract class. To implement this class, you must add a method with the signature<br>
- * <code>public static String name()</code>
+ * <code>public static String name()</code> <br>
+ * and a default constructor with two int parameters (position)<br>
+ * <code>public PieceXXX(int x, int y)</code>
  * */
 public abstract class Piece {
 
 	// The longest piece name of all the pieces added in the static block. This is used for determining how big we have
 	// to make the list for picking pieces
-	public static final String MAX_LENGTH_STRING;
+	public static final String LONGEST_PIECE_NAME;
 	// Size of connection ports
 	protected static final int PORT_SIZE = 20;
 	// Size of gap between connection ports
@@ -47,19 +48,13 @@ public abstract class Piece {
 	// A map of added piece classes to their names
 	private static Map<Class<? extends Piece>, String> pieceNames = new HashMap<>();
 
-	private final ProgramValue[] inputs;
-	private final Connection[] outputs;
-
-	private int x;
-	private int y;
-	// Defaults to this so no null pointer exception, but changes in the draw method to the graphics' font metrics
-	protected FontMetrics fontMetrics = new Canvas().getFontMetrics(GraphicsConstants.APP_FONT);
-
 	static {
-		addPiece(NumberConstant.class);
-		addPiece(Add.class);
-		addPiece(Display.class);
+		final Reflections reflections = new Reflections("language");
+		for (final Class<? extends Piece> c : reflections.getSubTypesOf(Piece.class)) {
+			addPiece(c);
+		}
 
+		// update the longest string
 		String longestString = "";
 		final Iterator<String> it = getPieceNames().values().iterator();
 		while (it.hasNext()) {
@@ -68,14 +63,22 @@ public abstract class Piece {
 				longestString = next;
 			}
 		}
-		MAX_LENGTH_STRING = longestString;
+		LONGEST_PIECE_NAME = longestString;
 	}
+
+	private final ProgramValue[] inputs;
+	private final Connection[] outputs;
+
+	private int x;
+	private int y;
+	// Defaults to this so no null pointer exception, but changes in the draw method to the graphics' font metrics
+	protected FontMetrics fontMetrics = new Canvas().getFontMetrics(GraphicsConstants.APP_FONT);
 
 	protected Piece(final int inputs, final int outputs, final int x, final int y) {
 		this.inputs = new ProgramValue[inputs];
 		this.outputs = new Connection[outputs];
 		for (int i = 0; i < outputs; i++) {
-			getOutputs()[i] = new Connection(this, i, null, 0);
+			getOutputs()[i] = new Connection(null, 0);
 		}
 		for (int i = 0; i < inputs; i++) {
 			getInputs()[i] = new ProgramValueNothing();
@@ -150,11 +153,11 @@ public abstract class Piece {
 	}
 
 	public static List<Class<? extends Piece>> values() {
-		return pieces;
+		return getPieces();
 	}
 
-	private static void addPiece(final Class<? extends Piece> p) {
-		pieces.add(p);
+	protected static void addPiece(final Class<? extends Piece> p) {
+		getPieces().add(p);
 		try {
 			// Assumes subclass has a static method called name
 			getPieceNames().put(p, p.getMethod("name").invoke(null).toString());
@@ -245,6 +248,14 @@ public abstract class Piece {
 			return getClass().getSimpleName();
 		}
 		return name;
+	}
+
+	public static List<Class<? extends Piece>> getPieces() {
+		return pieces;
+	}
+
+	public static void setPieces(final List<Class<? extends Piece>> pieces) {
+		Piece.pieces = pieces;
 	}
 
 }

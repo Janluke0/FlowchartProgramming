@@ -71,7 +71,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 					pieceCoord.translate(-p.getX(), -p.getY());
 					for (int j = 0; j < p.getInputs().length; j++) {
 						if (p.inputContainsPoint(j, pieceCoord)) {
-							pieceDragged.get().setOutput(portSelected.get(), new Connection(pieceDragged.get(), portSelected.get(), p, j));
+							pieceDragged.get().setOutput(portSelected.get(), new Connection(p, j));
 						}
 					}
 				}

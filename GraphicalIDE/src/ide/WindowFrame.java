@@ -71,12 +71,13 @@ public class WindowFrame extends JFrame {
 				return Piece.getPieceNames().get(Piece.values().get(i));
 			}
 		});
+		pieceList.addListSelectionListener(new ListInputHandler(pieceList, getMainPanel()));
 		jScrollPane1.setViewportView(pieceList);
 
 		final GroupLayout piecePickerPanelLayout = new GroupLayout(piecePickerPanel);
 		piecePickerPanel.setLayout(piecePickerPanelLayout);
 
-		final int maxPixelWidthOfPieceNames = (int) (getMainPanel().getFontMetrics(GraphicsConstants.APP_FONT).stringWidth(Piece.MAX_LENGTH_STRING) * 1.5);
+		final int maxPixelWidthOfPieceNames = (int) (getMainPanel().getFontMetrics(GraphicsConstants.APP_FONT).stringWidth(Piece.LONGEST_PIECE_NAME) * 1.5);
 
 		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, maxPixelWidthOfPieceNames, Short.MAX_VALUE));
 		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE));

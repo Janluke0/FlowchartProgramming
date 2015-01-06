@@ -15,8 +15,6 @@ import javax.swing.JPanel;
 
 import language.Piece;
 import language.ProgramContext;
-import language.pieces.Add;
-import language.pieces.NumberConstant;
 
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel {
@@ -34,11 +32,6 @@ public class MainPanel extends JPanel {
 
 	public MainPanel() {
 		super();
-		pieces.add(new NumberConstant(5, 100, 10));
-
-		pieces.add(new NumberConstant(5, 100, 10));
-		pieces.add(new Add(10, 10));
-		pieces.add(new language.pieces.Display(10, 10));
 		x = y = 0;
 		final MainInputHandler input = new MainInputHandler(this);
 
@@ -177,6 +170,12 @@ public class MainPanel extends JPanel {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	public void createPiece(final Piece piece) {
+		synchronized (pieces) {
+			pieces.add(piece);
 		}
 	}
 }

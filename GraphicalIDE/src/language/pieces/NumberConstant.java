@@ -18,6 +18,10 @@ public class NumberConstant extends Piece {
 		this.value = new ProgramValueInt(value);
 	}
 
+	public NumberConstant(final int x, final int y) {
+		this(0, x, y);
+	}
+
 	public static String name() {
 		return "Number Constant";
 	}

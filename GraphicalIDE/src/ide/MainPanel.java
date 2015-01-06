@@ -13,8 +13,10 @@ import java.util.Optional;
 
 import javax.swing.JPanel;
 
-import language.NumberConstant;
 import language.Piece;
+import language.ProgramContext;
+import language.pieces.Add;
+import language.pieces.NumberConstant;
 
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel {
@@ -25,6 +27,8 @@ public class MainPanel extends JPanel {
 	private int x;
 	private int y;
 
+	private final Thread interpreterThread;
+
 	// if a user is dragging from a port, this is a line between the port and the mouse
 	private Optional<Line2D.Float> portToMouse = Optional.empty();
 
@@ -33,11 +37,16 @@ public class MainPanel extends JPanel {
 		pieces.add(new NumberConstant(5, 100, 10));
 
 		pieces.add(new NumberConstant(5, 100, 10));
+		pieces.add(new Add(10, 10));
+		pieces.add(new language.pieces.Display(10, 10));
 		x = y = 0;
 		final MainInputHandler input = new MainInputHandler(this);
 
 		addMouseListener(input);
 		addMouseMotionListener(input);
+
+		interpreterThread = new Thread(new InterpreterTask(this));
+		interpreterThread.start();
 	}
 
 	@Override
@@ -52,7 +61,7 @@ public class MainPanel extends JPanel {
 		drawGrid(g);
 
 		g.translate(-x, -y);
-		for (final Piece p : pieces) {
+		for (final Piece p : getPieces()) {
 			p.draw(g);
 		}
 		g.translate(x, y);
@@ -128,7 +137,7 @@ public class MainPanel extends JPanel {
 		return new Point(x + p.x, y + p.y);
 	}
 
-	public List<Piece> getPieces() {
+	public synchronized List<Piece> getPieces() {
 		return pieces;
 	}
 
@@ -140,4 +149,34 @@ public class MainPanel extends JPanel {
 		portToMouse = line;
 	}
 
+	private static class InterpreterTask implements Runnable {
+		private final List<Piece> pieces;
+		private final MainPanel mainPanel;
+
+		public InterpreterTask(final MainPanel panel) {
+			pieces = panel.getPieces();
+			mainPanel = panel;
+		}
+
+		@Override
+		public void run() {
+			while (true) {
+				synchronized (pieces) {
+					final ProgramContext pc = new ProgramContext();
+					for (final Piece p : pieces) {
+						p.update(pc);
+					}
+				}
+				synchronized (mainPanel) {
+					mainPanel.repaint();
+				}
+				try {
+					Thread.sleep(100);
+				} catch (final InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }

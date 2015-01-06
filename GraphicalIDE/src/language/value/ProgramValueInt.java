@@ -1,15 +1,8 @@
 package language.value;
 
-public class ProgramValueInt extends ProgramValue {
-
-	private final int value;
+public class ProgramValueInt extends ProgramValue<Integer> {
 
 	public ProgramValueInt(final int value) {
-		this.value = value;
+		super(value);
 	}
-
-	public int getValue() {
-		return value;
-	}
-
 }

@@ -3,6 +3,7 @@ package language;
 import ide.graphics.GraphicsConstants;
 import ide.graphics.GraphicsUtils;
 
+import java.awt.Canvas;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -16,7 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import language.pieces.Add;
+import language.pieces.Display;
+import language.pieces.NumberConstant;
 import language.value.ProgramValue;
+import language.value.ProgramValueNothing;
 
 /**
  * Abstract class. To implement this class, you must add a method with the signature<br>
@@ -24,12 +29,22 @@ import language.value.ProgramValue;
  * */
 public abstract class Piece {
 
+	// The longest piece name of all the pieces added in the static block. This is used for determining how big we have
+	// to make the list for picking pieces
 	public static final String MAX_LENGTH_STRING;
-	private static final int PORT_SIZE = 20;
-	private static final int GAP_SIZE = 10;
-	private static final int BORDER_SPACE = 5;
+	// Size of connection ports
+	protected static final int PORT_SIZE = 20;
+	// Size of gap between connection ports
+	protected static final int GAP_SIZE = 10;
+	// Size of the space border around the whole piece
+	protected static final int BORDER_SPACE = 5;
 
+	// minimum width of a piece, definitely has to be at least 2 * port_size so that they don't overlap
+	private static final int MIN_WIDTH = 100;
+
+	// A list of all added piece classes
 	private static List<Class<? extends Piece>> pieces = new ArrayList<>();
+	// A map of added piece classes to their names
 	private static Map<Class<? extends Piece>, String> pieceNames = new HashMap<>();
 
 	private final ProgramValue[] inputs;
@@ -37,10 +52,13 @@ public abstract class Piece {
 
 	private int x;
 	private int y;
-	private FontMetrics fontMetrics;
+	// Defaults to this so no null pointer exception, but changes in the draw method to the graphics' font metrics
+	protected FontMetrics fontMetrics = new Canvas().getFontMetrics(GraphicsConstants.APP_FONT);
 
 	static {
 		addPiece(NumberConstant.class);
+		addPiece(Add.class);
+		addPiece(Display.class);
 
 		String longestString = "";
 		final Iterator<String> it = getPieceNames().values().iterator();
@@ -59,6 +77,9 @@ public abstract class Piece {
 		for (int i = 0; i < outputs; i++) {
 			getOutputs()[i] = new Connection(this, i, null, 0);
 		}
+		for (int i = 0; i < inputs; i++) {
+			getInputs()[i] = new ProgramValueNothing();
+		}
 		setX(x);
 		setY(y);
 	}
@@ -72,10 +93,10 @@ public abstract class Piece {
 	public void draw(final Graphics2D g) {
 		g.translate(getX(), getY());
 		g.setColor(GraphicsConstants.PIECE_BACKGROUND);
-		final String name = pieceNames.get(getClass());
+		final String name = getName();
 		// Store this variable so other methods can use it without accessing graphics
 		fontMetrics = g.getFontMetrics();
-		final int nameWidth = getNameWidth(name);
+		final int nameWidth = getStringWidth(name);
 		g.fill(getBodyShape(nameWidth));
 
 		final int nameHeight = fontMetrics.getMaxAscent();
@@ -113,7 +134,7 @@ public abstract class Piece {
 		// the body shape is at 0,0 so we have to translate that by its x and y OR translate our point by -x and -y
 		worldCoordCopy.translate(-getX(), -getY());
 
-		final int nameWidth = getNameWidth(pieceNames.get(getClass()));
+		final int nameWidth = getStringWidth(getName());
 		final int nameHeight = fontMetrics.getMaxAscent();
 
 		for (int i = 0; i < outputs.length; i++) {
@@ -124,8 +145,8 @@ public abstract class Piece {
 		return Optional.empty();
 	}
 
-	private int getNameWidth(final String name) {
-		return (int) (fontMetrics.stringWidth(name) * 1.5);
+	private int getStringWidth(final String name) {
+		return (int) Math.max(MIN_WIDTH, fontMetrics.stringWidth(name) * 1.5);
 	}
 
 	public static List<Class<? extends Piece>> values() {
@@ -162,7 +183,7 @@ public abstract class Piece {
 		final Point worldCoordCopy = new Point(worldCoord);
 		// the body shape is at 0,0 so we have to translate that by its x and y OR translate our point by -x and -y
 		worldCoordCopy.translate(-getX(), -getY());
-		return getBodyShape(getNameWidth(pieceNames.get(getClass()))).contains(worldCoordCopy);
+		return getBodyShape(getStringWidth(getName())).contains(worldCoordCopy);
 	}
 
 	public static Map<Class<? extends Piece>, String> getPieceNames() {
@@ -216,6 +237,14 @@ public abstract class Piece {
 
 	public void setOutput(final int index, final Connection connection) {
 		outputs[index] = connection;
+	}
+
+	public String getName() {
+		final String name = pieceNames.get(getClass());
+		if (name == null) {
+			return getClass().getSimpleName();
+		}
+		return name;
 	}
 
 }

@@ -19,8 +19,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import language.Piece;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * The Class WindowFrame.
  *
@@ -68,7 +66,38 @@ public class WindowFrame extends JFrame {
 		setMainPanel(new MainPanel());
 		final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
 		for (final PieceTreeRepresentation cl : Piece.getPieces()) {
-			root.add(new DefaultMutableTreeNode(cl));
+			DefaultMutableTreeNode folderParent = root;
+			final String[] folder = cl.packageString;
+			// Don't do the last one
+			for (int i = 0; i < folder.length; i++) {
+				final String s = folder[i];
+				final Enumeration<DefaultMutableTreeNode> e = folderParent
+						.children();
+				DefaultMutableTreeNode sChild = null;
+				boolean hasSChild = false;
+				while (e.hasMoreElements()) {
+					final DefaultMutableTreeNode element = e.nextElement();
+					if (element.getUserObject().equals(s)) {
+						// folderParent already contains a child named s
+						hasSChild = true;
+						sChild = element;
+						break;
+					}
+				}
+				if (hasSChild) {
+					// We don't need to create it
+					folderParent = sChild;
+
+				} else {
+					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(
+							s);
+					folderParent.add(newParent);
+					// recurse for next string with this as the parent
+					folderParent = newParent;
+				}
+			}
+
+			folderParent.add(new DefaultMutableTreeNode(cl));
 		}
 
 		pieceList = new PieceList(getMainPanel(), root);
@@ -79,13 +108,22 @@ public class WindowFrame extends JFrame {
 
 		jScrollPane1.setViewportView(pieceList);
 
-		final GroupLayout piecePickerPanelLayout = new GroupLayout(piecePickerPanel);
+		final GroupLayout piecePickerPanelLayout = new GroupLayout(
+				piecePickerPanel);
 		piecePickerPanel.setLayout(piecePickerPanelLayout);
 
-		final int maxPixelWidthOfPieceNames = (int) (getMainPanel().getFontMetrics(GraphicsConstants.APP_FONT).stringWidth(Piece.LONGEST_PIECE_NAME) * 1.5);
+		final int maxPixelWidthOfPieceNames = (int) (getMainPanel()
+				.getFontMetrics(GraphicsConstants.APP_FONT).stringWidth(
+						Piece.LONGEST_PIECE_NAME) * 1.5);
 
-		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, maxPixelWidthOfPieceNames, Short.MAX_VALUE));
-		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE));
+		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE,
+						maxPixelWidthOfPieceNames, Short.MAX_VALUE));
+		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 513,
+						Short.MAX_VALUE));
 
 		jSplitPane1.setLeftComponent(piecePickerPanel);
 
@@ -95,15 +133,21 @@ public class WindowFrame extends JFrame {
 
 		final GroupLayout toolbarPanelLayout = new GroupLayout(toolbarPanel);
 		toolbarPanel.setLayout(toolbarPanelLayout);
-		toolbarPanelLayout.setHorizontalGroup(toolbarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
-		toolbarPanelLayout.setVerticalGroup(toolbarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 39, Short.MAX_VALUE));
+		toolbarPanelLayout.setHorizontalGroup(toolbarPanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
+						454, Short.MAX_VALUE));
+		toolbarPanelLayout.setVerticalGroup(toolbarPanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
+						39, Short.MAX_VALUE));
 
 		mainAndToolbarSeperator.setTopComponent(toolbarPanel);
 
 		final GroupLayout mainPanelLayout = new GroupLayout(getMainPanel());
 		getMainPanel().setLayout(mainPanelLayout);
-		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
-		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 472, Short.MAX_VALUE));
+		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(
+				GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
+		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(
+				GroupLayout.Alignment.LEADING).addGap(0, 472, Short.MAX_VALUE));
 
 		mainAndToolbarSeperator.setRightComponent(getMainPanel());
 
@@ -111,8 +155,10 @@ public class WindowFrame extends JFrame {
 
 		final GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
-		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
+		layout.setHorizontalGroup(layout.createParallelGroup(
+				GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
+		layout.setVerticalGroup(layout.createParallelGroup(
+				GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
 
 		pack();
 
@@ -132,7 +178,8 @@ public class WindowFrame extends JFrame {
 			final Object value = UIManager.get(key);
 			if (value instanceof FontUIResource) {
 				final FontUIResource orig = (FontUIResource) value;
-				final Font font = new Font(f.getFontName(), orig.getStyle(), f.getSize());
+				final Font font = new Font(f.getFontName(), orig.getStyle(),
+						f.getSize());
 				UIManager.put(key, new FontUIResource(font));
 			}
 		}
@@ -147,20 +194,25 @@ public class WindowFrame extends JFrame {
 	public static void main(final String args[]) {
 
 		try {
-			for (final UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+			for (final UIManager.LookAndFeelInfo info : UIManager
+					.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
 				}
 			}
 		} catch (final ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final InstantiationException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		}
 
 		EventQueue.invokeLater(() -> {

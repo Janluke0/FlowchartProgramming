@@ -52,7 +52,7 @@ public class MainPanel extends JPanel {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
 	@Override
@@ -153,7 +153,7 @@ public class MainPanel extends JPanel {
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
@@ -166,6 +166,7 @@ public class MainPanel extends JPanel {
 					}
 				}
 				mainPanel.repaint();
+				Thread.yield();
 			}
 		}
 	}

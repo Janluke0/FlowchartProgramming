@@ -17,8 +17,10 @@ public class Display extends Piece {
 	/**
 	 * Instantiates a new display.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
 	 */
 	public Display(final int x, final int y) {
 		super(1, 0, x, y);
@@ -30,10 +32,12 @@ public class Display extends Piece {
 	 * @return the string
 	 */
 	public static String name() {
-		return "Display";
+		return "Utils.Display";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -48,14 +52,18 @@ public class Display extends Piece {
 		g.translate(-getX(), -getY());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
 	public void update(final ProgramContext pc) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

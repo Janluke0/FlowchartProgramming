@@ -11,21 +11,19 @@ import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 
 import org.reflections.Reflections;
 
-// TODO: Auto-generated Javadoc
 /**
- * Abstract class. To implement this class, you must add a method with the
- * signature<br>
+ * Abstract class. To implement this class, you must add a method with the signature<br>
  * <code>public static String name()</code> <br>
  * and a default constructor with two int parameters (position)<br>
  * <code>public PieceXXX(int x, int y)</code>
@@ -47,36 +45,9 @@ public abstract class Piece {
 	/** The Constant BORDER_SPACE. */
 	protected static final int BORDER_SPACE = 5;
 
-	/**
-	 * minimum width of a piece, definitely has to be at least 2 * port_size so
-	 * // that they don't overlap
-	 */
-	protected int minWidth = 2 * PORT_SIZE + 60;
-
 	// A map of added piece classes to their names
 	/** The piece names. */
-	private static Map<PieceTreeRepresentation, String> pieceToName = new HashMap<>();
-
-	static {
-		// For every signel class subtyping Piece, we add it
-		final Reflections reflections = new Reflections(Piece.class
-				.getPackage().getName());
-		for (final Class<? extends Piece> c : reflections
-				.getSubTypesOf(Piece.class)) {
-			addPiece(c);
-		}
-
-		// set the longest piece name
-		String longestString = "";
-		final Iterator<String> it = getPieceToNames().values().iterator();
-		while (it.hasNext()) {
-			final String next = it.next();
-			if (next.length() > longestString.length()) {
-				longestString = next;
-			}
-		}
-		LONGEST_PIECE_NAME = longestString;
-	}
+	private static List<PieceTreeRepresentation> pieces = new ArrayList<>();
 
 	/** The inputs. */
 	private final ProgramValue<?>[] inputs;
@@ -92,8 +63,31 @@ public abstract class Piece {
 	// Defaults to this so no null pointer exception, but changes in the draw
 	// method to the graphics' font metrics
 	/** The font metrics. */
-	protected FontMetrics fontMetrics = new Canvas()
-			.getFontMetrics(GraphicsConstants.APP_FONT);
+	protected FontMetrics fontMetrics = new Canvas().getFontMetrics(GraphicsConstants.APP_FONT);
+
+	/**
+	 * minimum width of a piece, definitely has to be at least 2 * port_size so // that they don't overlap
+	 */
+	protected int minWidth = 2 * PORT_SIZE + 60;
+
+	static {
+		// For every signel class subtyping Piece, we add it
+		final Reflections reflections = new Reflections(Piece.class.getPackage().getName());
+		for (final Class<? extends Piece> c : reflections.getSubTypesOf(Piece.class)) {
+			addPiece(c);
+		}
+
+		// set the longest piece name
+		String longestString = "";
+		final Iterator<PieceTreeRepresentation> it = getPieceNames().iterator();
+		while (it.hasNext()) {
+			final PieceTreeRepresentation next = it.next();
+			if (next.name.length() > longestString.length()) {
+				longestString = next.name;
+			}
+		}
+		LONGEST_PIECE_NAME = longestString;
+	}
 
 	/**
 	 * Instantiates a new piece.
@@ -107,15 +101,14 @@ public abstract class Piece {
 	 * @param y
 	 *            the y
 	 */
-	protected Piece(final int inputs, final int outputs, final int x,
-			final int y) {
+	protected Piece(final int inputs, final int outputs, final int x, final int y) {
 		this.inputs = new ProgramValue[inputs];
 		this.outputs = new Connection[outputs];
 		for (int i = 0; i < outputs; i++) {
-			getOutputs()[i] = new Connection(null, -1);
+			setOutput(i, new Connection(null, -1));
 		}
 		for (int i = 0; i < inputs; i++) {
-			getInputs()[i] = new ProgramValueNothing();
+			setInput(i, ProgramValueNothing.NOTHING);
 		}
 		setX(x);
 		setY(y);
@@ -125,18 +118,18 @@ public abstract class Piece {
 	/**
 	 * Update.
 	 *
-	 * @param pc
-	 *            the pc
+	 * @param programContext
+	 *            the ProgramContext for this tick
 	 */
-	public abstract void update(ProgramContext pc);
+	public abstract void update(ProgramContext programContext);
 
 	/**
 	 * Double clicked.
 	 *
-	 * @param p
-	 *            the p
+	 * @param clickPoint
+	 *            the point in world coordinates
 	 */
-	public abstract void doubleClicked(Point p);
+	public abstract void doubleClicked(Point clickPoint);
 
 	/**
 	 * Assumes that this should draw at (0,0).
@@ -162,25 +155,18 @@ public abstract class Piece {
 
 		g.setColor(GraphicsConstants.PORT_COLOR);
 		for (int i = 0; i < getInputs().length; i++) {
-			g.drawOval(BORDER_SPACE, nameHeight + GAP_SIZE
-					+ (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
+			g.drawOval(BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
 		}
 		g.translate(-getX(), -getY());
 
 		for (int i = 0; i < outputs.length; i++) {
-			g.drawOval(x + nameWidth - PORT_SIZE - BORDER_SPACE, y + nameHeight
-					+ GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE,
-					PORT_SIZE);
+			g.drawOval(x + nameWidth - PORT_SIZE - BORDER_SPACE, y + nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
 			if (outputs[i] != null && outputs[i].getOutput() != null) {
 				g.setColor(GraphicsConstants.LINE_DRAG_COLOR);
-				final Point p1 = new Point(x + nameWidth - PORT_SIZE
-						- BORDER_SPACE + PORT_SIZE / 2, y + nameHeight
-						+ GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
+				final Point p1 = new Point(x + nameWidth - PORT_SIZE - BORDER_SPACE + PORT_SIZE / 2, y + nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
 				final Point p2 = outputs[i].getOutput().getPosition();
 				final int inputIndex = outputs[i].getOutputPort();
-				p2.translate(BORDER_SPACE + PORT_SIZE / 2, nameHeight
-						+ GAP_SIZE + (PORT_SIZE + GAP_SIZE) * inputIndex
-						+ PORT_SIZE / 2);
+				p2.translate(BORDER_SPACE + PORT_SIZE / 2, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * inputIndex + PORT_SIZE / 2);
 				GraphicsUtils.drawCurve(g, p1, p2);
 				g.setColor(GraphicsConstants.PORT_COLOR);
 			}
@@ -204,9 +190,7 @@ public abstract class Piece {
 		final int nameHeight = fontMetrics.getMaxAscent();
 
 		for (int i = 0; i < outputs.length; i++) {
-			if (new Ellipse2D.Float(nameWidth - PORT_SIZE - BORDER_SPACE,
-					nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i,
-					PORT_SIZE, PORT_SIZE).contains(worldCoordCopy)) {
+			if (new Ellipse2D.Float(nameWidth - PORT_SIZE - BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE).contains(worldCoordCopy)) {
 				return Optional.of(i);
 			}
 		}
@@ -256,8 +240,7 @@ public abstract class Piece {
 		for (int i = 0; i < packageString.length; i++) {
 			packageString[i] = parts[i];
 		}
-		getPieceToNames().put(new PieceTreeRepresentation(p, packageString),
-				parts[parts.length - 1]);
+		getPieceNames().add(new PieceTreeRepresentation(p, packageString, parts[parts.length - 1]));
 	}
 
 	/**
@@ -269,9 +252,7 @@ public abstract class Piece {
 	 */
 	private RoundRectangle2D getBodyShape(final int width) {
 		final int curve = 5;
-		final int height = fontMetrics.getMaxAscent() + GAP_SIZE
-				+ (PORT_SIZE + GAP_SIZE)
-				* Math.max(getInputs().length, outputs.length);
+		final int height = fontMetrics.getMaxAscent() + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * Math.max(getInputs().length, outputs.length);
 		return new RoundRectangle2D.Float(0, 0, width, height, curve, curve);
 	}
 
@@ -295,8 +276,8 @@ public abstract class Piece {
 	 *
 	 * @return the piece names
 	 */
-	public static Map<PieceTreeRepresentation, String> getPieceToNames() {
-		return pieceToName;
+	public static List<PieceTreeRepresentation> getPieceNames() {
+		return pieces;
 	}
 
 	/**
@@ -309,7 +290,11 @@ public abstract class Piece {
 	 */
 	public void changeInput(final int inputPort, final ProgramValue<?> value) {
 		assert value != null;
-		getInputs()[inputPort] = value;
+		setInput(inputPort, value);
+	}
+
+	private void setInput(final int inputPort, final ProgramValue<?> value) {
+		inputs[inputPort] = value;
 	}
 
 	/**
@@ -318,7 +303,7 @@ public abstract class Piece {
 	 * @return the outputs
 	 */
 	protected Connection[] getOutputs() {
-		return outputs;
+		return Arrays.copyOf(outputs, outputs.length);
 	}
 
 	/**
@@ -349,12 +334,11 @@ public abstract class Piece {
 	 * @return the inputs
 	 */
 	public ProgramValue<?>[] getInputs() {
-		return inputs;
+		return Arrays.copyOf(inputs, inputs.length);
 	}
 
 	/**
-	 * p is translated so that the origin is (0,0) and the top left corner of
-	 * this piece.
+	 * p is translated so that the origin is (0,0) and the top left corner of this piece.
 	 *
 	 * @param i
 	 *            the i
@@ -363,9 +347,7 @@ public abstract class Piece {
 	 * @return true, if successful
 	 */
 	public boolean inputContainsPoint(final int i, final Point p) {
-		return new Ellipse2D.Float(BORDER_SPACE, fontMetrics.getMaxAscent()
-				+ GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE)
-				.contains(p);
+		return new Ellipse2D.Float(BORDER_SPACE, fontMetrics.getMaxAscent() + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE).contains(p);
 	}
 
 	/**
@@ -424,20 +406,21 @@ public abstract class Piece {
 	 * @return the name
 	 */
 	public String getName() {
-		final String name = pieceToName.get(getClass());
+		String name = null;
+		for (final PieceTreeRepresentation p : pieces) {
+			if (p.clazz.equals(getClass())) {
+				name = p.name;
+			}
+		}
+
 		if (name == null) {
 			return getClass().getSimpleName();
 		}
 		return name;
 	}
 
-	/**
-	 * Gets the pieces.
-	 *
-	 * @return the pieces
-	 */
-	public static Set<PieceTreeRepresentation> getPieces() {
-		return pieceToName.keySet();
+	public Connection getOutput(final int index) {
+		return outputs[index];
 	}
 
 }

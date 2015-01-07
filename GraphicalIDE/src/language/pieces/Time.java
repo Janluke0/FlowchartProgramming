@@ -52,8 +52,7 @@ public class Time extends Piece {
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(String.valueOf(lastTime), BORDER_SPACE,
-				2 * fontMetrics.getMaxAscent());
+		g.drawString(String.valueOf(lastTime), BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
@@ -66,8 +65,7 @@ public class Time extends Piece {
 	@Override
 	public void update(final ProgramContext pc) {
 		lastTime = pc.TIME;
-		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(
-				lastTime));
+		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(lastTime));
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}

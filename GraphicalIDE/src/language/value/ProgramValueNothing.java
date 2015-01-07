@@ -4,12 +4,14 @@ package language.value;
 /**
  * The Class ProgramValueNothing.
  */
-public class ProgramValueNothing extends ProgramValue<Object> {
+public final class ProgramValueNothing extends ProgramValue<Object> {
+
+	public static final ProgramValueNothing NOTHING = new ProgramValueNothing();
 
 	/**
 	 * Instantiates a new program value nothing.
 	 */
-	public ProgramValueNothing() {
+	private ProgramValueNothing() {
 		super(null);
 	}
 }

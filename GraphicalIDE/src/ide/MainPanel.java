@@ -19,7 +19,7 @@ import language.ProgramContext;
 public class MainPanel extends JPanel {
 
 	/** The pieces. */
-	private final List<Piece> pieces = new ArrayList<>();
+	private final List<Piece> pieces;
 
 	/** The x coordinate of the view frame. */
 	private int x;
@@ -28,10 +28,10 @@ public class MainPanel extends JPanel {
 	private int y;
 
 	/** The interpreter thread. This thread constantly updates every piece. */
-	private final Thread interpreterThread;
+	private final transient Thread interpreterThread;
 
 	/** The graphics handler. */
-	private final MainPanelGraphicsHandler graphicsHandler;
+	private final transient MainPanelGraphicsHandler graphicsHandler;
 
 	/**
 	 * Instantiates a new main panel.
@@ -39,6 +39,7 @@ public class MainPanel extends JPanel {
 	public MainPanel() {
 		super();
 		x = y = 0;
+		pieces = new ArrayList<>();
 		final MainInputHandler input = new MainInputHandler(this);
 
 		addMouseListener(input);
@@ -46,13 +47,17 @@ public class MainPanel extends JPanel {
 
 		graphicsHandler = new MainPanelGraphicsHandler(this);
 
-		interpreterThread = new Thread(new InterpreterTask(this));
+		interpreterThread = new Thread(new InterpreterTask());
+	}
+
+	public MainPanel start() {
 		interpreterThread.start();
+		return this;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
 	@Override
@@ -125,47 +130,30 @@ public class MainPanel extends JPanel {
 	 *
 	 * @return the pieces
 	 */
-	public synchronized List<Piece> getPieces() {
+	public List<Piece> getPieces() {
 		return pieces;
 	}
 
 	/**
 	 * The Class InterpreterTask.
 	 */
-	private static class InterpreterTask implements Runnable {
-
-		/** The pieces. */
-		private final List<Piece> pieces;
-
-		/** The main panel. */
-		private final MainPanel mainPanel;
-
-		/**
-		 * Instantiates a new interpreter task.
-		 *
-		 * @param panel
-		 *            the panel
-		 */
-		public InterpreterTask(final MainPanel panel) {
-			pieces = panel.getPieces();
-			mainPanel = panel;
-		}
+	private class InterpreterTask implements Runnable {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
 		public void run() {
 			while (true) {
-				synchronized (pieces) {
+				synchronized (getPieces()) {
 					final ProgramContext pc = new ProgramContext();
-					for (final Piece p : pieces) {
+					for (final Piece p : getPieces()) {
 						p.update(pc);
 					}
 				}
-				mainPanel.repaint();
+				repaint();
 				Thread.yield();
 			}
 		}
@@ -178,8 +166,8 @@ public class MainPanel extends JPanel {
 	 *            the piece
 	 */
 	public void createPiece(final Piece piece) {
-		synchronized (pieces) {
-			pieces.add(piece);
+		synchronized (getPieces()) {
+			getPieces().add(piece);
 		}
 	}
 

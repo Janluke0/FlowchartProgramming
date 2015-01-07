@@ -59,7 +59,7 @@ public class NumberConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -68,15 +68,14 @@ public class NumberConstant extends Piece {
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(value.toString(), BORDER_SPACE,
-				2 * fontMetrics.getMaxAscent());
+		g.drawString(value.toString(), BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -98,14 +97,16 @@ public class NumberConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
 		try {
-			setValue(new BigDecimal(JOptionPane.showInputDialog("Set Value: ",
-					String.valueOf(value))));
+			final String input = JOptionPane.showInputDialog("Set Value: ", String.valueOf(value));
+			if (input != null) {
+				setValue(new BigDecimal(input));
+			}
 		} catch (final NumberFormatException e) {
 			// If the input is malformed, we don't have to do anything
 		}

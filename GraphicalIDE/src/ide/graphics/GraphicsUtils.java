@@ -20,15 +20,15 @@ import java.util.Random;
  */
 public final class GraphicsUtils {
 
-	// Utility class, cannot instantiate
-	private GraphicsUtils() {
-	}
-
 	/** The Constant RAND. */
 	private static final Random RAND = new Random();
 
 	/** The Constant GFX_CONFIG. */
 	private static final GraphicsConfiguration GFX_CONFIG = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+
+	// Utility class, cannot instantiate
+	private GraphicsUtils() {
+	}
 
 	/**
 	 * Gets a random similar color to color c.
@@ -137,10 +137,10 @@ public final class GraphicsUtils {
 	 * @return the buffered image
 	 */
 	public static BufferedImage copyImage(final BufferedImage bi) {
-		final ColorModel cm = bi.getColorModel();
-		final boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		final ColorModel colorModel = bi.getColorModel();
+		final boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
 		final WritableRaster raster = bi.copyData(null);
-		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+		return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
 	}
 
 	/**
@@ -162,15 +162,15 @@ public final class GraphicsUtils {
 			for (int x = 0; x < width; x++) {
 				final int rgb1 = inPixels[index];
 				int r1 = rgb1 >> 16 & 0xff;
-			int g1 = rgb1 >> 8 & 0xff;
-			int b1 = rgb1 & 0xff;
+				int g1 = rgb1 >> 8 & 0xff;
+				int b1 = rgb1 & 0xff;
 
-			r1 = clampPixel((int) (r1 * a));
-			g1 = clampPixel((int) (g1 * a));
-			b1 = clampPixel((int) (b1 * a));
+				r1 = clampPixel((int) (r1 * a));
+				g1 = clampPixel((int) (g1 * a));
+				b1 = clampPixel((int) (b1 * a));
 
-			inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
-			index++;
+				inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
+				index++;
 			}
 		}
 	}
@@ -178,18 +178,18 @@ public final class GraphicsUtils {
 	/**
 	 * Clamps an integer between 0 and 255.
 	 *
-	 * @param i
+	 * @param num
 	 *            the i
 	 * @return the int
 	 */
-	public static int clampPixel(final int i) {
-		if (i < 0) {
+	public static int clampPixel(final int num) {
+		if (num < 0) {
 			return 0;
 		}
-		if (i > 255) {
+		if (num > 255) {
 			return 255;
 		}
-		return i;
+		return num;
 	}
 
 	/**
@@ -206,12 +206,12 @@ public final class GraphicsUtils {
 	 *            the p2
 	 */
 	public static void drawCurve(final Graphics2D g, final Point2D p1, final Point2D p2) {
-		final CubicCurve2D c = new CubicCurve2D.Double();
+		final CubicCurve2D curve = new CubicCurve2D.Double();
 		// right in between the two pieces on the x axis
 		final double lessX = Math.min(p1.getX(), p2.getX());
 		final double midX = lessX + Math.abs(p2.getX() - p1.getX()) / 2f;
-		c.setCurve(p1.getX(), p1.getY(), midX, p1.getY(), midX, p2.getY(), p2.getX(), p2.getY());
-		g.draw(c);
+		curve.setCurve(p1.getX(), p1.getY(), midX, p1.getY(), midX, p2.getY(), p2.getX(), p2.getY());
+		g.draw(curve);
 	}
 
 	/**

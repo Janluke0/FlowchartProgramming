@@ -15,13 +15,30 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.WritableRaster;
 import java.util.Random;
 
+/**
+ * The Class GraphicsUtils.
+ */
 public final class GraphicsUtils {
+
+	// Utility class, cannot instantiate
 	private GraphicsUtils() {
 	}
 
+	/** The Constant RAND. */
 	private static final Random RAND = new Random();
+
+	/** The Constant GFX_CONFIG. */
 	private static final GraphicsConfiguration GFX_CONFIG = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 
+	/**
+	 * Gets a random similar color to color c.
+	 *
+	 * @param c
+	 *            the c
+	 * @param similarity
+	 *            the similarity
+	 * @return the random similar color
+	 */
 	public static Color getRandomSimilarColor(final Color c, final int similarity) {
 		final float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
 		hsb[0] += RAND.nextFloat() * similarity;
@@ -30,6 +47,13 @@ public final class GraphicsUtils {
 		return Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
 	}
 
+	/**
+	 * Generate random color, and averages it with the mix.
+	 *
+	 * @param mix
+	 *            the mix
+	 * @return the color
+	 */
 	public static Color generateRandomColor(final Color mix) {
 		int red = RAND.nextInt(256);
 		int green = RAND.nextInt(256);
@@ -45,6 +69,13 @@ public final class GraphicsUtils {
 		return new Color(red, green, blue);
 	}
 
+	/**
+	 * Takes an image and makes a compatible version.
+	 *
+	 * @param image
+	 *            the image
+	 * @return the buffered image
+	 */
 	public static BufferedImage toCompatibleImage(final BufferedImage image) {
 		/*
 		 * if image is already compatible and optimized for current system settings, simply return it
@@ -67,6 +98,17 @@ public final class GraphicsUtils {
 		return new_image;
 	}
 
+	/**
+	 * Creates a compatible image given the parameters.
+	 *
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @param transparency
+	 *            the transparency
+	 * @return the buffered image
+	 */
 	public static BufferedImage createImage(final int width, final int height, final int transparency) {
 		BufferedImage image = GFX_CONFIG.createCompatibleImage(width, height, transparency);
 		if (image.getRaster().getDataBuffer().getDataType() != DataBuffer.TYPE_INT) {
@@ -87,6 +129,13 @@ public final class GraphicsUtils {
 		return image;
 	}
 
+	/**
+	 * Copies the image.
+	 *
+	 * @param bi
+	 *            the bi
+	 * @return the buffered image
+	 */
 	public static BufferedImage copyImage(final BufferedImage bi) {
 		final ColorModel cm = bi.getColorModel();
 		final boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -94,6 +143,14 @@ public final class GraphicsUtils {
 		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
+	/**
+	 * Applies a glow filter on the src image.
+	 *
+	 * @param src
+	 *            the src
+	 * @param amount
+	 *            the amount
+	 */
 	public static void glowFilter(final BufferedImage src, final float amount) {
 		final int width = src.getWidth();
 		final int height = src.getHeight();
@@ -118,6 +175,13 @@ public final class GraphicsUtils {
 		}
 	}
 
+	/**
+	 * Clamps an integer between 0 and 255.
+	 *
+	 * @param i
+	 *            the i
+	 * @return the int
+	 */
 	public static int clampPixel(final int i) {
 		if (i < 0) {
 			return 0;
@@ -128,7 +192,19 @@ public final class GraphicsUtils {
 		return i;
 	}
 
-	// for now, just draws a line
+	/**
+	 * Draws a curve. The curve is between p1 and p2, using two control points. <br>
+	 * Both of the x values of the control points are equal to<br>
+	 * <code>Math.min(p1.getX(), p2.getX()) + Math.abs(p2.getX() - p1.getX()) / 2f;</code><br>
+	 * or halfway between the two points. The y values each correspond to the y values of the two points.
+	 *
+	 * @param g
+	 *            the g
+	 * @param p1
+	 *            the p1
+	 * @param p2
+	 *            the p2
+	 */
 	public static void drawCurve(final Graphics2D g, final Point2D p1, final Point2D p2) {
 		final CubicCurve2D c = new CubicCurve2D.Double();
 		// right in between the two pieces on the x axis
@@ -138,6 +214,12 @@ public final class GraphicsUtils {
 		g.draw(c);
 	}
 
+	/**
+	 * Antialiases the graphics.
+	 *
+	 * @param g
+	 *            the g
+	 */
 	public static void prettyGraphics(final Graphics2D g) {
 		g.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

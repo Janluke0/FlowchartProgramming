@@ -6,46 +6,30 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.math.BigDecimal;
 
-import javax.swing.JOptionPane;
-
 import language.Connection;
 import language.Piece;
 import language.ProgramContext;
+import language.value.ProgramValue;
 import language.value.ProgramValueNum;
 
 /**
- * The Class NumberConstant.
+ * The Class Time.
  */
-public class NumberConstant extends Piece {
+public class Time extends Piece {
 
-	/** The value stored by this piece. */
-	private ProgramValueNum value;
+	private long lastTime = System.currentTimeMillis();
 
 	/**
-	 * Instantiates a new number constant.
+	 * Instantiates a new time piece.
 	 *
-	 * @param value
-	 *            the value
 	 * @param x
 	 *            the x
 	 * @param y
 	 *            the y
 	 */
-	public NumberConstant(final BigDecimal value, final int x, final int y) {
+	public Time(final int x, final int y) {
 		super(0, 1, x, y);
-		this.value = new ProgramValueNum(value);
-	}
-
-	/**
-	 * Instantiates a new number constant with a value of 0.
-	 *
-	 * @param x
-	 *            the x
-	 * @param y
-	 *            the y
-	 */
-	public NumberConstant(final int x, final int y) {
-		this(BigDecimal.ZERO, x, y);
+		minWidth = 2 * PORT_SIZE + 160;
 	}
 
 	/**
@@ -54,7 +38,7 @@ public class NumberConstant extends Piece {
 	 * @return the string
 	 */
 	public static String name() {
-		return "Number Constant";
+		return "Time";
 	}
 
 	/*
@@ -68,7 +52,7 @@ public class NumberConstant extends Piece {
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(value.toString(), BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
+		g.drawString(String.valueOf(lastTime), BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
@@ -80,19 +64,11 @@ public class NumberConstant extends Piece {
 	 */
 	@Override
 	public void update(final ProgramContext pc) {
+		lastTime = pc.TIME;
+		final ProgramValue value = new ProgramValueNum(new BigDecimal(lastTime));
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}
-	}
-
-	/**
-	 * Sets the value stored by this piece..
-	 *
-	 * @param value
-	 *            the new value
-	 */
-	public void setValue(final BigDecimal value) {
-		this.value = new ProgramValueNum(value);
 	}
 
 	/*
@@ -102,11 +78,7 @@ public class NumberConstant extends Piece {
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
-		try {
-			setValue(new BigDecimal(JOptionPane.showInputDialog("Set Value: ", String.valueOf(value))));
-		} catch (final NumberFormatException e) {
-			// If the input is malformed, we don't have to do anything
-		}
+
 	}
 
 }

@@ -29,6 +29,27 @@ import language.Piece;
 @SuppressWarnings("serial")
 public class WindowFrame extends JFrame {
 
+	/** The j scroll pane1. */
+	private JScrollPane jScrollPane1;
+
+	/** The j split pane1. */
+	private JSplitPane jSplitPane1;
+
+	/** The main and toolbar seperator. */
+	private JSplitPane mainAndToolbarSeperator;
+
+	/** The main panel. */
+	private MainPanel mainPanel;
+
+	/** The piece list. */
+	private PieceList pieceList;
+
+	/** The piece picker panel. */
+	private JPanel piecePickerPanel;
+
+	/** The toolbar panel. */
+	private JPanel toolbarPanel;
+
 	/**
 	 * Creates new form GUIFrame.
 	 */
@@ -46,8 +67,8 @@ public class WindowFrame extends JFrame {
 		toolbarPanel = new ToolbarPanel();
 		setMainPanel(new MainPanel());
 		final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-		for (final Class<? extends Piece> cl : Piece.getPieces()) {
-			root.add(new DefaultMutableTreeNode(new ClassDisplayer(cl)));
+		for (final PieceTreeRepresentation cl : Piece.getPieces()) {
+			root.add(new DefaultMutableTreeNode(cl));
 		}
 
 		pieceList = new PieceList(getMainPanel(), root);
@@ -168,24 +189,4 @@ public class WindowFrame extends JFrame {
 		this.mainPanel = mainPanel;
 	}
 
-	/** The j scroll pane1. */
-	private JScrollPane jScrollPane1;
-
-	/** The j split pane1. */
-	private JSplitPane jSplitPane1;
-
-	/** The main and toolbar seperator. */
-	private JSplitPane mainAndToolbarSeperator;
-
-	/** The main panel. */
-	private MainPanel mainPanel;
-
-	/** The piece list. */
-	private PieceList pieceList;
-
-	/** The piece picker panel. */
-	private JPanel piecePickerPanel;
-
-	/** The toolbar panel. */
-	private JPanel toolbarPanel;
 }

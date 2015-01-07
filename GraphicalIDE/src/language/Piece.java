@@ -1,5 +1,6 @@
 package language;
 
+import ide.PieceTreeRepresentation;
 import ide.graphics.GraphicsConstants;
 import ide.graphics.GraphicsUtils;
 
@@ -10,12 +11,11 @@ import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
@@ -51,12 +51,9 @@ public abstract class Piece {
 	 */
 	protected int minWidth = 2 * PORT_SIZE + 60;
 
-	// A list of all added piece classes
-	/** The pieces. */
-	private static List<Class<? extends Piece>> pieces = new ArrayList<>();
 	// A map of added piece classes to their names
 	/** The piece names. */
-	private static Map<Class<? extends Piece>, String> pieceNames = new HashMap<>();
+	private static Map<PieceTreeRepresentation, String> pieceToName = new HashMap<>();
 
 	static {
 		// For every signel class subtyping Piece, we add it
@@ -67,7 +64,7 @@ public abstract class Piece {
 
 		// set the longest piece name
 		String longestString = "";
-		final Iterator<String> it = getPieceNames().values().iterator();
+		final Iterator<String> it = getPieceToNames().values().iterator();
 		while (it.hasNext()) {
 			final String next = it.next();
 			if (next.length() > longestString.length()) {
@@ -142,12 +139,13 @@ public abstract class Piece {
 	 *            the g
 	 */
 	public void draw(final Graphics2D g) {
-		g.translate(getX(), getY());
-		g.setColor(GraphicsConstants.PIECE_BACKGROUND);
-		final String name = getName();
 		// Store this variable so other methods can use it without accessing
 		// graphics
 		fontMetrics = g.getFontMetrics();
+
+		g.translate(getX(), getY());
+		g.setColor(GraphicsConstants.PIECE_BACKGROUND);
+		final String name = getName();
 		final int nameWidth = getStringWidth(name);
 		g.fill(getBodyShape(nameWidth));
 
@@ -214,18 +212,20 @@ public abstract class Piece {
 	/**
 	 * Adds the piece.
 	 *
+	 *
 	 * @param p
 	 *            the p
 	 */
 	protected static void addPiece(final Class<? extends Piece> p) {
-		getPieces().add(p);
+		String name = "";
+
 		try {
 			// Assumes subclass has a static method called name
-			getPieceNames().put(p, p.getMethod("name").invoke(null).toString());
+			name = p.getMethod("name").invoke(null).toString();
 		} catch (final NoSuchMethodException e) {
 			e.printStackTrace();
 			// if they didn't supply a name method, use the class name instead
-			getPieceNames().put(p, p.getSimpleName());
+			name = p.getSimpleName();
 		} catch (final SecurityException e) {
 			e.printStackTrace();
 		} catch (final IllegalAccessException e) {
@@ -235,6 +235,17 @@ public abstract class Piece {
 		} catch (final InvocationTargetException e) {
 			e.printStackTrace();
 		}
+		final String[] parts = name.split("\\.");
+		final StringBuilder packageString = new StringBuilder();
+		// don't do the last one, that's the name
+		for (int i = 0; i < parts.length - 1; i++) {
+			packageString.append(parts[i]);
+			// Don't add trailing period
+			if (i != parts.length - 2) {
+				packageString.append('.');
+			}
+		}
+		getPieceToNames().put(new PieceTreeRepresentation(p, packageString.toString()), parts[parts.length - 1]);
 	}
 
 	/**
@@ -270,8 +281,8 @@ public abstract class Piece {
 	 *
 	 * @return the piece names
 	 */
-	public static Map<Class<? extends Piece>, String> getPieceNames() {
-		return pieceNames;
+	public static Map<PieceTreeRepresentation, String> getPieceToNames() {
+		return pieceToName;
 	}
 
 	/**
@@ -323,7 +334,7 @@ public abstract class Piece {
 	 *
 	 * @return the inputs
 	 */
-	public ProgramValue[] getInputs() {
+	public ProgramValue<?>[] getInputs() {
 		return inputs;
 	}
 
@@ -396,7 +407,7 @@ public abstract class Piece {
 	 * @return the name
 	 */
 	public String getName() {
-		final String name = pieceNames.get(getClass());
+		final String name = pieceToName.get(getClass());
 		if (name == null) {
 			return getClass().getSimpleName();
 		}
@@ -408,18 +419,8 @@ public abstract class Piece {
 	 *
 	 * @return the pieces
 	 */
-	public static List<Class<? extends Piece>> getPieces() {
-		return pieces;
-	}
-
-	/**
-	 * Sets the pieces.
-	 *
-	 * @param pieces
-	 *            the new pieces
-	 */
-	public static void setPieces(final List<Class<? extends Piece>> pieces) {
-		Piece.pieces = pieces;
+	public static Set<PieceTreeRepresentation> getPieces() {
+		return pieceToName.keySet();
 	}
 
 }

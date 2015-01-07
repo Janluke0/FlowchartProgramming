@@ -43,7 +43,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -59,13 +59,13 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
 	public void update(final ProgramContext pc) {
 		lastTime = pc.TIME;
-		final ProgramValue value = new ProgramValueNum(new BigDecimal(lastTime));
+		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(lastTime));
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}
@@ -73,7 +73,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

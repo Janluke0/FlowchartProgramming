@@ -33,7 +33,7 @@ public class Connection {
 	 * @param value
 	 *            the value
 	 */
-	public void changeInput(final ProgramValue value) {
+	public void changeInput(final ProgramValue<?> value) {
 		if (output != null) {
 			output.changeInput(getOutputPort(), value);
 		}

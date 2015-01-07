@@ -42,8 +42,8 @@ public class Add extends Piece {
 	 */
 	@Override
 	public void update(final ProgramContext pc) {
-		final ProgramValue v1 = getInputs()[0];
-		final ProgramValue v2 = getInputs()[1];
+		final ProgramValue<?> v1 = getInputs()[0];
+		final ProgramValue<?> v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueNum && v2 instanceof ProgramValueNum) {
 			final ProgramValueNum v3 = new ProgramValueNum(((ProgramValueNum) v1).getValue().add(((ProgramValueNum) v2).getValue()));
 			for (final Connection c : getOutputs()) {

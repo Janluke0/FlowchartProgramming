@@ -48,13 +48,13 @@ public class ListInputHandler implements TreeSelectionListener {
 			final Object nodeInfo = node.getUserObject();
 
 			if (node.isLeaf()) {
-				assert nodeInfo instanceof ClassDisplayer;
+				assert nodeInfo instanceof PieceTreeRepresentation;
 			} else {
 				return;
 			}
 
 			// Get the class of the piece that was selected
-			final Class<? extends Piece> c = ((ClassDisplayer) nodeInfo).c;
+			final Class<? extends Piece> c = ((PieceTreeRepresentation) nodeInfo).clazz;
 			// Deselect so it acts like a button
 			tree.clearSelection();
 			Constructor<? extends Piece> ctor = null;

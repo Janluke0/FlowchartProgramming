@@ -3,6 +3,8 @@ package ide.graphics;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.ImageIcon;
+
 /**
  * The Class GraphicsConstants. Holds the IDE default colors and fonts.
  */
@@ -37,4 +39,7 @@ public final class GraphicsConstants {
 
 	/** The Default PORT_COLOR. */
 	public static final Color PORT_COLOR = Color.RED;
+
+	public static final ImageIcon FILE_ICON = new ImageIcon(
+			"./res/toolbaricons/file.png");
 }

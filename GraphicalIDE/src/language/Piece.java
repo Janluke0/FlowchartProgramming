@@ -150,14 +150,13 @@ public abstract class Piece {
 
 		g.translate(getX(), getY());
 		g.setColor(GraphicsConstants.PIECE_BACKGROUND);
-		final String name = getName();
-		final int nameWidth = getStringWidth(name);
-		g.fill(getBodyShape(nameWidth));
+		final int nameWidth = Math.max(getStringWidth(getName()), minWidth);
+		g.fill(getBodyShape());
 
 		final int nameHeight = fontMetrics.getMaxAscent();
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(name, BORDER_SPACE, nameHeight);
+		g.drawString(getName(), BORDER_SPACE, nameHeight);
 
 		g.setColor(GraphicsConstants.PORT_COLOR);
 		for (int i = 0; i < getInputs().length; i++) {
@@ -199,7 +198,7 @@ public abstract class Piece {
 		// OR translate our point by -x and -y
 		worldCoordCopy.translate(-getX(), -getY());
 
-		final int nameWidth = getStringWidth(getName());
+		final int nameWidth = Math.max(getStringWidth(getName()), minWidth);
 		final int nameHeight = fontMetrics.getMaxAscent();
 
 		for (int i = 0; i < outputs.length; i++) {
@@ -213,14 +212,14 @@ public abstract class Piece {
 	}
 
 	/**
-	 * Gets the string width.
+	 * Gets the string width + 2 * BORDER_SPACE
 	 *
 	 * @param name
 	 *            the name
 	 * @return the string width
 	 */
-	private int getStringWidth(final String name) {
-		return (int) Math.max(minWidth, fontMetrics.stringWidth(name) * 1.5);
+	protected int getStringWidth(final String name) {
+		return fontMetrics.stringWidth(name) + 2 * BORDER_SPACE;
 	}
 
 	/**
@@ -267,7 +266,8 @@ public abstract class Piece {
 	 *            the width
 	 * @return the body shape
 	 */
-	private RoundRectangle2D getBodyShape(final int width) {
+	private RoundRectangle2D getBodyShape() {
+		final int width = Math.max(getStringWidth(getName()), minWidth);
 		final int curve = 5;
 		final int height = fontMetrics.getMaxAscent() + GAP_SIZE
 				+ (PORT_SIZE + GAP_SIZE)
@@ -287,7 +287,7 @@ public abstract class Piece {
 		// the body shape is at 0,0 so we have to translate that by its x and y
 		// OR translate our point by -x and -y
 		worldCoordCopy.translate(-getX(), -getY());
-		return getBodyShape(getStringWidth(getName())).contains(worldCoordCopy);
+		return getBodyShape().contains(worldCoordCopy);
 	}
 
 	/**

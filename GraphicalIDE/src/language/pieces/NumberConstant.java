@@ -59,23 +59,27 @@ public class NumberConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
 	public void draw(final Graphics2D g) {
+		minWidth = getStringWidth(value.toString()) + PORT_SIZE + 2
+				* BORDER_SPACE;
+
 		super.draw(g);
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(value.toString(), BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
+		g.drawString(value.toString(), BORDER_SPACE,
+				2 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -97,13 +101,14 @@ public class NumberConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
 		try {
-			final String input = JOptionPane.showInputDialog("Set Value: ", String.valueOf(value));
+			final String input = JOptionPane.showInputDialog("Set Value: ",
+					String.valueOf(value));
 			if (input != null) {
 				setValue(new BigDecimal(input));
 			}

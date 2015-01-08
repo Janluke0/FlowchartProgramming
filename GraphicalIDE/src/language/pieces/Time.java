@@ -43,29 +43,33 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
 	public void draw(final Graphics2D g) {
+		final String timeString = String.valueOf(lastTime);
+		minWidth = getStringWidth(timeString) + PORT_SIZE + 2 * BORDER_SPACE;
+
 		super.draw(g);
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(String.valueOf(lastTime), BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
+		g.drawString(timeString, BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
 	public void update(final ProgramContext pc) {
 		lastTime = pc.TIME;
-		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(lastTime));
+		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(
+				lastTime));
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}
@@ -73,7 +77,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

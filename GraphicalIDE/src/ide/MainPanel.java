@@ -57,7 +57,7 @@ public class MainPanel extends JPanel {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
 	@Override
@@ -138,14 +138,19 @@ public class MainPanel extends JPanel {
 	 * The Class InterpreterTask.
 	 */
 	private class InterpreterTask implements Runnable {
+		private static final int FRAMES_PER_SECOND = 60;
+		private static final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
 		public void run() {
+			long nextTime = System.currentTimeMillis();
+			long sleepTime = 0;
+
 			while (true) {
 				synchronized (getPieces()) {
 					final ProgramContext pc = new ProgramContext();
@@ -153,8 +158,21 @@ public class MainPanel extends JPanel {
 						p.update(pc);
 					}
 				}
-				repaint();
-				Thread.yield();
+
+				nextTime += SKIP_TICKS;
+				sleepTime = nextTime - System.currentTimeMillis();
+
+				repaint(sleepTime);
+
+				if (sleepTime >= 0) {
+					try {
+						Thread.sleep(sleepTime);
+					} catch (final InterruptedException e) {
+						e.printStackTrace();
+					}
+				} else {
+					// Shit, we are running behind!
+				}
 			}
 		}
 	}

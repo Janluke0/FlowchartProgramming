@@ -2,6 +2,7 @@ package ide.graphics;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 
@@ -12,6 +13,9 @@ public final class GraphicsConstants {
 	// Constants class, can't be instantiated
 	private GraphicsConstants() {
 	}
+
+	public static final int TOOLBAR_HEIGHT = 40;
+	public static final int TOOLBAR_PADDING = 5;
 
 	/** The Default APP_FONT. */
 	public static final Font APP_FONT = new Font("Arial", Font.PLAIN, 12);
@@ -40,6 +44,19 @@ public final class GraphicsConstants {
 	/** The Default PORT_COLOR. */
 	public static final Color PORT_COLOR = Color.RED;
 
-	public static final ImageIcon FILE_ICON = new ImageIcon(
-			"./res/toolbaricons/file.png");
+	// All icons are not resized, they are the default size.
+	/**
+	 * The Default File Icon.
+	 */
+	public static final ImageIcon FILE_ICON;
+	static {
+		ImageIcon fileIcon;
+		try {
+			fileIcon = new ImageIcon(GraphicsUtils.loadImage("/toolbaricons/file.png"));
+		} catch (final IOException e) {
+			fileIcon = new ImageIcon("Could not find image");
+			e.printStackTrace();
+		}
+		FILE_ICON = fileIcon;
+	}
 }

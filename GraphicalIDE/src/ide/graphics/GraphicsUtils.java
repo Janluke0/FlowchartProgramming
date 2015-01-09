@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.geom.CubicCurve2D;
@@ -13,7 +14,12 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  * The Class GraphicsUtils.
@@ -129,6 +135,11 @@ public final class GraphicsUtils {
 		return image;
 	}
 
+	public static BufferedImage loadImage(final String filename) throws IOException {
+		final InputStream in = GraphicsUtils.class.getResourceAsStream(filename);
+		return toCompatibleImage(ImageIO.read(in));
+	}
+
 	/**
 	 * Copies the image.
 	 *
@@ -141,6 +152,33 @@ public final class GraphicsUtils {
 		final boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
 		final WritableRaster raster = bi.copyData(null);
 		return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
+	}
+
+	/**
+	 *
+	 * @param image
+	 * @param width
+	 * @param height
+	 * @return a new image of width and height
+	 */
+	public static BufferedImage resize(final Image image, final int width, final int height) {
+		final BufferedImage bi = new BufferedImage(width, height, Transparency.TRANSLUCENT);
+		final Graphics2D g2d = bi.createGraphics();
+		g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+		g2d.drawImage(image, 0, 0, width, height, null);
+		g2d.dispose();
+		return bi;
+	}
+
+	/**
+	 *
+	 * @param fileIcon
+	 * @param width
+	 * @param height
+	 * @return a new image icon of size width and height
+	 */
+	public static ImageIcon resize(final ImageIcon fileIcon, final int width, final int height) {
+		return new ImageIcon(resize(fileIcon.getImage(), width, height));
 	}
 
 	/**
@@ -225,4 +263,5 @@ public final class GraphicsUtils {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 	}
+
 }

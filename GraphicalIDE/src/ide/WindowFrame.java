@@ -117,14 +117,9 @@ public class WindowFrame extends JFrame {
 
 		jSplitPane1.setLeftComponent(piecePickerPanel);
 
-		mainAndToolbarSeperator.setDividerLocation(40);
+		mainAndToolbarSeperator.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
 		mainAndToolbarSeperator.setDividerSize(0);
 		mainAndToolbarSeperator.setOrientation(JSplitPane.VERTICAL_SPLIT);
-
-		final GroupLayout toolbarPanelLayout = new GroupLayout(toolbarPanel);
-		toolbarPanel.setLayout(toolbarPanelLayout);
-		toolbarPanelLayout.setHorizontalGroup(toolbarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
-		toolbarPanelLayout.setVerticalGroup(toolbarPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 39, Short.MAX_VALUE));
 
 		mainAndToolbarSeperator.setTopComponent(toolbarPanel);
 

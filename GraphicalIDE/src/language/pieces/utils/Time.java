@@ -1,38 +1,44 @@
-package language.pieces;
+package language.pieces.utils;
 
 import ide.graphics.GraphicsConstants;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.math.BigDecimal;
 
+import language.Connection;
 import language.Piece;
 import language.ProgramContext;
+import language.value.ProgramValue;
+import language.value.ProgramValueNum;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Display.
+ * The Class Time.
  */
-public class Display extends Piece {
+public class Time extends Piece {
+
+	private long lastTime = System.currentTimeMillis();
 
 	/**
-	 * Instantiates a new display.
+	 * Instantiates a new time piece.
 	 *
 	 * @param x
 	 *            the x
 	 * @param y
 	 *            the y
 	 */
-	public Display(final int x, final int y) {
-		super(1, 0, x, y);
+	public Time(final int x, final int y) {
+		super(0, 1, x, y);
+		minWidth = 2 * PORT_SIZE + 160;
 	}
 
 	/**
-	 * Name.
+	 * returns the piece name.
 	 *
 	 * @return the string
 	 */
 	public static String name() {
-		return "Utils.Display";
+		return "Utils.Time";
 	}
 
 	/*
@@ -42,15 +48,14 @@ public class Display extends Piece {
 	 */
 	@Override
 	public void draw(final Graphics2D g) {
-		final String displayText = getInputs()[0].toString();
-		minWidth = getStringWidth(displayText) + PORT_SIZE + BORDER_SPACE;
+		final String timeString = String.valueOf(lastTime);
+		minWidth = getStringWidth(timeString) + PORT_SIZE + 2 * BORDER_SPACE;
 
 		super.draw(g);
 		g.translate(getX(), getY());
 
 		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(displayText, BORDER_SPACE * 2 + PORT_SIZE,
-				3 * fontMetrics.getMaxAscent());
+		g.drawString(timeString, BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
 
 		g.translate(-getX(), -getY());
 	}
@@ -62,6 +67,12 @@ public class Display extends Piece {
 	 */
 	@Override
 	public void update(final ProgramContext pc) {
+		lastTime = pc.TIME;
+		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(
+				lastTime));
+		for (final Connection c : getOutputs()) {
+			c.changeInput(value);
+		}
 	}
 
 	/*
@@ -71,7 +82,6 @@ public class Display extends Piece {
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
-		// TODO Auto-generated method stub
 
 	}
 

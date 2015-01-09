@@ -5,6 +5,10 @@ package language.value;
  */
 public class ProgramValueBoolean extends ProgramValue<Boolean> {
 
+	public static final ProgramValueBoolean TRUE = new ProgramValueBoolean(true);
+	public static final ProgramValueBoolean FALSE = new ProgramValueBoolean(
+			false);
+
 	/**
 	 * Instantiates a new program value number.
 	 *

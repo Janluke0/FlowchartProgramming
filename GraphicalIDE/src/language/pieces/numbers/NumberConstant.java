@@ -1,24 +1,25 @@
-package language.pieces;
+package language.pieces.numbers;
 
 import ide.graphics.GraphicsConstants;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.math.BigDecimal;
 
 import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
 import language.ProgramContext;
-import language.value.ProgramValueBoolean;
+import language.value.ProgramValueNum;
 
 /**
  * The Class NumberConstant.
  */
-public class BooleanConstant extends Piece {
+public class NumberConstant extends Piece {
 
 	/** The value stored by this piece. */
-	private ProgramValueBoolean value;
+	private ProgramValueNum value;
 
 	/**
 	 * Instantiates a new number constant.
@@ -30,9 +31,9 @@ public class BooleanConstant extends Piece {
 	 * @param y
 	 *            the y
 	 */
-	public BooleanConstant(final Boolean value, final int x, final int y) {
+	public NumberConstant(final BigDecimal value, final int x, final int y) {
 		super(0, 1, x, y);
-		this.value = new ProgramValueBoolean(value);
+		this.value = new ProgramValueNum(value);
 	}
 
 	/**
@@ -43,8 +44,8 @@ public class BooleanConstant extends Piece {
 	 * @param y
 	 *            the y
 	 */
-	public BooleanConstant(final int x, final int y) {
-		this(false, x, y);
+	public NumberConstant(final int x, final int y) {
+		this(BigDecimal.ZERO, x, y);
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class BooleanConstant extends Piece {
 	 * @return the string
 	 */
 	public static String name() {
-		return "Logic.Boolean Constant";
+		return "Numbers.Number Constant";
 	}
 
 	/*
@@ -94,8 +95,8 @@ public class BooleanConstant extends Piece {
 	 * @param value
 	 *            the new value
 	 */
-	public void setValue(final Boolean value) {
-		this.value = new ProgramValueBoolean(value);
+	public void setValue(final BigDecimal value) {
+		this.value = new ProgramValueNum(value);
 	}
 
 	/*
@@ -105,11 +106,15 @@ public class BooleanConstant extends Piece {
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
-
-		final String input = JOptionPane.showInputDialog("Set Value: ",
-				String.valueOf(value));
-		if (input != null) {
-			setValue(Boolean.valueOf(input));
+		try {
+			final String input = JOptionPane.showInputDialog("Set Value: ",
+					String.valueOf(value));
+			if (input != null) {
+				setValue(new BigDecimal(input));
+			}
+		} catch (final NumberFormatException e) {
+			// If the input is malformed, we don't have to do anything
 		}
 	}
+
 }

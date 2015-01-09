@@ -1,4 +1,4 @@
-package language.pieces;
+package language.pieces.numbers.operators;
 
 import java.awt.Point;
 
@@ -13,7 +13,7 @@ import language.value.ProgramValueNum;
 /**
  * The Class Add.
  */
-public class Add extends Piece {
+public class Addition extends Piece {
 
 	/**
 	 * Instantiates a new adds the.
@@ -23,7 +23,7 @@ public class Add extends Piece {
 	 * @param y
 	 *            the y
 	 */
-	public Add(final int x, final int y) {
+	public Addition(final int x, final int y) {
 		super(2, 1, x, y);
 	}
 
@@ -33,12 +33,12 @@ public class Add extends Piece {
 	 * @return the string
 	 */
 	public static String name() {
-		return "Numbers.Math.Add";
+		return "Numbers.Operators.Add";
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -46,7 +46,9 @@ public class Add extends Piece {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueNum && v2 instanceof ProgramValueNum) {
-			final ProgramValueNum v3 = new ProgramValueNum(((ProgramValueNum) v1).getValue().add(((ProgramValueNum) v2).getValue()));
+			final ProgramValueNum v3 = new ProgramValueNum(
+					((ProgramValueNum) v1).getValue().add(
+							((ProgramValueNum) v2).getValue()));
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
@@ -60,7 +62,7 @@ public class Add extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

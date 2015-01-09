@@ -51,7 +51,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -93,7 +93,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
@@ -132,8 +132,8 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 										if (piece == p.getOutput(outputIndex)
 												.getOutput()
 												&& j == p
-														.getOutput(outputIndex)
-														.getOutputPort()) {
+												.getOutput(outputIndex)
+												.getOutputPort()) {
 											// make the other piece output to
 											// nothing
 											p.setOutput(outputIndex,
@@ -143,14 +143,14 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 									}
 								}
 
-							pieceDragged
-										.get()
-										.getOutput(portSelected.get())
-										.changeInput(
-												ProgramValueNothing.NOTHING);
-							pieceDragged.get().setOutput(
-									portSelected.get(),
-									new Connection(piece, j));
+								pieceDragged
+							.get()
+							.getOutput(portSelected.get())
+							.changeInput(
+									ProgramValueNothing.NOTHING);
+								pieceDragged.get().setOutput(
+										portSelected.get(),
+										new Connection(piece, j));
 							}
 						}
 					}
@@ -161,13 +161,18 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 			// if we just released a piece from dragging it
 			if (mainPanel.pointIsInTrash(mainPanel.getWorldCoordFromMouse(e
 					.getPoint()))) {
-				//if the mouse is in the trash
+				// if the mouse is in the trash
 				synchronized (mainPanel.getPieces()) {
-					Iterator<Piece> it = mainPanel.getPieces().iterator();
-					//remove it
-					while(it.hasNext()){
-						Piece p = it.next();
-						if(p == pieceDragged.get()){
+					final Iterator<Piece> it = mainPanel.getPieces().iterator();
+					// remove it
+					while (it.hasNext()) {
+						final Piece p = it.next();
+						if (p == pieceDragged.get()) {
+							for (final Connection c : p.getOutputs()) {
+								if (c.getOutput() != null) {
+									c.changeInput(ProgramValueNothing.NOTHING);
+								}
+							}
 							it.remove();
 							break;
 						}
@@ -189,7 +194,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent
 	 * )
@@ -224,7 +229,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
 	 */
@@ -235,7 +240,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -245,7 +250,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -255,7 +260,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
 	@Override

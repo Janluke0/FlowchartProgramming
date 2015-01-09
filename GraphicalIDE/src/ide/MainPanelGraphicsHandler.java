@@ -5,6 +5,7 @@ import ide.graphics.GraphicsUtils;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Line2D;
 import java.util.Optional;
 
@@ -15,10 +16,10 @@ import language.Piece;
  * The Class MainPanelGraphicsHandler.
  */
 public class MainPanelGraphicsHandler {
-	
+
 	/** The Constant GRID_SEPARATOR_DISTANCE. */
 	private static final int GRID_SEPARATOR_DISTANCE = 100;
-	
+
 	/** The Constant GRID_NUMBER_DISTANCE. */
 	private static final int GRID_NUMBER_DISTANCE = 200;
 
@@ -30,10 +31,13 @@ public class MainPanelGraphicsHandler {
 	/** The parent. */
 	private final MainPanel parent;
 
+	public boolean draggingPiece = false;
+
 	/**
 	 * Instantiates a new main panel graphics handler.
 	 *
-	 * @param parent the parent
+	 * @param parent
+	 *            the parent
 	 */
 	public MainPanelGraphicsHandler(final MainPanel parent) {
 		this.parent = parent;
@@ -42,7 +46,8 @@ public class MainPanelGraphicsHandler {
 	/**
 	 * Draw.
 	 *
-	 * @param g the g
+	 * @param g
+	 *            the g
 	 */
 	public void draw(final Graphics2D g) {
 		GraphicsUtils.prettyGraphics(g);
@@ -62,12 +67,24 @@ public class MainPanelGraphicsHandler {
 			final Line2D line = portToMouseLine.get();
 			GraphicsUtils.drawCurve(g, line.getP1(), line.getP2());
 		}
+		if (draggingPiece) {
+			drawTrashCan(g);
+		}
+	}
+
+	private void drawTrashCan(final Graphics2D g) {
+		final Image trash = GraphicsConstants.TRASH_ICON.getImage();
+		g.drawImage(trash, parent.getWidth() - trash.getWidth(null)
+				- GraphicsConstants.TRASH_BORDER_SIZE, parent.getHeight()
+				- trash.getHeight(null) - GraphicsConstants.TRASH_BORDER_SIZE,
+				null);
 	}
 
 	/**
 	 * Draw grid.
 	 *
-	 * @param g the g
+	 * @param g
+	 *            the g
 	 */
 	private void drawGrid(final Graphics g) {
 		final int textSpaceBuffer = 5;

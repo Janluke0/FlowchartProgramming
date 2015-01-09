@@ -1,8 +1,11 @@
 package ide;
 
+import ide.graphics.GraphicsConstants;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +14,6 @@ import javax.swing.JPanel;
 import language.Piece;
 import language.ProgramContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MainPanel.
  */
@@ -72,6 +74,23 @@ public class MainPanel extends JPanel {
 	public void centerOnOrigin() {
 		x = -getWidth() / 2;
 		y = -getHeight() / 2;
+	}
+
+	public boolean pointIsInTrash(final Point worldCoord) {
+		final Point screenCoord = new Point(worldCoord);
+		screenCoord.translate(-x, -y);
+		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage()
+				.getWidth(null);
+		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage()
+				.getHeight(null);
+
+		if (new Rectangle(getWidth() - imageWidth
+				- GraphicsConstants.TRASH_BORDER_SIZE, getHeight()
+				- imageHeight - GraphicsConstants.TRASH_BORDER_SIZE,
+				imageWidth, imageHeight).contains(screenCoord)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

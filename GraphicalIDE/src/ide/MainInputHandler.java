@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +63,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 				.containsPoint(worldCoord));
 		if (collidingPieces.isEmpty()) {
 			// we aren't clicking on anything
+			mainPanel.getGraphicsHandler().draggingPiece = false;
 			pieceDragged = Optional.empty();
 			pieceInitialPosition = Optional.empty();
 
@@ -77,6 +79,8 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 			if (outputPortSelected.isPresent()) {
 				// we selected a port
 				portSelected = outputPortSelected;
+			} else {
+				mainPanel.getGraphicsHandler().draggingPiece = true;
 			}
 			pieceDragged = Optional.of(selected);
 			pieceInitialPosition = Optional
@@ -152,11 +156,31 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 					}
 				}
 			}
-		}
 
+		} else if (pieceDragged.isPresent() && !portSelected.isPresent()) {
+			// if we just released a piece from dragging it
+			if (mainPanel.pointIsInTrash(mainPanel.getWorldCoordFromMouse(e
+					.getPoint()))) {
+				//if the mouse is in the trash
+				synchronized (mainPanel.getPieces()) {
+					Iterator<Piece> it = mainPanel.getPieces().iterator();
+					//remove it
+					while(it.hasNext()){
+						Piece p = it.next();
+						if(p == pieceDragged.get()){
+							it.remove();
+							break;
+						}
+					}
+				}
+			}
+
+		}
 		pressedPosition = Optional.empty();
 		initialPosition = Optional.empty();
 		pieceDragged = Optional.empty();
+
+		mainPanel.getGraphicsHandler().draggingPiece = false;
 		pieceInitialPosition = Optional.empty();
 		portSelected = Optional.empty();
 		mainPanel.getGraphicsHandler().portToMouseLine = Optional.empty();

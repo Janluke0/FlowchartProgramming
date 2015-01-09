@@ -48,15 +48,18 @@ public final class GraphicsConstants {
 	/**
 	 * The Default File Icon.
 	 */
-	public static final ImageIcon FILE_ICON;
-	static {
-		ImageIcon fileIcon;
+	public static final ImageIcon FILE_ICON = loadImageIcon("/icons/toolbar/file.png");
+	public static final ImageIcon TRASH_ICON = loadImageIcon("/icons/trashcan.png");
+	public static final int TRASH_BORDER_SIZE = 25;
+
+	private static ImageIcon loadImageIcon(final String filename) {
+		ImageIcon icon;
 		try {
-			fileIcon = new ImageIcon(GraphicsUtils.loadImage("/toolbaricons/file.png"));
+			icon = new ImageIcon(GraphicsUtils.loadImage(filename));
 		} catch (final IOException e) {
-			fileIcon = new ImageIcon("Could not find image");
+			icon = new ImageIcon("Could not find image");
 			e.printStackTrace();
 		}
-		FILE_ICON = fileIcon;
+		return icon;
 	}
 }

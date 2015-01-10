@@ -56,11 +56,9 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		final List<Piece> collidingPieces = new ArrayList<>(
-				mainPanel.getPieces());
+		final List<Piece> collidingPieces = new ArrayList<>(mainPanel.getPieces());
 		final Point worldCoord = mainPanel.getWorldCoordFromMouse(e.getPoint());
-		collidingPieces.removeIf((final Piece piece) -> !piece
-				.containsPoint(worldCoord));
+		collidingPieces.removeIf((final Piece piece) -> !piece.containsPoint(worldCoord));
 		if (collidingPieces.isEmpty()) {
 			// we aren't clicking on anything
 			mainPanel.getGraphicsHandler().draggingPiece = false;
@@ -71,11 +69,9 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 			// we are clicking on one or more pieces, drag the top piece (last
 			// in the list)
-			final Piece selected = collidingPieces
-					.get(collidingPieces.size() - 1);
+			final Piece selected = collidingPieces.get(collidingPieces.size() - 1);
 
-			final Optional<Integer> outputPortSelected = selected
-					.outputPortContainingPoint(worldCoord);
+			final Optional<Integer> outputPortSelected = selected.outputPortContainingPoint(worldCoord);
 			if (outputPortSelected.isPresent()) {
 				// we selected a port
 				portSelected = outputPortSelected;
@@ -83,8 +79,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 				mainPanel.getGraphicsHandler().draggingPiece = true;
 			}
 			pieceDragged = Optional.of(selected);
-			pieceInitialPosition = Optional
-					.of(pieceDragged.get().getPosition());
+			pieceInitialPosition = Optional.of(pieceDragged.get().getPosition());
 		}
 
 		pressedPosition = Optional.of(e.getPoint());
@@ -94,20 +89,16 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
 	@Override
 	public void mouseReleased(final MouseEvent e) {
 		if (portSelected.isPresent()) {
 			// we are dragging from a port
-			final List<Piece> collidingPieces = new ArrayList<>(
-					mainPanel.getPieces());
-			final Point worldCoord = mainPanel.getWorldCoordFromMouse(e
-					.getPoint());
+			final List<Piece> collidingPieces = new ArrayList<>(mainPanel.getPieces());
+			final Point worldCoord = mainPanel.getWorldCoordFromMouse(e.getPoint());
 			// remove all we aren't colliding with so we don't check all of them
-			collidingPieces.removeIf((final Piece piece) -> !piece
-					.containsPoint(worldCoord));
+			collidingPieces.removeIf((final Piece piece) -> !piece.containsPoint(worldCoord));
 			if (!collidingPieces.isEmpty()) {
 				// if we are in a piece
 				for (int i = collidingPieces.size() - 1; i >= 0; --i) {
@@ -121,36 +112,23 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 							synchronized (mainPanel.getPieces()) {
 								// check if any other pieces are using this as
 								// an output
-								OUTER: for (final Piece p : mainPanel
-										.getPieces()) {
-									for (int outputIndex = 0; outputIndex < p
-											.getOutputs().length; outputIndex++) {
+								OUTER: for (final Piece p : mainPanel.getPieces()) {
+									for (int outputIndex = 0; outputIndex < p.getOutputs().length; outputIndex++) {
 
 										// if the piece we are trying to output
 										// to already has a piece outputting to
 										// it
-										if (piece == p.getOutput(outputIndex)
-												.getOutput()
-												&& j == p
-												.getOutput(outputIndex)
-												.getOutputPort()) {
+										if (piece == p.getOutput(outputIndex).getOutput() && j == p.getOutput(outputIndex).getOutputPort()) {
 											// make the other piece output to
 											// nothing
-											p.setOutput(outputIndex,
-													new Connection(null, 0));
+											p.setOutput(outputIndex, new Connection(null, 0));
 											break OUTER;
 										}
 									}
 								}
 
-								pieceDragged
-							.get()
-							.getOutput(portSelected.get())
-							.changeInput(
-									ProgramValueNothing.NOTHING);
-								pieceDragged.get().setOutput(
-										portSelected.get(),
-										new Connection(piece, j));
+								pieceDragged.get().getOutput(portSelected.get()).changeInput(ProgramValueNothing.NOTHING);
+								pieceDragged.get().setOutput(portSelected.get(), new Connection(piece, j));
 							}
 						}
 					}
@@ -159,8 +137,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 
 		} else if (pieceDragged.isPresent() && !portSelected.isPresent()) {
 			// if we just released a piece from dragging it
-			if (mainPanel.pointIsInTrash(mainPanel.getWorldCoordFromMouse(e
-					.getPoint()))) {
+			if (mainPanel.pointIsInTrash(mainPanel.getWorldCoordFromMouse(e.getPoint()))) {
 				// if the mouse is in the trash
 				synchronized (mainPanel.getPieces()) {
 					final Iterator<Piece> it = mainPanel.getPieces().iterator();
@@ -174,7 +151,13 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 								}
 							}
 							it.remove();
-							break;
+						} else {
+							// if this piece outputs to this piece, remove its connection
+							for (int i = 0; i < p.getOutputs().length; i++) {
+								if (p.getOutput(i).getOutput() == pieceDragged.get()) {
+									p.setOutput(i, new Connection(null, 0));
+								}
+							}
 						}
 					}
 				}
@@ -195,32 +178,24 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent
-	 * )
+	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent )
 	 */
 	@Override
 	public void mouseDragged(final MouseEvent e) {
 
-		if (portSelected.isPresent() && pressedPosition.isPresent()
-				&& pieceInitialPosition.isPresent()) {
+		if (portSelected.isPresent() && pressedPosition.isPresent() && pieceInitialPosition.isPresent()) {
 			// Drag a connection
-			mainPanel.getGraphicsHandler().portToMouseLine = Optional
-					.of(new Line2D.Float(pressedPosition.get(), e.getPoint()));
+			mainPanel.getGraphicsHandler().portToMouseLine = Optional.of(new Line2D.Float(pressedPosition.get(), e.getPoint()));
 		} else if (pieceDragged.isPresent() && pieceInitialPosition.isPresent()) {
 			// Drag a piece
 
-			final int x = pieceInitialPosition.get().x + e.getPoint().x
-					- pressedPosition.get().x;
-			final int y = pieceInitialPosition.get().y + e.getPoint().y
-					- pressedPosition.get().y;
+			final int x = pieceInitialPosition.get().x + e.getPoint().x - pressedPosition.get().x;
+			final int y = pieceInitialPosition.get().y + e.getPoint().y - pressedPosition.get().y;
 			pieceDragged.get().setPosition(x, y);
 		} else if (pressedPosition.isPresent() && initialPosition.isPresent()) {
 			// Move the background
-			final int x = initialPosition.get().x + pressedPosition.get().x
-					- e.getPoint().x;
-			final int y = initialPosition.get().y + pressedPosition.get().y
-					- e.getPoint().y;
+			final int x = initialPosition.get().x + pressedPosition.get().x - e.getPoint().x;
+			final int y = initialPosition.get().y + pressedPosition.get().y - e.getPoint().y;
 			mainPanel.setViewPosition(x, y);
 		}
 
@@ -230,8 +205,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
+	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
 	 */
 	@Override
 	public void mouseMoved(final MouseEvent e) {
@@ -267,8 +241,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 	public void mouseClicked(final MouseEvent e) {
 		// handle double left click
 		if (e.getClickCount() >= 2 && SwingUtilities.isLeftMouseButton(e)) {
-			final Point worldCoord = mainPanel.getWorldCoordFromMouse(e
-					.getPoint());
+			final Point worldCoord = mainPanel.getWorldCoordFromMouse(e.getPoint());
 			for (int i = mainPanel.getPieces().size() - 1; i >= 0; i--) {
 				final Piece piece = mainPanel.getPieces().get(i);
 				if (piece.containsPoint(worldCoord)) {
@@ -277,19 +250,16 @@ public class MainInputHandler implements MouseListener, MouseMotionListener {
 				}
 			}
 		} else if (SwingUtilities.isRightMouseButton(e)) {
-			final Point worldCoord = mainPanel.getWorldCoordFromMouse(e
-					.getPoint());
+			final Point worldCoord = mainPanel.getWorldCoordFromMouse(e.getPoint());
 			for (int i = mainPanel.getPieces().size() - 1; i >= 0; i--) {
 				final Piece piece = mainPanel.getPieces().get(i);
 				if (piece.containsPoint(worldCoord)) {
-					final Optional<Integer> port = piece
-							.outputPortContainingPoint(worldCoord);
+					final Optional<Integer> port = piece.outputPortContainingPoint(worldCoord);
 					if (port.isPresent()) {
 						// Synchronized so that we do both operations together
 						synchronized (mainPanel.getPieces()) {
 							// set other input to nothing
-							piece.getOutput(port.get()).changeInput(
-									ProgramValueNothing.NOTHING);
+							piece.getOutput(port.get()).changeInput(ProgramValueNothing.NOTHING);
 							// set our output to nothing
 							piece.setOutput(port.get(), new Connection(null, 0));
 						}

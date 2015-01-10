@@ -2,6 +2,8 @@ package language.pieces.numbers.operators;
 
 import java.awt.Point;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import language.Connection;
 import language.Piece;
@@ -15,6 +17,8 @@ import language.value.ProgramValueNum;
  * The Class Add.
  */
 public class Division extends Piece {
+
+	private static final MathContext MC = new MathContext(50, RoundingMode.HALF_UP);
 
 	/**
 	 * Instantiates a new adds the.
@@ -39,7 +43,7 @@ public class Division extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -47,10 +51,14 @@ public class Division extends Piece {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueNum && v2 instanceof ProgramValueNum) {
-			final ProgramValueNum v3 = new ProgramValueNum(
-					((ProgramValueNum) v1).getValue().divide(
-							((ProgramValueNum) v2).getValue(),
-							BigDecimal.ROUND_CEILING));
+			final ProgramValue<?> v3;
+
+			if (((ProgramValueNum) v2).getValue().compareTo(BigDecimal.ZERO) == 0) {
+				v3 = ProgramValueNothing.NOTHING;
+			} else {
+
+				v3 = new ProgramValueNum(((ProgramValueNum) v1).getValue().divide(((ProgramValueNum) v2).getValue(), MC));
+			}
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
@@ -64,7 +72,7 @@ public class Division extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

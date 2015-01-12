@@ -45,7 +45,7 @@ public class Print extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void update(final ProgramContext pc) {
+	public void updatePiece(final ProgramContext pc) {
 		if (getInputs()[INPUT_SHOULD_PRINT] instanceof ProgramValueBoolean
 				&& ((ProgramValueBoolean) getInputs()[INPUT_SHOULD_PRINT])
 						.getValue() == true) {

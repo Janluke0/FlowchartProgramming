@@ -4,12 +4,13 @@ import java.util.Arrays;
 
 import language.Piece;
 
-public class PieceTreeRepresentation {
+public class PieceTreeRepresentation implements Comparable {
 	public final Class<? extends Piece> clazz;
 	public final String[] packageString;
 	public final String name;
 
-	public PieceTreeRepresentation(final Class<? extends Piece> clazz, final String[] packageString, final String name) {
+	public PieceTreeRepresentation(final Class<? extends Piece> clazz,
+			final String[] packageString, final String name) {
 		this.clazz = clazz;
 		this.packageString = Arrays.copyOf(packageString, packageString.length);
 		this.name = name;
@@ -60,6 +61,11 @@ public class PieceTreeRepresentation {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public int compareTo(final Object o) {
+		return name.compareTo(((PieceTreeRepresentation) o).name);
 	}
 
 }

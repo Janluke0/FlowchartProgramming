@@ -51,7 +51,9 @@ public abstract class Piece {
 	private static List<PieceTreeRepresentation> pieces = new ArrayList<>();
 
 	/** The inputs. */
-	private final ProgramValue<?>[] inputs;
+	private ProgramValue<?>[] inputs;
+	/** The input buffer, every tick this overwrites the inputs */
+	private ProgramValue<?>[] inputBuffer;
 
 	/** The outputs. */
 	private final Connection[] outputs;
@@ -65,7 +67,7 @@ public abstract class Piece {
 	// method to the graphics' font metrics
 	/** The font metrics. */
 	protected FontMetrics fontMetrics = new Canvas()
-			.getFontMetrics(GraphicsConstants.APP_FONT);
+	.getFontMetrics(GraphicsConstants.APP_FONT);
 
 	/**
 	 * minimum width of a piece, definitely has to be at least 2 * port_size so
@@ -109,13 +111,16 @@ public abstract class Piece {
 	protected Piece(final int inputs, final int outputs, final int x,
 			final int y) {
 		this.inputs = new ProgramValue[inputs];
+		inputBuffer = new ProgramValue[inputs];
 		this.outputs = new Connection[outputs];
 		for (int i = 0; i < outputs; i++) {
 			setOutput(i, new Connection(null, -1));
 		}
 		for (int i = 0; i < inputs; i++) {
 			setInput(i, ProgramValueNothing.NOTHING);
+			inputBuffer[i] = ProgramValueNothing.NOTHING;
 		}
+
 		setX(x);
 		setY(y);
 	}
@@ -127,7 +132,17 @@ public abstract class Piece {
 	 * @param programContext
 	 *            the ProgramContext for this tick
 	 */
-	public abstract void update(ProgramContext programContext);
+	protected abstract void updatePiece(ProgramContext programContext);
+
+	public void update(final ProgramContext pc) {
+		inputs = inputBuffer;
+		inputBuffer = new ProgramValue[inputs.length];
+		for (int i = 0; i < inputBuffer.length; i++) {
+			inputBuffer[i] = ProgramValueNothing.NOTHING;
+		}
+
+		updatePiece(pc);
+	}
 
 	/**
 	 * Double clicked.
@@ -313,7 +328,7 @@ public abstract class Piece {
 	}
 
 	private void setInput(final int inputPort, final ProgramValue<?> value) {
-		inputs[inputPort] = value;
+		inputBuffer[inputPort] = value;
 	}
 
 	/**
@@ -369,7 +384,7 @@ public abstract class Piece {
 	public boolean inputContainsPoint(final int i, final Point p) {
 		return new Ellipse2D.Float(BORDER_SPACE, fontMetrics.getMaxAscent()
 				+ GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE)
-				.contains(p);
+		.contains(p);
 	}
 
 	/**

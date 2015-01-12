@@ -66,7 +66,7 @@ public class Time extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void update(final ProgramContext pc) {
+	public void updatePiece(final ProgramContext pc) {
 		lastTime = pc.TIME;
 		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(
 				lastTime));

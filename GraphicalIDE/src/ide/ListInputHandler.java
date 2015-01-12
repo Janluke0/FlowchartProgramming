@@ -38,7 +38,8 @@ public class ListInputHandler implements TreeSelectionListener {
 	@Override
 	public void valueChanged(final TreeSelectionEvent e) {
 		if (tree.getSelectionCount() >= 1) {
-			final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+			final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+					.getLastSelectedPathComponent();
 
 			if (node == null) {
 				// Nothing is selected.
@@ -70,8 +71,10 @@ public class ListInputHandler implements TreeSelectionListener {
 				// create piece in center of screen
 				final int pieceX = panel.getViewX() + panel.getWidth() / 2;
 				final int pieceY = panel.getViewY() + panel.getHeight() / 2;
-				createdPiece = ctor.newInstance(new Object[] { pieceX, pieceY });
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+				createdPiece = ctor
+						.newInstance(new Object[] { pieceX, pieceY });
+			} catch (InstantiationException | IllegalAccessException
+					| IllegalArgumentException | InvocationTargetException e1) {
 				e1.printStackTrace();
 				return;
 			}

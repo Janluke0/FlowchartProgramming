@@ -83,7 +83,7 @@ public class NumberConstant extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void update(final ProgramContext pc) {
+	public void updatePiece(final ProgramContext pc) {
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}

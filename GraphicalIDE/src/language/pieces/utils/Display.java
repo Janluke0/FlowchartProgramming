@@ -61,7 +61,7 @@ public class Display extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void update(final ProgramContext pc) {
+	public void updatePiece(final ProgramContext pc) {
 	}
 
 	/*

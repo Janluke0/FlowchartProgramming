@@ -45,7 +45,7 @@ public class FlipFlop extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void update(final ProgramContext pc) {
+	public void updatePiece(final ProgramContext pc) {
 		final ProgramValue<?> v1 = getInputs()[0];
 		if (v1 instanceof ProgramValueBoolean) {
 			if (((ProgramValueBoolean) v1).getValue() == true) {

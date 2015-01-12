@@ -17,7 +17,7 @@ import language.value.ProgramValueBoolean;
  */
 public class Timer extends Piece {
 
-	private long lastTime = System.currentTimeMillis();
+	private long lastTime;
 	private int interval;
 
 	/**
@@ -57,7 +57,7 @@ public class Timer extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -78,7 +78,7 @@ public class Timer extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -98,7 +98,7 @@ public class Timer extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

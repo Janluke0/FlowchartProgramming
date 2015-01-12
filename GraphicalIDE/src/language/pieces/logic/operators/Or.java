@@ -2,21 +2,18 @@ package language.pieces.logic.operators;
 
 import java.awt.Point;
 
-import javax.swing.JOptionPane;
-
 import language.Connection;
 import language.Piece;
 import language.ProgramContext;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
+import language.value.ProgramValueNothing;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class Add.
  */
-public class FlipFlop extends Piece {
-
-	ProgramValueBoolean currentValue = new ProgramValueBoolean(false);
+public class Or extends Piece {
 
 	/**
 	 * Instantiates a new adds the.
@@ -26,8 +23,8 @@ public class FlipFlop extends Piece {
 	 * @param y
 	 *            the y
 	 */
-	public FlipFlop(final int x, final int y) {
-		super(1, 1, x, y);
+	public Or(final int x, final int y) {
+		super(2, 1, x, y);
 	}
 
 	/**
@@ -36,7 +33,7 @@ public class FlipFlop extends Piece {
 	 * @return the string
 	 */
 	public static String name() {
-		return "Logic.Operators.FlipFlop";
+		return "Logic.Operators.Or";
 	}
 
 	/*
@@ -47,15 +44,21 @@ public class FlipFlop extends Piece {
 	@Override
 	public void updatePiece(final ProgramContext pc) {
 		final ProgramValue<?> v1 = getInputs()[0];
-		if (v1 instanceof ProgramValueBoolean) {
-			if (((ProgramValueBoolean) v1).getValue() == true) {
-				currentValue = new ProgramValueBoolean(!currentValue.getValue());
+		final ProgramValue<?> v2 = getInputs()[1];
+		if (v1 instanceof ProgramValueBoolean
+				&& v2 instanceof ProgramValueBoolean) {
+			final ProgramValueBoolean v3 = new ProgramValueBoolean(
+					((ProgramValueBoolean) v1).getValue()
+					|| ((ProgramValueBoolean) v2).getValue());
+			for (final Connection c : getOutputs()) {
+				c.changeInput(v3);
 			}
+		} else {
+			for (final Connection c : getOutputs()) {
+				c.changeInput(ProgramValueNothing.NOTHING);
+			}
+		}
 
-		}
-		for (final Connection c : getOutputs()) {
-			c.changeInput(currentValue);
-		}
 	}
 
 	/*
@@ -65,11 +68,8 @@ public class FlipFlop extends Piece {
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
-		final String input = JOptionPane.showInputDialog("Set Value: ",
-				String.valueOf(currentValue.getValue()));
-		if (input != null) {
-			currentValue = new ProgramValueBoolean(Boolean.valueOf(input));
-		}
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -15,7 +15,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.FontUIResource;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import language.Piece;
 
@@ -65,44 +64,8 @@ public class WindowFrame extends JFrame {
 		mainAndToolbarSeperator = new JSplitPane();
 		toolbarPanel = new ToolbarPanel();
 		setMainPanel(new MainPanel().start());
-		final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-		for (final PieceTreeRepresentation cl : Piece.getPieceNames()) {
-			DefaultMutableTreeNode folderParent = root;
-			final String[] folder = cl.packageString;
-			// Don't do the last one
-			for (int i = 0; i < folder.length; i++) {
-				final String s = folder[i];
-				final Enumeration<DefaultMutableTreeNode> e = folderParent
-						.children();
-				DefaultMutableTreeNode sChild = null;
-				boolean hasSChild = false;
-				while (e.hasMoreElements()) {
-					final DefaultMutableTreeNode element = e.nextElement();
-					if (element.getUserObject().equals(s)) {
 
-						// folderParent already contains a child named s
-						hasSChild = true;
-						sChild = element;
-						break;
-					}
-				}
-				if (hasSChild) {
-					// We don't need to create it
-					folderParent = sChild;
-
-				} else {
-					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(
-							s);
-					folderParent.add(newParent);
-					// recurse for next string with this as the parent
-					folderParent = newParent;
-				}
-			}
-
-			folderParent.add(new DefaultMutableTreeNode(cl));
-		}
-
-		pieceList = new PieceList(getMainPanel(), root);
+		pieceList = new PieceList(getMainPanel());
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -130,7 +93,7 @@ public class WindowFrame extends JFrame {
 		jSplitPane1.setLeftComponent(piecePickerPanel);
 
 		mainAndToolbarSeperator
-		.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
+				.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
 		mainAndToolbarSeperator.setDividerSize(0);
 		mainAndToolbarSeperator.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
@@ -197,16 +160,16 @@ public class WindowFrame extends JFrame {
 			}
 		} catch (final ClassNotFoundException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+					.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final InstantiationException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+					.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final IllegalAccessException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+					.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final UnsupportedLookAndFeelException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+					.log(java.util.logging.Level.SEVERE, null, ex);
 		}
 
 		EventQueue.invokeLater(() -> {

@@ -1,14 +1,61 @@
 package ide;
 
+import java.util.Enumeration;
+
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import language.Piece;
+
 @SuppressWarnings("serial")
 public class PieceList extends JTree {
-	public PieceList(final MainPanel panel, final DefaultMutableTreeNode root) {
+	private static DefaultMutableTreeNode root;
+	static {
+		// Initialize the root node and all the children node from
+		// Piece.getPieceNames()
+		root = new DefaultMutableTreeNode("Root");
+		for (final PieceTreeRepresentation cl : Piece.getPieceNames()) {
+			DefaultMutableTreeNode folderParent = root;
+			final String[] folder = cl.packageString;
+			// Don't do the last one
+			for (int i = 0; i < folder.length; i++) {
+				final String s = folder[i];
+				final Enumeration<DefaultMutableTreeNode> e = folderParent
+						.children();
+				DefaultMutableTreeNode sChild = null;
+				boolean hasSChild = false;
+				while (e.hasMoreElements()) {
+					final DefaultMutableTreeNode element = e.nextElement();
+					if (element.getUserObject().equals(s)) {
+
+						// folderParent already contains a child named s
+						hasSChild = true;
+						sChild = element;
+						break;
+					}
+				}
+				if (hasSChild) {
+					// We don't need to create it
+					folderParent = sChild;
+
+				} else {
+					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(
+							s);
+					folderParent.add(newParent);
+					// recurse for next string with this as the parent
+					folderParent = newParent;
+				}
+			}
+
+			folderParent.add(new DefaultMutableTreeNode(cl));
+		}
+
+	}
+
+	public PieceList(final MainPanel panel) {
 		super(new AlphabeticalTreeModel(root));
 
 		setRootVisible(false);

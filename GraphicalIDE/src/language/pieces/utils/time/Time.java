@@ -1,4 +1,4 @@
-package language.pieces.utils;
+package language.pieces.utils.time;
 
 import ide.graphics.GraphicsConstants;
 
@@ -38,12 +38,12 @@ public class Time extends Piece {
 	 * @return the string
 	 */
 	public static String name() {
-		return "Utils.Time";
+		return "Utils.Time.Time";
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -62,7 +62,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -77,7 +77,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

@@ -62,7 +62,6 @@ public class PieceList extends JTree {
 		getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		addTreeSelectionListener(new ListInputHandler(this, panel));
-		System.out.println(getModel().getRoot());
 	}
 
 	private static class AlphabeticalTreeModel extends DefaultTreeModel {

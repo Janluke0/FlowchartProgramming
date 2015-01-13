@@ -23,8 +23,7 @@ public class PieceList extends JTree {
 			// Don't do the last one
 			for (int i = 0; i < folder.length; i++) {
 				final String s = folder[i];
-				final Enumeration<DefaultMutableTreeNode> e = folderParent
-						.children();
+				final Enumeration<DefaultMutableTreeNode> e = folderParent.children();
 				DefaultMutableTreeNode sChild = null;
 				boolean hasSChild = false;
 				while (e.hasMoreElements()) {
@@ -42,14 +41,14 @@ public class PieceList extends JTree {
 					folderParent = sChild;
 
 				} else {
-					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(
-							s);
+					// adds a folder node, stored as a string
+					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(s);
 					folderParent.add(newParent);
 					// recurse for next string with this as the parent
 					folderParent = newParent;
 				}
 			}
-
+			// Adds a leaf node
 			folderParent.add(new DefaultMutableTreeNode(cl));
 		}
 
@@ -59,8 +58,7 @@ public class PieceList extends JTree {
 		super(new AlphabeticalTreeModel(root));
 
 		setRootVisible(false);
-		getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		addTreeSelectionListener(new ListInputHandler(this, panel));
 	}
 
@@ -77,12 +75,11 @@ public class PieceList extends JTree {
 			for (int i = 0; i < cc - 1; i++) {
 				for (int j = i + 1; j <= cc - 1; j++) {
 					final DefaultMutableTreeNode here = sort(root.getChildAt(i));
-					final DefaultMutableTreeNode there = sort(root
-							.getChildAt(j));
-					final Comparable hereObject = (Comparable) here
-							.getUserObject();
-					final Comparable thereObject = (Comparable) there
-							.getUserObject();
+					final DefaultMutableTreeNode there = sort(root.getChildAt(j));
+
+					// If its a leaf, it is a PieceTreeRepresentation, else it is a string
+					final Object hereObject = here.getUserObject();
+					final Object thereObject = there.getUserObject();
 					String s1 = null;
 					String s2 = null;
 
@@ -98,6 +95,7 @@ public class PieceList extends JTree {
 					if (thereObject instanceof PieceTreeRepresentation) {
 						s2 = ((PieceTreeRepresentation) thereObject).name;
 					}
+					assert s1 != null && s2 != null;
 
 					if (s1.compareTo(s2) > 0) {
 						root.remove(here);

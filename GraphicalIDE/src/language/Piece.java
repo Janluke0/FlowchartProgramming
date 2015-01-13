@@ -67,7 +67,7 @@ public abstract class Piece {
 	// method to the graphics' font metrics
 	/** The font metrics. */
 	protected FontMetrics fontMetrics = new Canvas()
-	.getFontMetrics(GraphicsConstants.APP_FONT);
+			.getFontMetrics(GraphicsConstants.APP_FONT);
 
 	/**
 	 * minimum width of a piece, definitely has to be at least 2 * port_size so
@@ -210,6 +210,26 @@ public abstract class Piece {
 				GraphicsUtils.drawCurve(g, p1, p2);
 			}
 		}
+	}
+
+	protected void drawInputPortText(final Graphics2D g, final int port,
+			final String text) {
+
+		minWidth = getStringWidth(text);
+		int x = BORDER_SPACE;
+		if (inputs.length > 0) {
+			minWidth += PORT_SIZE + BORDER_SPACE;
+			x += PORT_SIZE + BORDER_SPACE;
+		}
+		if (outputs.length > 0) {
+			minWidth += PORT_SIZE + BORDER_SPACE;
+		}
+
+		g.translate(getX(), getY());
+		g.drawString(text, x, (int) (fontMetrics.getMaxAscent() + GAP_SIZE
+				+ (PORT_SIZE + GAP_SIZE) * port + PORT_SIZE * 1.5 - fontMetrics
+				.getAscent()));
+		g.translate(-getX(), -getY());
 	}
 
 	/**
@@ -396,7 +416,7 @@ public abstract class Piece {
 	public boolean inputContainsPoint(final int i, final Point p) {
 		return new Ellipse2D.Float(BORDER_SPACE, fontMetrics.getMaxAscent()
 				+ GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE)
-		.contains(p);
+				.contains(p);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package language.pieces.logic.operators;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 
 import javax.swing.JOptionPane;
@@ -19,7 +20,7 @@ public class FlipFlop extends Piece {
 	ProgramValueBoolean currentValue = new ProgramValueBoolean(false);
 
 	/**
-	 * Instantiates a new adds the.
+	 * Instantiates a new flip flop piece
 	 *
 	 * @param x
 	 *            the x
@@ -41,7 +42,7 @@ public class FlipFlop extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -58,9 +59,15 @@ public class FlipFlop extends Piece {
 		}
 	}
 
+	@Override
+	public void draw(final Graphics2D g) {
+		super.draw(g);
+		drawInputPortText(g, 0, String.valueOf(currentValue.getValue()));
+	}
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

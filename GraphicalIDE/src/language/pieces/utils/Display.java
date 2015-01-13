@@ -1,7 +1,5 @@
 package language.pieces.utils;
 
-import ide.graphics.GraphicsConstants;
-
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -42,17 +40,8 @@ public class Display extends Piece {
 	 */
 	@Override
 	public void draw(final Graphics2D g) {
-		final String displayText = getInputs()[0].toString();
-		minWidth = getStringWidth(displayText) + PORT_SIZE + BORDER_SPACE;
-
 		super.draw(g);
-		g.translate(getX(), getY());
-
-		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(displayText, BORDER_SPACE * 2 + PORT_SIZE,
-				3 * fontMetrics.getMaxAscent());
-
-		g.translate(-getX(), -getY());
+		drawInputPortText(g, 0, getInputs()[0].toString());
 	}
 
 	/*

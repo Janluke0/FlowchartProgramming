@@ -12,13 +12,13 @@ import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 import language.value.ProgramValueNum;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Add.
  */
 public class Division extends Piece {
 
-	private static final MathContext MC = new MathContext(50, RoundingMode.HALF_UP);
+	private static final MathContext MC = new MathContext(50,
+			RoundingMode.HALF_UP);
 
 	/**
 	 * Instantiates a new adds the.
@@ -57,7 +57,8 @@ public class Division extends Piece {
 				v3 = ProgramValueNothing.NOTHING;
 			} else {
 
-				v3 = new ProgramValueNum(((ProgramValueNum) v1).getValue().divide(((ProgramValueNum) v2).getValue(), MC));
+				v3 = new ProgramValueNum(((ProgramValueNum) v1).getValue()
+						.divide(((ProgramValueNum) v2).getValue(), MC));
 			}
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
@@ -77,7 +78,6 @@ public class Division extends Piece {
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
-		// TODO Auto-generated method stub
 
 	}
 

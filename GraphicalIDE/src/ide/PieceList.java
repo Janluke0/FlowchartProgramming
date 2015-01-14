@@ -1,5 +1,7 @@
 package ide;
 
+import ide.graphics.GraphicsConstants;
+
 import java.util.Enumeration;
 
 import javax.swing.JTree;
@@ -24,8 +26,7 @@ public class PieceList extends JTree {
 			for (int i = 0; i < folder.length; i++) {
 				final String s = folder[i];
 				@SuppressWarnings("unchecked")
-				final Enumeration<DefaultMutableTreeNode> e = folderParent
-						.children();
+				final Enumeration<DefaultMutableTreeNode> e = folderParent.children();
 				DefaultMutableTreeNode sChild = null;
 				boolean hasSChild = false;
 				while (e.hasMoreElements()) {
@@ -44,8 +45,7 @@ public class PieceList extends JTree {
 
 				} else {
 					// adds a folder node, stored as a string
-					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(
-							s);
+					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(s);
 					folderParent.add(newParent);
 					// recurse for next string with this as the parent
 					folderParent = newParent;
@@ -61,8 +61,8 @@ public class PieceList extends JTree {
 		super(new AlphabeticalTreeModel(root));
 
 		setRootVisible(false);
-		getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		setBackground(GraphicsConstants.LIST_BACKGROUND_COLOR);
+		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		addTreeSelectionListener(new ListInputHandler(this, panel));
 	}
 
@@ -79,8 +79,7 @@ public class PieceList extends JTree {
 			for (int i = 0; i < cc - 1; i++) {
 				for (int j = i + 1; j <= cc - 1; j++) {
 					final DefaultMutableTreeNode here = sort(root.getChildAt(i));
-					final DefaultMutableTreeNode there = sort(root
-							.getChildAt(j));
+					final DefaultMutableTreeNode there = sort(root.getChildAt(j));
 
 					// If its a leaf, it is a PieceTreeRepresentation, else it
 					// is a string

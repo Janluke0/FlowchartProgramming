@@ -20,6 +20,8 @@ public final class GraphicsConstants {
 	/** The Default APP_FONT. */
 	public static final Font APP_FONT = new Font("Arial", Font.PLAIN, 12);
 
+	public static final Color LIST_BACKGROUND_COLOR = new Color(155, 185, 180);
+
 	/** The Default MAIN_BACKROUND_COLOR. */
 	public static final Color MAIN_BACKROUND_COLOR = new Color(100, 125, 120);
 
@@ -43,14 +45,14 @@ public final class GraphicsConstants {
 
 	/** The Default PORT_COLOR. */
 	public static final Color PORT_COLOR = Color.RED;
-
-	// All icons are not resized, they are the default size.
 	/**
 	 * The Default File Icon.
 	 */
 	public static final ImageIcon FILE_ICON = loadImageIcon("/icons/toolbar/file.png");
-	public static final ImageIcon TRASH_ICON = loadImageIcon("/icons/trashcan.png");
-	public static final int TRASH_BORDER_SIZE = 25;
+
+	public static final int TRASH_WIDTH = 50;
+	public static final int TRASH_BORDER_SIZE = 15;
+	public static final ImageIcon TRASH_ICON = resizeImage(loadImageIcon("/icons/trashcan.png"), TRASH_WIDTH);
 
 	private static ImageIcon loadImageIcon(final String filename) {
 		ImageIcon icon;
@@ -61,5 +63,9 @@ public final class GraphicsConstants {
 			e.printStackTrace();
 		}
 		return icon;
+	}
+
+	private static ImageIcon resizeImage(final ImageIcon original, final int width) {
+		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width, (int) (original.getIconHeight() * ((double) width / original.getIconWidth()))));
 	}
 }

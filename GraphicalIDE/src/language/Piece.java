@@ -55,6 +55,9 @@ public abstract class Piece {
 	/** The input buffer, every tick this overwrites the inputs */
 	private ProgramValue<?>[] inputBuffer;
 
+	private final String[] inputDisplays;
+	private final String[] outputDisplays;
+
 	/** The outputs. */
 	private final Connection[] outputs;
 
@@ -73,7 +76,7 @@ public abstract class Piece {
 	 * minimum width of a piece, definitely has to be at least 2 * port_size so
 	 * // that they don't overlap
 	 */
-	protected int minWidth = 2 * PORT_SIZE + 60;
+	private int width = 2 * PORT_SIZE + 60;
 
 	static {
 		// For every signel class subtyping Piece, we add it
@@ -112,17 +115,24 @@ public abstract class Piece {
 			final int y) {
 		this.inputs = new ProgramValue[inputs];
 		inputBuffer = new ProgramValue[inputs];
+		inputDisplays = new String[inputs];
+
 		this.outputs = new Connection[outputs];
+		outputDisplays = new String[outputs];
+
 		for (int i = 0; i < outputs; i++) {
 			setOutput(i, new Connection(null, -1));
+			outputDisplays[i] = "";
 		}
 		for (int i = 0; i < inputs; i++) {
 			setInput(i, ProgramValueNothing.NOTHING);
 			inputBuffer[i] = ProgramValueNothing.NOTHING;
+			inputDisplays[i] = "";
 		}
 
 		setX(x);
 		setY(y);
+		updateWidth();
 	}
 
 	// Piece should take inputs and figure out its output
@@ -163,8 +173,10 @@ public abstract class Piece {
 		// graphics
 		fontMetrics = g.getFontMetrics();
 
+		updateWidth();
+
 		final int nameHeight = fontMetrics.getMaxAscent();
-		final int nameWidth = Math.max(getStringWidth(getName()), minWidth);
+		final int nameWidth = Math.max(getStringWidth(getName()), width);
 
 		g.translate(getX(), getY());
 
@@ -187,13 +199,15 @@ public abstract class Piece {
 		g.setColor(GraphicsConstants.PIECE_TEXT);
 		g.drawString(getName(), BORDER_SPACE, nameHeight);
 
+		drawPortText(g);
+
 		g.translate(-getX(), -getY());
 
 	}
 
 	public void drawConnections(final Graphics2D g) {
 
-		final int nameWidth = Math.max(getStringWidth(getName()), minWidth);
+		final int nameWidth = Math.max(getStringWidth(getName()), width);
 		final int nameHeight = fontMetrics.getMaxAscent();
 
 		for (int i = 0; i < outputs.length; i++) {
@@ -212,24 +226,69 @@ public abstract class Piece {
 		}
 	}
 
-	protected void drawInputPortText(final Graphics2D g, final int port,
-			final String text) {
+	protected void setInputText(final int port, final String text) {
+		inputDisplays[port] = text;
+	}
 
-		minWidth = getStringWidth(text);
-		int x = BORDER_SPACE;
-		if (inputs.length > 0) {
-			minWidth += PORT_SIZE + BORDER_SPACE;
-			x += PORT_SIZE + BORDER_SPACE;
-		}
-		if (outputs.length > 0) {
-			minWidth += PORT_SIZE + BORDER_SPACE;
-		}
+	protected void setOutputText(final int port, final String text) {
+		outputDisplays[port] = text;
+	}
 
-		g.translate(getX(), getY());
-		g.drawString(text, x, (int) (fontMetrics.getMaxAscent() + GAP_SIZE
-				+ (PORT_SIZE + GAP_SIZE) * port + PORT_SIZE * 1.5 - fontMetrics
-				.getAscent()));
-		g.translate(-getX(), -getY());
+	protected void updateWidth() {
+		int newWidth = 0;
+		newWidth += BORDER_SPACE;
+		if (inputs.length != 0) {
+			newWidth += PORT_SIZE + BORDER_SPACE;
+		}
+		int maxInputLength = 0;
+		for (final String s : inputDisplays) {
+			if (fontMetrics.stringWidth(s) > maxInputLength) {
+				maxInputLength = fontMetrics.stringWidth(s);
+			}
+		}
+		newWidth += maxInputLength + BORDER_SPACE;
+		int maxOutputLength = 0;
+		for (final String s : outputDisplays) {
+			if (fontMetrics.stringWidth(s) > maxInputLength) {
+				maxOutputLength = fontMetrics.stringWidth(s);
+			}
+		}
+		newWidth += maxOutputLength + BORDER_SPACE;
+		if (outputs.length != 0) {
+			newWidth += PORT_SIZE + BORDER_SPACE;
+		}
+		width = Math.max(newWidth, fontMetrics.stringWidth(getName()));
+	}
+
+	private void drawPortText(final Graphics2D g) {
+
+		for (int i = 0; i < inputDisplays.length; i++) {
+			int x = BORDER_SPACE;
+			if (inputs.length > 0) {
+				x += PORT_SIZE + BORDER_SPACE;
+			}
+
+			g.drawString(
+					inputDisplays[i],
+					x,
+					(int) (fontMetrics.getMaxAscent() + GAP_SIZE
+							+ (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE * 1.5 - fontMetrics
+							.getAscent()));
+		}
+		for (int i = 0; i < outputDisplays.length; i++) {
+			int portWidth = 0;
+			if (outputs.length != 0) {
+				portWidth = PORT_SIZE + BORDER_SPACE;
+			}
+
+			g.drawString(
+					outputDisplays[i],
+					width - fontMetrics.stringWidth(outputDisplays[i])
+					- BORDER_SPACE - portWidth,
+					(int) (fontMetrics.getMaxAscent() + GAP_SIZE
+							+ (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE * 1.5 - fontMetrics
+							.getAscent()));
+		}
 	}
 
 	/**
@@ -245,7 +304,7 @@ public abstract class Piece {
 		// OR translate our point by -x and -y
 		worldCoordCopy.translate(-getX(), -getY());
 
-		final int nameWidth = Math.max(getStringWidth(getName()), minWidth);
+		final int nameWidth = Math.max(getStringWidth(getName()), width);
 		final int nameHeight = fontMetrics.getMaxAscent();
 
 		for (int i = 0; i < outputs.length; i++) {
@@ -314,12 +373,12 @@ public abstract class Piece {
 	 * @return the body shape
 	 */
 	private RoundRectangle2D getBodyShape() {
-		final int width = Math.max(getStringWidth(getName()), minWidth);
+		final int newWidth = Math.max(getStringWidth(getName()), width);
 		final int curve = 5;
 		final int height = fontMetrics.getMaxAscent() + GAP_SIZE
 				+ (PORT_SIZE + GAP_SIZE)
 				* Math.max(getInputs().length, outputs.length);
-		return new RoundRectangle2D.Float(0, 0, width, height, curve, curve);
+		return new RoundRectangle2D.Float(0, 0, newWidth, height, curve, curve);
 	}
 
 	/**
@@ -475,15 +534,12 @@ public abstract class Piece {
 	 * @return the name
 	 */
 	public String getName() {
-		String name = null;
+		// defaults to class name
+		String name = getClass().getSimpleName();
 		for (final PieceTreeRepresentation p : pieces) {
 			if (p.clazz.equals(getClass())) {
 				name = p.name;
 			}
-		}
-
-		if (name == null) {
-			return getClass().getSimpleName();
 		}
 		return name;
 	}

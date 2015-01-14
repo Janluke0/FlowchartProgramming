@@ -1,7 +1,5 @@
 package language.pieces.utils.time;
 
-import ide.graphics.GraphicsConstants;
-
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.math.BigDecimal;
@@ -29,7 +27,6 @@ public class Time extends Piece {
 	 */
 	public Time(final int x, final int y) {
 		super(0, 1, x, y);
-		minWidth = 2 * PORT_SIZE + 160;
 	}
 
 	/**
@@ -43,26 +40,20 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
 	public void draw(final Graphics2D g) {
 		final String timeString = String.valueOf(lastTime);
-		minWidth = getStringWidth(timeString) + PORT_SIZE + 2 * BORDER_SPACE;
+		setOutputText(0, timeString);
 
 		super.draw(g);
-		g.translate(getX(), getY());
-
-		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(timeString, BORDER_SPACE, 2 * fontMetrics.getMaxAscent());
-
-		g.translate(-getX(), -getY());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -77,7 +68,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

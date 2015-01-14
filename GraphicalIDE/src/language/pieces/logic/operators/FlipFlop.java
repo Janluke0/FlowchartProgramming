@@ -1,6 +1,5 @@
 package language.pieces.logic.operators;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 
 import javax.swing.JOptionPane;
@@ -17,7 +16,7 @@ import language.value.ProgramValueBoolean;
  */
 public class FlipFlop extends Piece {
 
-	ProgramValueBoolean currentValue = new ProgramValueBoolean(false);
+	ProgramValueBoolean currentValue;
 
 	/**
 	 * Instantiates a new flip flop piece
@@ -29,6 +28,7 @@ public class FlipFlop extends Piece {
 	 */
 	public FlipFlop(final int x, final int y) {
 		super(1, 1, x, y);
+		setCurrentValue(ProgramValueBoolean.FALSE);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class FlipFlop extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -50,7 +50,8 @@ public class FlipFlop extends Piece {
 		final ProgramValue<?> v1 = getInputs()[0];
 		if (v1 instanceof ProgramValueBoolean) {
 			if (((ProgramValueBoolean) v1).getValue() == true) {
-				currentValue = new ProgramValueBoolean(!currentValue.getValue());
+				setCurrentValue(new ProgramValueBoolean(
+						!currentValue.getValue()));
 			}
 
 		}
@@ -59,15 +60,9 @@ public class FlipFlop extends Piece {
 		}
 	}
 
-	@Override
-	public void draw(final Graphics2D g) {
-		super.draw(g);
-		drawInputPortText(g, 0, String.valueOf(currentValue.getValue()));
-	}
-
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -75,8 +70,17 @@ public class FlipFlop extends Piece {
 		final String input = JOptionPane.showInputDialog("Set Value: ",
 				String.valueOf(currentValue.getValue()));
 		if (input != null) {
-			currentValue = new ProgramValueBoolean(Boolean.valueOf(input));
+			setCurrentValue(new ProgramValueBoolean(Boolean.valueOf(input)));
 		}
+	}
+
+	public ProgramValueBoolean getCurrentValue() {
+		return currentValue;
+	}
+
+	public void setCurrentValue(final ProgramValueBoolean currentValue) {
+		this.currentValue = currentValue;
+		setInputText(0, String.valueOf(currentValue.getValue()));
 	}
 
 }

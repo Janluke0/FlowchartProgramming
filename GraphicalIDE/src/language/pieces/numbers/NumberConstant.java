@@ -1,8 +1,5 @@
 package language.pieces.numbers;
 
-import ide.graphics.GraphicsConstants;
-
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.math.BigDecimal;
 
@@ -33,7 +30,7 @@ public class NumberConstant extends Piece {
 	 */
 	public NumberConstant(final BigDecimal value, final int x, final int y) {
 		super(0, 1, x, y);
-		this.value = new ProgramValueNum(value);
+		setValue(value);
 	}
 
 	/**
@@ -59,27 +56,7 @@ public class NumberConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see language.Piece#draw(java.awt.Graphics2D)
-	 */
-	@Override
-	public void draw(final Graphics2D g) {
-		minWidth = getStringWidth(value.toString()) + PORT_SIZE + 2
-				* BORDER_SPACE;
-
-		super.draw(g);
-		g.translate(getX(), getY());
-
-		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(value.toString(), BORDER_SPACE,
-				2 * fontMetrics.getMaxAscent());
-
-		g.translate(-getX(), -getY());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -97,11 +74,12 @@ public class NumberConstant extends Piece {
 	 */
 	public void setValue(final BigDecimal value) {
 		this.value = new ProgramValueNum(value);
+		setOutputText(0, value.toPlainString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

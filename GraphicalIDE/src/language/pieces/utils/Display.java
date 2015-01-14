@@ -41,7 +41,7 @@ public class Display extends Piece {
 	@Override
 	public void draw(final Graphics2D g) {
 		super.draw(g);
-		drawInputPortText(g, 0, getInputs()[0].toString());
+		setInputText(0, String.valueOf(getInputs()[0]));
 	}
 
 	/*

@@ -1,8 +1,5 @@
 package language.pieces.logic;
 
-import ide.graphics.GraphicsConstants;
-
-import java.awt.Graphics2D;
 import java.awt.Point;
 
 import javax.swing.JOptionPane;
@@ -32,7 +29,7 @@ public class BooleanConstant extends Piece {
 	 */
 	public BooleanConstant(final Boolean value, final int x, final int y) {
 		super(0, 1, x, y);
-		this.value = new ProgramValueBoolean(value);
+		setValue(value);
 	}
 
 	/**
@@ -59,26 +56,6 @@ public class BooleanConstant extends Piece {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see language.Piece#draw(java.awt.Graphics2D)
-	 */
-	@Override
-	public void draw(final Graphics2D g) {
-		minWidth = getStringWidth(value.toString()) + PORT_SIZE + 2
-				* BORDER_SPACE;
-
-		super.draw(g);
-		g.translate(getX(), getY());
-
-		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(value.toString(), BORDER_SPACE,
-				2 * fontMetrics.getMaxAscent());
-
-		g.translate(-getX(), -getY());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -96,6 +73,7 @@ public class BooleanConstant extends Piece {
 	 */
 	public void setValue(final Boolean value) {
 		this.value = new ProgramValueBoolean(value);
+		setOutputText(0, value.toString());
 	}
 
 	/*

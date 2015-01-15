@@ -3,10 +3,13 @@ package ide;
 import ide.graphics.GraphicsConstants;
 import ide.graphics.GraphicsUtils;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Stroke;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Optional;
 
 import language.Piece;
@@ -32,6 +35,9 @@ public class MainPanelGraphicsHandler {
 	private final MainPanel parent;
 
 	public boolean draggingPiece = false;
+
+	// world coordinates
+	public Optional<Rectangle2D> selectionRectangle = Optional.empty();
 
 	/**
 	 * Instantiates a new main panel graphics handler.
@@ -63,6 +69,21 @@ public class MainPanelGraphicsHandler {
 		for (final Piece p : parent.getPieces()) {
 			p.drawConnections(g);
 		}
+		g.setColor(GraphicsConstants.SELECTION_COLOR);
+		for (final Piece p : parent.getSelectedPieces()) {
+			g.translate(p.getX(), p.getY());
+			final Stroke oldStroke = g.getStroke();
+			g.setStroke(new BasicStroke(GraphicsConstants.SELECTION_WIDTH));
+
+			g.draw(p.getBodyShape());
+			g.setStroke(oldStroke);
+			g.translate(-p.getX(), -p.getY());
+		}
+		if (selectionRectangle.isPresent()) {
+			g.setColor(GraphicsConstants.SELECTION_COLOR);
+			g.fill(selectionRectangle.get());
+		}
+
 		g.translate(parent.getViewX(), parent.getViewY());
 
 		if (portToMouseLine.isPresent()) {

@@ -43,6 +43,9 @@ public final class GraphicsConstants {
 	/** The Default LINE_DRAG_COLOR. */
 	public static final Color LINE_DRAG_COLOR = Color.GREEN;
 
+	public static final Color SELECTION_COLOR = new Color(255, 200, 0, 100);
+	public static final int SELECTION_WIDTH = 3;
+
 	/** The Default PORT_COLOR. */
 	public static final Color PORT_COLOR = Color.RED;
 	/**

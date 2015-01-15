@@ -63,7 +63,7 @@ public class WindowFrame extends JFrame {
 		jScrollPane1 = new JScrollPane();
 		mainAndToolbarSeperator = new JSplitPane();
 		toolbarPanel = new ToolbarPanel();
-		setMainPanel(new MainPanel().start());
+		setMainPanel(new MainPanel());
 
 		pieceList = new PieceList(getMainPanel());
 
@@ -175,6 +175,7 @@ public class WindowFrame extends JFrame {
 		EventQueue.invokeLater(() -> {
 			final WindowFrame frame = new WindowFrame();
 			frame.setVisible(true);
+			frame.mainPanel.start();
 
 		});
 	}

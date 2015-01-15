@@ -48,6 +48,7 @@ public class MainPanel extends JPanel {
 
 		addMouseListener(input);
 		addMouseMotionListener(input);
+		addKeyListener(input);
 
 		graphicsHandler = new MainPanelGraphicsHandler(this);
 
@@ -56,6 +57,9 @@ public class MainPanel extends JPanel {
 
 	public MainPanel start() {
 		interpreterThread.start();
+
+		setFocusable(true);
+		System.out.println(requestFocusInWindow());
 		return this;
 	}
 
@@ -81,10 +85,15 @@ public class MainPanel extends JPanel {
 	public boolean pointIsInTrash(final Point worldCoord) {
 		final Point screenCoord = new Point(worldCoord);
 		screenCoord.translate(-x, -y);
-		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage().getWidth(null);
-		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage().getHeight(null);
+		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage()
+				.getWidth(null);
+		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage()
+				.getHeight(null);
 
-		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE, getHeight() - imageHeight - GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight).contains(screenCoord)) {
+		if (new Rectangle(getWidth() - imageWidth
+				- GraphicsConstants.TRASH_BORDER_SIZE, getHeight()
+				- imageHeight - GraphicsConstants.TRASH_BORDER_SIZE,
+				imageWidth, imageHeight).contains(screenCoord)) {
 			return true;
 		}
 		return false;

@@ -28,7 +28,7 @@ public class PieceTree extends JTree {
 				final String s = folder[i];
 				@SuppressWarnings("unchecked")
 				final Enumeration<DefaultMutableTreeNode> e = folderParent
-				.children();
+						.children();
 				DefaultMutableTreeNode sChild = null;
 				boolean hasSChild = false;
 				while (e.hasMoreElements()) {
@@ -69,6 +69,7 @@ public class PieceTree extends JTree {
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		addTreeSelectionListener(new PieceTreeInputHandler(this, panel));
 		setCellRenderer(new PieceTreeDisplay());
+		setToggleClickCount(1);
 	}
 
 	private static class AlphabeticalTreeModel extends DefaultTreeModel {

@@ -1,8 +1,8 @@
 package language;
 
-import ide.PieceTreeRepresentation;
 import ide.graphics.GraphicsConstants;
 import ide.graphics.GraphicsUtils;
+import ide.piecetree.PieceTreeRepresentation;
 
 import java.awt.Canvas;
 import java.awt.FontMetrics;

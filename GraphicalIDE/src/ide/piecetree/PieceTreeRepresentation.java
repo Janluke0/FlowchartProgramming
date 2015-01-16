@@ -1,4 +1,4 @@
-package ide;
+package ide.piecetree;
 
 import java.util.Arrays;
 

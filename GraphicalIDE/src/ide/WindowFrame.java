@@ -1,6 +1,9 @@
 package ide;
 
 import ide.graphics.GraphicsConstants;
+import ide.mainpanel.MainPanel;
+import ide.piecetree.PieceTree;
+import ide.toolbar.ToolbarPanel;
 
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -39,7 +42,7 @@ public class WindowFrame extends JFrame {
 	private MainPanel mainPanel;
 
 	/** The piece list. */
-	private PieceList pieceList;
+	private PieceTree pieceList;
 
 	/** The piece picker panel. */
 	private JPanel piecePickerPanel;
@@ -65,7 +68,7 @@ public class WindowFrame extends JFrame {
 		toolbarPanel = new ToolbarPanel();
 		setMainPanel(new MainPanel());
 
-		pieceList = new PieceList(getMainPanel());
+		pieceList = new PieceTree(getMainPanel());
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

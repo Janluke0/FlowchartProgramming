@@ -1,4 +1,6 @@
-package ide;
+package ide.piecetree;
+
+import ide.mainpanel.MainPanel;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +16,7 @@ import language.Piece;
 /**
  * The Class ListInputHandler.
  */
-public class ListInputHandler implements TreeSelectionListener {
+public class PieceTreeInputHandler implements TreeSelectionListener {
 
 	/** The jlist. */
 	private final JTree tree;
@@ -30,7 +32,7 @@ public class ListInputHandler implements TreeSelectionListener {
 	 * @param panel
 	 *            the panel
 	 */
-	public ListInputHandler(final JTree list, final MainPanel panel) {
+	public PieceTreeInputHandler(final JTree list, final MainPanel panel) {
 		tree = list;
 		this.panel = panel;
 	}

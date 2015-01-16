@@ -1,4 +1,4 @@
-package ide;
+package ide.mainpanel;
 
 import ide.graphics.GraphicsConstants;
 

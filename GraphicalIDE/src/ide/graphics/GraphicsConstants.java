@@ -20,7 +20,10 @@ public final class GraphicsConstants {
 	/** The Default APP_FONT. */
 	public static final Font APP_FONT = new Font("Arial", Font.PLAIN, 12);
 
-	public static final Color LIST_BACKGROUND_COLOR = new Color(155, 185, 180);
+	public static final Color PIECE_TREE_BACKGROUND_COLOR = new Color(55, 85,
+			80);
+
+	public static final Color PIECE_TREE_TEXT_COLOR = Color.WHITE;
 
 	/** The Default MAIN_BACKROUND_COLOR. */
 	public static final Color MAIN_BACKROUND_COLOR = new Color(100, 125, 120);
@@ -55,7 +58,18 @@ public final class GraphicsConstants {
 
 	public static final int TRASH_WIDTH = 50;
 	public static final int TRASH_BORDER_SIZE = 15;
-	public static final ImageIcon TRASH_ICON = resizeImage(loadImageIcon("/icons/trashcan.png"), TRASH_WIDTH);
+	public static final ImageIcon TRASH_ICON = resizeImage(
+			loadImageIcon("/icons/trashcan.png"), TRASH_WIDTH);
+	private static final int LEAF_WIDTH = 15;
+	public static final ImageIcon PIECE_TREE_LEAF_ICON = resizeImage(
+			loadImageIcon("/icons/piecetree/circleicon.png"), LEAF_WIDTH);
+	private static final int OPEN_FOLDER_WIDTH = 15;
+	public static final ImageIcon PIECE_TREE_OPEN_FOLDER_ICON = resizeImage(
+			loadImageIcon("/icons/piecetree/circleicon.png"), OPEN_FOLDER_WIDTH);
+	private static final int CLOSED_FOLDER_WIDTH = 15;
+	public static final ImageIcon PIECE_TREE_CLOSED_FOLDER_ICON = resizeImage(
+			loadImageIcon("/icons/piecetree/closedcircleicon.png"),
+			CLOSED_FOLDER_WIDTH);
 
 	private static ImageIcon loadImageIcon(final String filename) {
 		ImageIcon icon;
@@ -68,7 +82,10 @@ public final class GraphicsConstants {
 		return icon;
 	}
 
-	private static ImageIcon resizeImage(final ImageIcon original, final int width) {
-		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width, (int) (original.getIconHeight() * ((double) width / original.getIconWidth()))));
+	private static ImageIcon resizeImage(final ImageIcon original,
+			final int width) {
+		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width,
+				(int) (original.getIconHeight() * ((double) width / original
+						.getIconWidth()))));
 	}
 }

@@ -1,4 +1,4 @@
-package ide;
+package ide.toolbar;
 
 import ide.graphics.GraphicsConstants;
 import ide.graphics.GraphicsUtils;

@@ -57,8 +57,8 @@ public class Time extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
-		lastTime = pc.TIME;
+	public void updatePiece() {
+		lastTime = ProgramContext.getTime();
 		final ProgramValue<?> value = new ProgramValueNum(new BigDecimal(
 				lastTime));
 		for (final Connection c : getOutputs()) {
@@ -74,6 +74,11 @@ public class Time extends Piece {
 	@Override
 	public void doubleClicked(final Point p) {
 
+	}
+
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		return true;
 	}
 
 }

@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
-import language.ProgramContext;
 import language.value.ProgramValueNum;
 
 /**
@@ -56,14 +55,15 @@ public class NumberConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
+	public void updatePiece() {
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}
+		System.out.println("Updating constant");
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class NumberConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -93,6 +93,11 @@ public class NumberConstant extends Piece {
 		} catch (final NumberFormatException e) {
 			// If the input is malformed, we don't have to do anything
 		}
+	}
+
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		return false;
 	}
 
 }

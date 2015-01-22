@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import language.Piece;
-import language.ProgramContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,7 +34,7 @@ public class Display extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -46,22 +45,28 @@ public class Display extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
+	public void updatePiece() {
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

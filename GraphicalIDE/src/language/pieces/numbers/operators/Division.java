@@ -7,7 +7,6 @@ import java.math.RoundingMode;
 
 import language.Connection;
 import language.Piece;
-import language.ProgramContext;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 import language.value.ProgramValueNum;
@@ -43,11 +42,11 @@ public class Division extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
+	public void updatePiece() {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueNum && v2 instanceof ProgramValueNum) {
@@ -73,12 +72,18 @@ public class Division extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
 
+	}
+
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

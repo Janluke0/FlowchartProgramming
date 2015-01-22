@@ -6,7 +6,6 @@ import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
-import language.ProgramContext;
 import language.value.ProgramValueBoolean;
 
 /**
@@ -55,11 +54,11 @@ public class BooleanConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
+	public void updatePiece() {
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}
@@ -78,7 +77,7 @@ public class BooleanConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -89,5 +88,11 @@ public class BooleanConstant extends Piece {
 		if (input != null) {
 			setValue(Boolean.valueOf(input));
 		}
+	}
+
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

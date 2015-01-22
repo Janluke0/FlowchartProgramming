@@ -53,13 +53,13 @@ public class Timer extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
-		if (pc.TIME > lastTime + interval) {
-			lastTime = pc.TIME;
+	public void updatePiece() {
+		if (ProgramContext.getTime() > lastTime + interval) {
+			lastTime = ProgramContext.getTime();
 			for (final Connection c : getOutputs()) {
 				c.changeInput(ProgramValueBoolean.TRUE);
 			}
@@ -73,7 +73,7 @@ public class Timer extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -95,4 +95,8 @@ public class Timer extends Piece {
 
 	}
 
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		return true;
+	}
 }

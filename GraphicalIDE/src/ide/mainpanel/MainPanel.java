@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import language.Piece;
-import language.ProgramContext;
 
 /**
  * The Class MainPanel.
@@ -65,7 +64,7 @@ public class MainPanel extends JPanel {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
 	@Override
@@ -168,7 +167,7 @@ public class MainPanel extends JPanel {
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
@@ -178,9 +177,11 @@ public class MainPanel extends JPanel {
 
 			while (true) {
 				synchronized (getPieces()) {
-					final ProgramContext pc = new ProgramContext();
 					for (final Piece p : getPieces()) {
-						p.update(pc);
+						if (p.shouldUpdateEveryTick()
+								|| p.shouldUpdateNextTick()) {
+							p.update();
+						}
 					}
 				}
 
@@ -200,6 +201,7 @@ public class MainPanel extends JPanel {
 				}
 			}
 		}
+
 	}
 
 	/**

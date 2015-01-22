@@ -35,7 +35,7 @@ public class Connection {
 	 */
 	public void changeInput(final ProgramValue<?> value) {
 		if (output != null) {
-			output.changeInput(getOutputPort(), value);
+			output.setInput(getOutputPort(), value);
 		}
 	}
 

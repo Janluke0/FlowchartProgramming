@@ -6,9 +6,11 @@ package language;
 public class ProgramContext {
 
 	public static final long START_TIME = System.currentTimeMillis();
-	public final long TIME;
 
-	public ProgramContext() {
-		TIME = System.currentTimeMillis() - START_TIME;
+	private ProgramContext() {
+	}
+
+	public static long getTime() {
+		return System.currentTimeMillis() - START_TIME;
 	}
 }

@@ -17,6 +17,10 @@ import language.Piece;
 public class PieceTree extends JTree {
 	private static DefaultMutableTreeNode root;
 	static {
+		initializePieceTree();
+	}
+
+	private static void initializePieceTree() {
 		// Initialize the root node and all the children node from
 		// Piece.getPieceNames()
 		root = new DefaultMutableTreeNode("Root");
@@ -57,7 +61,6 @@ public class PieceTree extends JTree {
 			// Adds a leaf node
 			folderParent.add(new DefaultMutableTreeNode(cl));
 		}
-
 	}
 
 	public PieceTree(final MainPanel panel) {
@@ -107,6 +110,7 @@ public class PieceTree extends JTree {
 					if (thereObject instanceof PieceTreeRepresentation) {
 						s2 = ((PieceTreeRepresentation) thereObject).name;
 					}
+					// Make sure it's a string or a piecetreerepresentation
 					assert s1 != null && s2 != null;
 
 					if (s1.compareTo(s2) > 0) {

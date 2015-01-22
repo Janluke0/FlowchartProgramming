@@ -4,7 +4,6 @@ import java.awt.Point;
 
 import language.Connection;
 import language.Piece;
-import language.ProgramContext;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
 import language.value.ProgramValueNothing;
@@ -38,18 +37,18 @@ public class And extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
+	public void updatePiece() {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueBoolean
 				&& v2 instanceof ProgramValueBoolean) {
 			final ProgramValueBoolean v3 = new ProgramValueBoolean(
 					((ProgramValueBoolean) v1).getValue()
-							&& ((ProgramValueBoolean) v2).getValue());
+					&& ((ProgramValueBoolean) v2).getValue());
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
@@ -63,13 +62,19 @@ public class And extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

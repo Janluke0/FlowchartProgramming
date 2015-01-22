@@ -4,7 +4,6 @@ import java.awt.Point;
 
 import language.Connection;
 import language.Piece;
-import language.ProgramContext;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
 import language.value.ProgramValueNothing;
@@ -38,11 +37,11 @@ public class Not extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece(final ProgramContext pc) {
+	public void updatePiece() {
 		final ProgramValue<?> v1 = getInputs()[0];
 		if (v1 instanceof ProgramValueBoolean) {
 			final ProgramValueBoolean v3 = new ProgramValueBoolean(
@@ -60,13 +59,19 @@ public class Not extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean shouldUpdateEveryTick() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

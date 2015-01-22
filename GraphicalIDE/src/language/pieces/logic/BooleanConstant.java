@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
+import language.type.Type;
 import language.value.ProgramValueBoolean;
 
 /**
@@ -94,5 +95,10 @@ public class BooleanConstant extends Piece {
 	public boolean shouldUpdateEveryTick() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected Type getOutputType() {
+		return Type.BOOLEAN;
 	}
 }

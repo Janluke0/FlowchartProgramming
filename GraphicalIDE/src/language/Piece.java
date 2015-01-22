@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 
@@ -207,7 +208,7 @@ public abstract class Piece {
 
 		for (int i = 0; i < outputs.length; i++) {
 			if (outputs[i] != null && outputs[i].getOutput() != null) {
-				g.setColor(GraphicsConstants.LINE_DRAG_COLOR);
+				g.setColor(GraphicsConstants.TYPE_COLORS.get(getOutputType()));
 				final Point p1 = new Point(x + nameWidth - PORT_SIZE
 						- BORDER_SPACE + PORT_SIZE / 2, y + nameHeight
 						+ GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
@@ -220,6 +221,8 @@ public abstract class Piece {
 			}
 		}
 	}
+
+	protected abstract Type getOutputType();
 
 	protected void setInputText(final int port, final String text) {
 		inputDisplays[port] = text;

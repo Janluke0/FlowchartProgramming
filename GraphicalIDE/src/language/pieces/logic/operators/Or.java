@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import language.Connection;
 import language.Piece;
+import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
 import language.value.ProgramValueNothing;
@@ -77,4 +78,8 @@ public class Or extends Piece {
 		return false;
 	}
 
+	@Override
+	protected Type getOutputType() {
+		return Type.BOOLEAN;
+	}
 }

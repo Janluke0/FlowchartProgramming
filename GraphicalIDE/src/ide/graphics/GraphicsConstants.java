@@ -3,8 +3,12 @@ package ide.graphics;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
+
+import language.type.Type;
 
 /**
  * The Class GraphicsConstants. Holds the IDE default colors and fonts.
@@ -45,6 +49,15 @@ public final class GraphicsConstants {
 
 	/** The Default LINE_DRAG_COLOR. */
 	public static final Color LINE_DRAG_COLOR = Color.GREEN;
+
+	public static final Map<Type, Color> TYPE_COLORS = new HashMap<Type, Color>() {
+		{
+			put(Type.NUMBER, new Color(50, 150, 200));
+			put(Type.BOOLEAN, new Color(240, 100, 100));
+
+			put(Type.NONE, Color.BLACK);
+		}
+	};
 
 	public static final Color SELECTION_COLOR = new Color(255, 200, 0, 100);
 	public static final int SELECTION_WIDTH = 3;

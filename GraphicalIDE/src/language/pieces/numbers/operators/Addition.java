@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import language.Connection;
 import language.Piece;
+import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 import language.value.ProgramValueNum;
@@ -44,7 +45,6 @@ public class Addition extends Piece {
 	public void updatePiece() {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
-		System.out.println(v1 + " and " + v2);
 		if (v1 instanceof ProgramValueNum && v2 instanceof ProgramValueNum) {
 			final ProgramValueNum v3 = new ProgramValueNum(
 					((ProgramValueNum) v1).getValue().add(
@@ -58,7 +58,6 @@ public class Addition extends Piece {
 				c.changeInput(ProgramValueNothing.NOTHING);
 			}
 		}
-		System.out.println("utptign");
 
 	}
 
@@ -77,6 +76,11 @@ public class Addition extends Piece {
 	public boolean shouldUpdateEveryTick() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected Type getOutputType() {
+		return Type.NUMBER;
 	}
 
 }

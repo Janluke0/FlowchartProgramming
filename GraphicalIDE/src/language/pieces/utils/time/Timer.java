@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import language.Connection;
 import language.Piece;
 import language.ProgramContext;
+import language.type.Type;
 import language.value.ProgramValueBoolean;
 
 /**
@@ -53,7 +54,7 @@ public class Timer extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -73,7 +74,7 @@ public class Timer extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -98,5 +99,10 @@ public class Timer extends Piece {
 	@Override
 	public boolean shouldUpdateEveryTick() {
 		return true;
+	}
+
+	@Override
+	protected Type getOutputType() {
+		return Type.BOOLEAN;
 	}
 }

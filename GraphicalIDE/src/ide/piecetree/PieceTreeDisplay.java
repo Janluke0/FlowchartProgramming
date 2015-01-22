@@ -5,8 +5,9 @@ import ide.graphics.GraphicsConstants;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
+@SuppressWarnings("serial")
 public class PieceTreeDisplay extends DefaultTreeCellRenderer implements
-TreeCellRenderer {
+		TreeCellRenderer {
 	public PieceTreeDisplay() {
 		super();
 

@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
+import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
 
@@ -41,7 +42,7 @@ public class FlipFlop extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -61,7 +62,7 @@ public class FlipFlop extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -86,6 +87,11 @@ public class FlipFlop extends Piece {
 	public boolean shouldUpdateEveryTick() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected Type getOutputType() {
+		return Type.BOOLEAN;
 	}
 
 }

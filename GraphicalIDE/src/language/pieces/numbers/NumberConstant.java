@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
+import language.type.Type;
 import language.value.ProgramValueNum;
 
 /**
@@ -63,7 +64,6 @@ public class NumberConstant extends Piece {
 		for (final Connection c : getOutputs()) {
 			c.changeInput(value);
 		}
-		System.out.println("Updating constant");
 	}
 
 	/**
@@ -98,6 +98,11 @@ public class NumberConstant extends Piece {
 	@Override
 	public boolean shouldUpdateEveryTick() {
 		return false;
+	}
+
+	@Override
+	protected Type getOutputType() {
+		return Type.NUMBER;
 	}
 
 }

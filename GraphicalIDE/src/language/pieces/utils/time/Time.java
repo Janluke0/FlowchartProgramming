@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import language.Connection;
 import language.Piece;
 import language.ProgramContext;
+import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueNum;
 
@@ -40,7 +41,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -53,7 +54,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -68,7 +69,7 @@ public class Time extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -79,6 +80,11 @@ public class Time extends Piece {
 	@Override
 	public boolean shouldUpdateEveryTick() {
 		return true;
+	}
+
+	@Override
+	protected Type getOutputType() {
+		return Type.NUMBER;
 	}
 
 }

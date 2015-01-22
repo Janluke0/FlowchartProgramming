@@ -3,6 +3,7 @@ package language.pieces.utils;
 import java.awt.Point;
 
 import language.Piece;
+import language.type.Type;
 import language.value.ProgramValueBoolean;
 
 /**
@@ -40,14 +41,14 @@ public class Print extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
 	public void updatePiece() {
 		if (getInputs()[INPUT_SHOULD_PRINT] instanceof ProgramValueBoolean
 				&& ((ProgramValueBoolean) getInputs()[INPUT_SHOULD_PRINT])
-						.getValue() == true) {
+				.getValue() == true) {
 			System.out.println(getInputs()[INPUT_TO_PRINT]);
 			getOutputs()[OUTPUT_PRINTED].changeInput(ProgramValueBoolean.TRUE);
 		} else {
@@ -57,7 +58,7 @@ public class Print extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -68,5 +69,10 @@ public class Print extends Piece {
 	@Override
 	public boolean shouldUpdateEveryTick() {
 		return false;
+	}
+
+	@Override
+	protected Type getOutputType() {
+		return Type.NONE;
 	}
 }

@@ -1,5 +1,7 @@
 package language.value;
 
+import language.type.Type;
+
 /**
  * The Class ProgramValueNum.
  */
@@ -17,5 +19,10 @@ public class ProgramValueBoolean extends ProgramValue<Boolean> {
 	 */
 	public ProgramValueBoolean(final Boolean value) {
 		super(value);
+	}
+
+	@Override
+	public Type getType() {
+		return Type.BOOLEAN;
 	}
 }

@@ -6,7 +6,6 @@ import java.awt.Point;
 import language.Piece;
 import language.type.Type;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Display.
  */
@@ -21,7 +20,7 @@ public class Display extends Piece {
 	 *            the y
 	 */
 	public Display(final int x, final int y) {
-		super(1, 0, x, y);
+		super(1, 1, x, y);
 	}
 
 	/**
@@ -35,7 +34,7 @@ public class Display extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -46,16 +45,17 @@ public class Display extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
 	public void updatePiece() {
+		getOutputs()[0].changeInput(getInputs()[0]);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class Display extends Piece {
 
 	@Override
 	protected Type getOutputType() {
-		return Type.BOOLEAN;
+		return getInputs()[0].getType();
 	}
 
 }

@@ -2,6 +2,8 @@ package language.value;
 
 import java.math.BigDecimal;
 
+import language.type.Type;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ProgramValueNum.
@@ -16,5 +18,10 @@ public class ProgramValueNum extends ProgramValue<BigDecimal> {
 	 */
 	public ProgramValueNum(final BigDecimal value) {
 		super(value);
+	}
+
+	@Override
+	public Type getType() {
+		return Type.NUMBER;
 	}
 }

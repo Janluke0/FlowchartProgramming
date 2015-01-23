@@ -55,6 +55,7 @@ public final class GraphicsConstants {
 			put(Type.NUMBER, new Color(50, 150, 200));
 			put(Type.BOOLEAN, new Color(240, 100, 100));
 
+			put(Type.ANY, Color.LIGHT_GRAY);
 			put(Type.NONE, Color.BLACK);
 		}
 	};

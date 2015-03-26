@@ -65,8 +65,8 @@ public class WindowFrame extends JFrame {
 		piecePickerPanel = new JPanel();
 		jScrollPane1 = new JScrollPane();
 		mainAndToolbarSeperator = new JSplitPane();
-		toolbarPanel = new ToolbarPanel();
 		setMainPanel(new MainPanel());
+		toolbarPanel = new ToolbarPanel(getMainPanel());
 
 		pieceList = new PieceTree(getMainPanel());
 
@@ -96,7 +96,7 @@ public class WindowFrame extends JFrame {
 		jSplitPane1.setLeftComponent(piecePickerPanel);
 
 		mainAndToolbarSeperator
-				.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
+		.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
 		mainAndToolbarSeperator.setDividerSize(0);
 		mainAndToolbarSeperator.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
@@ -163,16 +163,16 @@ public class WindowFrame extends JFrame {
 			}
 		} catch (final ClassNotFoundException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final InstantiationException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final IllegalAccessException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final UnsupportedLookAndFeelException ex) {
 			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
+			.log(java.util.logging.Level.SEVERE, null, ex);
 		}
 
 		EventQueue.invokeLater(() -> {

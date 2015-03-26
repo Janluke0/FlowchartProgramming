@@ -23,23 +23,27 @@ import language.value.ProgramValueNothing;
  * The Class MainInputHandler.
  */
 public class MainInputHandler implements MouseListener, MouseMotionListener,
-		KeyListener {
+KeyListener {
 
 	/** The main panel. */
 	private final MainPanel mainPanel;
 
-	/** The pressed position. */
+	/** The position the mouse is pressed down. */
 	private Optional<Point> pressedPosition = Optional.empty();
 
-	/** The initial position. */
+	/** The initial position the screen was in when the mouse was pressed down. */
 	private Optional<Point> initialScreenPosition = Optional.empty();
 
-	/** The piece initial position. */
+	/**
+	 * The list of initial positions of pieces when the mouse was initially
+	 * pressed down.
+	 */
 	private Optional<List<Point>> initialPositions = Optional.empty();
 
-	/** The port selected. */
+	/** The port currently selected. */
 	private Optional<Integer> portSelected = Optional.empty();
 
+	/** The piece whose port is currently being dragged. */
 	private Optional<Piece> piecePortDragged = Optional.empty();
 
 	/**
@@ -54,7 +58,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -106,29 +110,28 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
 	@Override
 	public void mouseReleased(final MouseEvent e) {
 		if (portSelected.isPresent()) {
-			// we are dragging from a port
-			final List<Piece> collidingPieces = new ArrayList<>(
-					mainPanel.getPieces());
 			final Point worldCoord = mainPanel.getWorldCoordFromMouse(e
 					.getPoint());
-			// remove all we aren't colliding with so we don't check all of them
-			collidingPieces.removeIf((final Piece piece) -> !piece
-					.containsPoint(worldCoord));
+
+			// we are dragging from a port
+			final List<Piece> collidingPieces = getTouchingPieces(worldCoord);
 			if (!collidingPieces.isEmpty()) {
 				// if we are in a piece
 				for (int i = collidingPieces.size() - 1; i >= 0; --i) {
 					// check if we're touching an output, backwards so we check
 					// from top to bottom
 					final Piece piece = collidingPieces.get(i);
+					// get the coordinate of the mouse on the piece
 					final Point pieceCoord = new Point(worldCoord);
 					pieceCoord.translate(-piece.getX(), -piece.getY());
+
 					for (int j = 0; j < piece.getInputs().length; j++) {
 						if (piece.inputContainsPoint(j, pieceCoord)) {
 							synchronized (mainPanel.getPieces()) {
@@ -145,8 +148,8 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 										if (piece == p.getOutput(outputIndex)
 												.getOutput()
 												&& j == p
-														.getOutput(outputIndex)
-														.getOutputPort()) {
+												.getOutput(outputIndex)
+												.getOutputPort()) {
 											// make the other piece output to
 											// nothing
 											p.setOutput(outputIndex,
@@ -156,14 +159,14 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 									}
 								}
 
-							piecePortDragged
-										.get()
-										.getOutput(portSelected.get())
-										.changeInput(
-												ProgramValueNothing.NOTHING);
-							piecePortDragged.get().setOutput(
-										portSelected.get(),
-										new Connection(piece, j));
+								piecePortDragged
+							.get()
+							.getOutput(portSelected.get())
+							.changeInput(
+									ProgramValueNothing.NOTHING);
+								piecePortDragged.get().setOutput(
+									portSelected.get(),
+									new Connection(piece, j));
 							}
 						}
 					}
@@ -221,7 +224,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent
 	 * )
@@ -269,7 +272,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 			for (final Piece p : mainPanel.getPieces()) {
 				final Rectangle2D transformedSelection = new Rectangle2D.Double(
 						selection.getX() - p.getX(), selection.getY()
-								- p.getY(), selection.getWidth(),
+						- p.getY(), selection.getWidth(),
 						selection.getHeight());
 				if (p.getBodyShape().intersects(transformedSelection)) {
 					mainPanel.getSelectedPieces().add(p);
@@ -290,15 +293,15 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 			// lower right
 			selection = new Rectangle2D.Float(pressedWorldCoord.x,
 					pressedWorldCoord.y, mouseWorldCoord.x
-							- pressedWorldCoord.x, mouseWorldCoord.y
-							- pressedWorldCoord.y);
+					- pressedWorldCoord.x, mouseWorldCoord.y
+					- pressedWorldCoord.y);
 		} else if (mouseWorldCoord.getX() <= pressedWorldCoord.getX()
 				&& mouseWorldCoord.getY() >= pressedWorldCoord.getY()) {
 			// lower left
 			selection = new Rectangle2D.Float(mouseWorldCoord.x,
 					pressedWorldCoord.y, pressedWorldCoord.x
-							- mouseWorldCoord.x, mouseWorldCoord.y
-							- pressedWorldCoord.y);
+					- mouseWorldCoord.x, mouseWorldCoord.y
+					- pressedWorldCoord.y);
 		} else if (mouseWorldCoord.getX() >= pressedWorldCoord.getX()
 				&& mouseWorldCoord.getY() <= pressedWorldCoord.getY()) {
 			// upper right
@@ -320,7 +323,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
 	 */
@@ -331,7 +334,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -341,7 +344,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -351,7 +354,7 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -426,6 +429,16 @@ public class MainInputHandler implements MouseListener, MouseMotionListener,
 	public void keyReleased(final KeyEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private List<Piece> getTouchingPieces(final Point worldCoord) {
+		// we are dragging from a port
+		final List<Piece> collidingPieces = new ArrayList<>(
+				mainPanel.getPieces());
+		// remove all we aren't colliding with so we don't check all of them
+		collidingPieces.removeIf((final Piece piece) -> !piece
+				.containsPoint(worldCoord));
+		return collidingPieces;
 	}
 
 }

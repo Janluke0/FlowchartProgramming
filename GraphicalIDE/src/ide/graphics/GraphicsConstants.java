@@ -50,6 +50,7 @@ public final class GraphicsConstants {
 	/** The Default LINE_DRAG_COLOR. */
 	public static final Color LINE_DRAG_COLOR = Color.GREEN;
 
+	@SuppressWarnings("serial")
 	public static final Map<Type, Color> TYPE_COLORS = new HashMap<Type, Color>() {
 		{
 			put(Type.NUMBER, new Color(50, 150, 200));
@@ -69,6 +70,8 @@ public final class GraphicsConstants {
 	 * The Default File Icon.
 	 */
 	public static final ImageIcon FILE_ICON = loadImageIcon("/icons/toolbar/file.png");
+
+	public static final ImageIcon RUN_ICON = loadImageIcon("/icons/toolbar/run.png");
 
 	public static final int TRASH_WIDTH = 50;
 	public static final int TRASH_BORDER_SIZE = 15;

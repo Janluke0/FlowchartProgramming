@@ -56,7 +56,6 @@ public class MainPanel extends JPanel {
 
 	public MainPanel start() {
 		interpreterThread.start();
-
 		setFocusable(true);
 		requestFocusInWindow();
 		return this;
@@ -205,7 +204,7 @@ public class MainPanel extends JPanel {
 	}
 
 	/**
-	 * Creates the piece.
+	 * Creates the piece and selects it.
 	 *
 	 * @param piece
 	 *            the piece
@@ -219,7 +218,7 @@ public class MainPanel extends JPanel {
 	}
 
 	/**
-	 * Gets the graphics handler.
+	 * Returns the graphics handler.
 	 *
 	 * @return the graphics handler
 	 */

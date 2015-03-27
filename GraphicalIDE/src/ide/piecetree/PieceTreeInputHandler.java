@@ -1,6 +1,6 @@
 package ide.piecetree;
 
-import ide.mainpanel.MainPanel;
+import ide.WindowFrame;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,8 +21,8 @@ public class PieceTreeInputHandler implements TreeSelectionListener {
 	/** The jlist. */
 	private final JTree tree;
 
-	/** The main panel. */
-	private final MainPanel panel;
+	/** The main frame to get the current panel from. */
+	private final WindowFrame frame;
 
 	/**
 	 * Instantiates a new list input handler.
@@ -32,16 +32,15 @@ public class PieceTreeInputHandler implements TreeSelectionListener {
 	 * @param panel
 	 *            the panel
 	 */
-	public PieceTreeInputHandler(final JTree list, final MainPanel panel) {
+	public PieceTreeInputHandler(final JTree list, final WindowFrame frame) {
 		tree = list;
-		this.panel = panel;
+		this.frame = frame;
 	}
 
 	@Override
 	public void valueChanged(final TreeSelectionEvent e) {
 		if (tree.getSelectionCount() >= 1) {
-			final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-					.getLastSelectedPathComponent();
+			final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 			if (node == null) {
 				// Nothing is selected.
@@ -71,16 +70,14 @@ public class PieceTreeInputHandler implements TreeSelectionListener {
 			Object createdPiece = null;
 			try {
 				// create piece in center of screen
-				final int pieceX = panel.getViewX() + panel.getWidth() / 2;
-				final int pieceY = panel.getViewY() + panel.getHeight() / 2;
-				createdPiece = ctor
-						.newInstance(new Object[] { pieceX, pieceY });
-			} catch (InstantiationException | IllegalAccessException
-					| IllegalArgumentException | InvocationTargetException e1) {
+				final int pieceX = frame.getMainPanel().getViewX() + frame.getMainPanel().getWidth() / 2;
+				final int pieceY = frame.getMainPanel().getViewY() + frame.getMainPanel().getHeight() / 2;
+				createdPiece = ctor.newInstance(new Object[] { pieceX, pieceY });
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
 				e1.printStackTrace();
 				return;
 			}
-			panel.createPiece((Piece) createdPiece);
+			frame.getMainPanel().createPiece((Piece) createdPiece);
 		}
 	}
 }

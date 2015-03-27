@@ -1,5 +1,6 @@
 package ide.toolbar;
 
+import ide.WindowFrame;
 import ide.mainpanel.MainPanel;
 
 import java.awt.HeadlessException;
@@ -10,11 +11,11 @@ import javax.swing.JPopupMenu;
 @SuppressWarnings("serial")
 public class FilePopupMenu extends JPopupMenu {
 
-	private final MainPanel panel;
+	private final WindowFrame frame;
 
-	public FilePopupMenu(final MainPanel panel) throws HeadlessException {
+	public FilePopupMenu(final WindowFrame frame) throws HeadlessException {
 		init();
-		this.panel = panel;
+		this.frame = frame;
 	}
 
 	private void init() {
@@ -74,7 +75,6 @@ public class FilePopupMenu extends JPopupMenu {
 	}
 
 	private void newClicked() {
-		// TODO Auto-generated method stub
-
+		frame.getTabPanel().addTab("Untitled", new MainPanel());
 	}
 }

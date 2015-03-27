@@ -3,6 +3,7 @@ package ide.graphics;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,14 +19,13 @@ public final class GraphicsConstants {
 	private GraphicsConstants() {
 	}
 
-	public static final int TOOLBAR_HEIGHT = 40;
+	public static final int TOOLBAR_HEIGHT = 60;
 	public static final int TOOLBAR_PADDING = 5;
 
 	/** The Default APP_FONT. */
 	public static final Font APP_FONT = new Font("Arial", Font.PLAIN, 12);
 
-	public static final Color PIECE_TREE_BACKGROUND_COLOR = new Color(55, 85,
-			80);
+	public static final Color PIECE_TREE_BACKGROUND_COLOR = new Color(55, 85, 80);
 
 	public static final Color PIECE_TREE_TEXT_COLOR = Color.WHITE;
 
@@ -51,7 +51,7 @@ public final class GraphicsConstants {
 	public static final Color LINE_DRAG_COLOR = Color.GREEN;
 
 	@SuppressWarnings("serial")
-	public static final Map<Type, Color> TYPE_COLORS = new HashMap<Type, Color>() {
+	public static final Map<Type, Color> TYPE_COLORS = Collections.unmodifiableMap(new HashMap<Type, Color>() {
 		{
 			put(Type.NUMBER, new Color(50, 150, 200));
 			put(Type.BOOLEAN, new Color(240, 100, 100));
@@ -59,7 +59,7 @@ public final class GraphicsConstants {
 			put(Type.ANY, Color.LIGHT_GRAY);
 			put(Type.NONE, Color.BLACK);
 		}
-	};
+	});
 
 	public static final Color SELECTION_COLOR = new Color(255, 200, 0, 100);
 	public static final int SELECTION_WIDTH = 3;
@@ -75,18 +75,13 @@ public final class GraphicsConstants {
 
 	public static final int TRASH_WIDTH = 50;
 	public static final int TRASH_BORDER_SIZE = 15;
-	public static final ImageIcon TRASH_ICON = resizeImage(
-			loadImageIcon("/icons/trashcan.png"), TRASH_WIDTH);
+	public static final ImageIcon TRASH_ICON = resizeImage(loadImageIcon("/icons/trashcan.png"), TRASH_WIDTH);
 	private static final int LEAF_WIDTH = 15;
-	public static final ImageIcon PIECE_TREE_LEAF_ICON = resizeImage(
-			loadImageIcon("/icons/piecetree/circleicon.png"), LEAF_WIDTH);
+	public static final ImageIcon PIECE_TREE_LEAF_ICON = resizeImage(loadImageIcon("/icons/piecetree/circleicon.png"), LEAF_WIDTH);
 	private static final int OPEN_FOLDER_WIDTH = 15;
-	public static final ImageIcon PIECE_TREE_OPEN_FOLDER_ICON = resizeImage(
-			loadImageIcon("/icons/piecetree/circleicon.png"), OPEN_FOLDER_WIDTH);
+	public static final ImageIcon PIECE_TREE_OPEN_FOLDER_ICON = resizeImage(loadImageIcon("/icons/piecetree/circleicon.png"), OPEN_FOLDER_WIDTH);
 	private static final int CLOSED_FOLDER_WIDTH = 15;
-	public static final ImageIcon PIECE_TREE_CLOSED_FOLDER_ICON = resizeImage(
-			loadImageIcon("/icons/piecetree/closedcircleicon.png"),
-			CLOSED_FOLDER_WIDTH);
+	public static final ImageIcon PIECE_TREE_CLOSED_FOLDER_ICON = resizeImage(loadImageIcon("/icons/piecetree/closedcircleicon.png"), CLOSED_FOLDER_WIDTH);
 
 	private static ImageIcon loadImageIcon(final String filename) {
 		ImageIcon icon;
@@ -99,10 +94,7 @@ public final class GraphicsConstants {
 		return icon;
 	}
 
-	private static ImageIcon resizeImage(final ImageIcon original,
-			final int width) {
-		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width,
-				(int) (original.getIconHeight() * ((double) width / original
-						.getIconWidth()))));
+	private static ImageIcon resizeImage(final ImageIcon original, final int width) {
+		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width, (int) (original.getIconHeight() * ((double) width / original.getIconWidth()))));
 	}
 }

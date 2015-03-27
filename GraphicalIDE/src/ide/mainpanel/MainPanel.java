@@ -52,9 +52,10 @@ public class MainPanel extends JPanel {
 		graphicsHandler = new MainPanelGraphicsHandler(this);
 
 		interpreterThread = new Thread(new InterpreterTask());
+		start();
 	}
 
-	public MainPanel start() {
+	private MainPanel start() {
 		interpreterThread.start();
 		setFocusable(true);
 		requestFocusInWindow();
@@ -83,15 +84,10 @@ public class MainPanel extends JPanel {
 	public boolean pointIsInTrash(final Point worldCoord) {
 		final Point screenCoord = new Point(worldCoord);
 		screenCoord.translate(-x, -y);
-		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage()
-				.getWidth(null);
-		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage()
-				.getHeight(null);
+		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage().getWidth(null);
+		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage().getHeight(null);
 
-		if (new Rectangle(getWidth() - imageWidth
-				- GraphicsConstants.TRASH_BORDER_SIZE, getHeight()
-				- imageHeight - GraphicsConstants.TRASH_BORDER_SIZE,
-				imageWidth, imageHeight).contains(screenCoord)) {
+		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE, getHeight() - imageHeight - GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight).contains(screenCoord)) {
 			return true;
 		}
 		return false;
@@ -177,8 +173,7 @@ public class MainPanel extends JPanel {
 			while (true) {
 				synchronized (getPieces()) {
 					for (final Piece p : getPieces()) {
-						if (p.shouldUpdateEveryTick()
-								|| p.shouldUpdateNextTick()) {
+						if (p.shouldUpdateEveryTick() || p.shouldUpdateNextTick()) {
 							p.update();
 						}
 					}

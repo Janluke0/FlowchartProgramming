@@ -1,6 +1,6 @@
 package ide.toolbar;
 
-import ide.mainpanel.MainPanel;
+import ide.WindowFrame;
 
 import java.awt.HeadlessException;
 
@@ -10,11 +10,11 @@ import javax.swing.JPopupMenu;
 @SuppressWarnings("serial")
 public class RunPopupMenu extends JPopupMenu {
 
-	private final MainPanel panel;
+	private final WindowFrame frame;
 
-	public RunPopupMenu(final MainPanel panel) throws HeadlessException {
+	public RunPopupMenu(final WindowFrame frame) throws HeadlessException {
 		init();
-		this.panel = panel;
+		this.frame = frame;
 	}
 
 	private void init() {

@@ -1,8 +1,8 @@
 package ide.toolbar;
 
+import ide.WindowFrame;
 import ide.graphics.GraphicsConstants;
 import ide.graphics.GraphicsUtils;
-import ide.mainpanel.MainPanel;
 
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
@@ -19,15 +19,13 @@ import javax.swing.JPopupMenu;
 @SuppressWarnings("serial")
 public class ToolbarPanel extends JPanel {
 
-	public ToolbarPanel(final MainPanel panel) {
+	public ToolbarPanel(final WindowFrame frame) {
 		super();
 
-		setLayout(new FlowLayout(FlowLayout.LEFT,
-				GraphicsConstants.TOOLBAR_PADDING,
-				GraphicsConstants.TOOLBAR_PADDING));
+		setLayout(new FlowLayout(FlowLayout.LEFT, GraphicsConstants.TOOLBAR_PADDING, GraphicsConstants.TOOLBAR_PADDING));
 
-		addButton(GraphicsConstants.FILE_ICON, new FilePopupMenu(panel));
-		addButton(GraphicsConstants.RUN_ICON, new RunPopupMenu(panel));
+		addButton(GraphicsConstants.FILE_ICON, new FilePopupMenu(frame));
+		addButton(GraphicsConstants.RUN_ICON, new RunPopupMenu(frame));
 
 		setBackground(GraphicsConstants.MENU_BACKROUND_COLOR);
 	}
@@ -51,11 +49,9 @@ public class ToolbarPanel extends JPanel {
 	}
 
 	private static ImageIcon fitToToolbar(final ImageIcon icon) {
-		final int newHeight = GraphicsConstants.TOOLBAR_HEIGHT
-				- GraphicsConstants.TOOLBAR_PADDING * 2;
+		final int newHeight = GraphicsConstants.TOOLBAR_HEIGHT - GraphicsConstants.TOOLBAR_PADDING * 2;
 
-		final int newWidth = (int) ((double) icon.getIconWidth()
-				/ icon.getIconHeight() * newHeight);
+		final int newWidth = (int) ((double) icon.getIconWidth() / icon.getIconHeight() * newHeight);
 		return GraphicsUtils.resize(icon, newWidth, newHeight);
 	}
 }

@@ -3,8 +3,11 @@ package ide;
 import ide.graphics.GraphicsConstants;
 import ide.mainpanel.MainPanel;
 import ide.piecetree.PieceTree;
+import ide.tabs.TabPanel;
 import ide.toolbar.ToolbarPanel;
 
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.util.Enumeration;
@@ -32,11 +35,16 @@ public class WindowFrame extends JFrame {
 	/** The j scroll pane1. */
 	private JScrollPane jScrollPane1;
 
-	/** The j split pane1. */
-	private JSplitPane jSplitPane1;
+	/** The piece picker and main panel seperator. */
+	private JSplitPane piecePickerAndMainSeperator;
 
 	/** The main and toolbar seperator. */
-	private JSplitPane mainAndToolbarSeperator;
+	public JSplitPane mainAndToolbarSeperator;
+
+	private JSplitPane toolbarAndTabSeperator;
+
+	/** The panel that holds the tabs */
+	private TabPanel tabPanel;
 
 	/** The main panel. */
 	private MainPanel mainPanel;
@@ -50,6 +58,8 @@ public class WindowFrame extends JFrame {
 	/** The toolbar panel. */
 	private JPanel toolbarPanel;
 
+	public JPanel mainPanelHolder;
+
 	/**
 	 * Creates new form GUIFrame.
 	 */
@@ -61,66 +71,65 @@ public class WindowFrame extends JFrame {
 
 	private final void initComponents() {
 
-		jSplitPane1 = new JSplitPane();
+		mainPanelHolder = new JPanel();
+		mainPanelHolder.setBorder(null);
+		mainPanelHolder.setLayout(new CardLayout());
+
+		setMainPanel(new MainPanel());
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		piecePickerAndMainSeperator = new JSplitPane();
 		piecePickerPanel = new JPanel();
 		jScrollPane1 = new JScrollPane();
 		mainAndToolbarSeperator = new JSplitPane();
-		setMainPanel(new MainPanel());
-		toolbarPanel = new ToolbarPanel(getMainPanel());
+		toolbarPanel = new ToolbarPanel(this);
+		pieceList = new PieceTree(this);
+		toolbarAndTabSeperator = new JSplitPane();
 
-		pieceList = new PieceTree(getMainPanel());
+		setTabPanel(new TabPanel(this));
+		getTabPanel().addTab("Untitled", getMainPanel());
 
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		toolbarAndTabSeperator.setDividerSize(0);
+		toolbarAndTabSeperator.setRightComponent(getTabPanel());
+		toolbarAndTabSeperator.setLeftComponent(toolbarPanel);
 
-		jSplitPane1.setDividerSize(0);
+		piecePickerAndMainSeperator.setDividerSize(0);
 
 		jScrollPane1.setViewportView(pieceList);
 
-		final GroupLayout piecePickerPanelLayout = new GroupLayout(
-				piecePickerPanel);
+		final GroupLayout piecePickerPanelLayout = new GroupLayout(piecePickerPanel);
 		piecePickerPanel.setLayout(piecePickerPanelLayout);
 
-		final int maxPixelWidthOfPieceNames = (int) (getMainPanel()
-				.getFontMetrics(GraphicsConstants.APP_FONT).stringWidth(
-						Piece.LONGEST_PIECE_NAME) * 1.5);
+		final int maxPixelWidthOfPieceNames = (int) (getMainPanel().getFontMetrics(GraphicsConstants.APP_FONT).stringWidth(Piece.LONGEST_PIECE_NAME) * 1.5);
 
-		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE,
-						maxPixelWidthOfPieceNames, Short.MAX_VALUE));
-		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 513,
-						Short.MAX_VALUE));
+		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, maxPixelWidthOfPieceNames, Short.MAX_VALUE));
+		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE));
 
-		jSplitPane1.setLeftComponent(piecePickerPanel);
+		piecePickerAndMainSeperator.setLeftComponent(piecePickerPanel);
 
-		mainAndToolbarSeperator
-		.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
+		mainAndToolbarSeperator.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
 		mainAndToolbarSeperator.setDividerSize(0);
 		mainAndToolbarSeperator.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
-		mainAndToolbarSeperator.setTopComponent(toolbarPanel);
+		mainAndToolbarSeperator.setTopComponent(toolbarAndTabSeperator);
 
 		final GroupLayout mainPanelLayout = new GroupLayout(getMainPanel());
 		getMainPanel().setLayout(mainPanelLayout);
-		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
-		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 472, Short.MAX_VALUE));
+		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
+		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 472, Short.MAX_VALUE));
 
-		mainAndToolbarSeperator.setRightComponent(getMainPanel());
+		mainAndToolbarSeperator.setRightComponent(mainPanelHolder);
 
-		jSplitPane1.setRightComponent(mainAndToolbarSeperator);
+		piecePickerAndMainSeperator.setRightComponent(mainAndToolbarSeperator);
 
 		final GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
-		layout.setVerticalGroup(layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addComponent(jSplitPane1));
+		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(piecePickerAndMainSeperator));
+		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(piecePickerAndMainSeperator));
 
 		pack();
+
+		getTabPanel().setPreferredSize(new Dimension(getWidth() / 2, GraphicsConstants.TOOLBAR_HEIGHT));
 
 		getMainPanel().centerOnOrigin();
 	}
@@ -138,8 +147,7 @@ public class WindowFrame extends JFrame {
 			final Object value = UIManager.get(key);
 			if (value instanceof FontUIResource) {
 				final FontUIResource orig = (FontUIResource) value;
-				final Font font = new Font(f.getFontName(), orig.getStyle(),
-						f.getSize());
+				final Font font = new Font(f.getFontName(), orig.getStyle(), f.getSize());
 				UIManager.put(key, new FontUIResource(font));
 			}
 		}
@@ -154,31 +162,25 @@ public class WindowFrame extends JFrame {
 	public static void main(final String... args) {
 
 		try {
-			for (final UIManager.LookAndFeelInfo info : UIManager
-					.getInstalledLookAndFeels()) {
+			for (final UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
 				}
 			}
 		} catch (final ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final InstantiationException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (final UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(WindowFrame.class.getName())
-			.log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(WindowFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 
 		EventQueue.invokeLater(() -> {
 			final WindowFrame frame = new WindowFrame();
 			frame.setVisible(true);
-			frame.mainPanel.start();
 
 		});
 	}
@@ -200,6 +202,14 @@ public class WindowFrame extends JFrame {
 	 */
 	public final void setMainPanel(final MainPanel mainPanel) {
 		this.mainPanel = mainPanel;
+	}
+
+	public TabPanel getTabPanel() {
+		return tabPanel;
+	}
+
+	public void setTabPanel(TabPanel tabPanel) {
+		this.tabPanel = tabPanel;
 	}
 
 }

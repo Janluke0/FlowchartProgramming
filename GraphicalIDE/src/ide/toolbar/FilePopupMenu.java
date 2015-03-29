@@ -4,6 +4,8 @@ import ide.WindowFrame;
 import ide.mainpanel.MainPanel;
 
 import java.awt.HeadlessException;
+import java.io.File;
+import java.util.Optional;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -60,13 +62,18 @@ public class FilePopupMenu extends JPopupMenu {
 	}
 
 	private void saveAsClicked() {
-		// TODO Auto-generated method stub
-
+		final Optional<File> file = frame.getMainPanel().askForAndGetFilename();
+		if (file.isPresent()) {
+			frame.getTabPanel().setFilename(file.get().getName());
+			saveClicked();
+		}
 	}
 
 	private void saveClicked() {
-		// TODO Auto-generated method stub
+		final Optional<File> file = frame.getMainPanel().getOrAskForFilename();
+		if (file.isPresent()) {
 
+		}
 	}
 
 	private void openClicked() {

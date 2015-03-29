@@ -35,6 +35,14 @@ public final class GraphicsConstants {
 	/** The Default MENU_BACKROUND_COLOR. */
 	public static final Color MENU_BACKROUND_COLOR = new Color(140, 165, 160);
 
+	public static final Color SELECTED_TAB_BACKGROUND = new Color(150, 74, 89);
+
+	public static final Color SELECTED_TAB_FOREGROUND = new Color(230, 230, 230);
+
+	public static final Color DESELECTED_TAB_BACKGROUND = new Color(200, 220, 200);
+
+	public static final Color DESELECTED_TAB_FOREGROUND = new Color(50, 50, 50);
+
 	/** The Default PIECE_BACKGROUND. */
 	public static final Color PIECE_BACKGROUND = new Color(190, 200, 200);
 

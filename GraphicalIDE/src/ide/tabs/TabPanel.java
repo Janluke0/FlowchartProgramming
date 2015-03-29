@@ -6,6 +6,7 @@ import ide.mainpanel.MainPanel;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,21 +39,55 @@ public class TabPanel extends JPanel {
 	}
 
 	public void addTab(final String s, final MainPanel panel) {
-		final JButton component = new JButton(s);
-		this.panel.add(component);
 
-		components.add(new MainPanelAndButton(component, panel));
+		final JButton button = new JButton(s);
+		this.panel.add(button);
+
+		components.add(new MainPanelAndButton(button, panel));
 		frame.mainPanelHolder.add(panel, "" + (components.size() - 1));
 
-		component.addActionListener((e) -> {
+		// if this is the only tab, select it
+		if (components.size() == 1) {
+			button.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
+			button.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
+		} else {
+			button.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
+			button.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
+		}
+
+		button.addActionListener((e) -> {
 			for (int i = 0; i < components.size(); i++) {
-				if (components.get(i).button.equals(component)) {
+				if (components.get(i).button.equals(button)) {
+
+					components.get(i).button.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
+					components.get(i).button.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
+
 					frame.setMainPanel(components.get(i).panel);
 					final CardLayout cl = (CardLayout) frame.mainPanelHolder.getLayout();
 					cl.show(frame.mainPanelHolder, "" + i);
+					frame.currentMainPanel = i;
+				} else {
+					components.get(i).button.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
+					components.get(i).button.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
 				}
 			}
 		});
+		revalidate();
+		repaint();
+	}
+
+	/**
+	 * Sets the current MainPanel's filename in the tabs.
+	 *
+	 * @param s
+	 */
+	public void setFilename(final String s) {
+		for (final Component c : panel.getComponents()) {
+			if (c.equals(components.get(frame.currentMainPanel).button)) {
+				((JButton) c).setText(s);
+				break;
+			}
+		}
 		revalidate();
 		repaint();
 	}

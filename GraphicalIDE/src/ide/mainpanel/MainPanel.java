@@ -6,9 +6,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import language.Piece;
@@ -18,6 +21,8 @@ import language.Piece;
  */
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel {
+
+	private Optional<File> filename = Optional.empty();
 
 	/** The pieces. */
 	private final List<Piece> pieces;
@@ -64,21 +69,13 @@ public class MainPanel extends JPanel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
 	@Override
 	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 		getGraphicsHandler().draw((Graphics2D) g);
-	}
-
-	/**
-	 * Centers this panel's position on (0,0).
-	 */
-	public void centerOnOrigin() {
-		x = -getWidth() / 2;
-		y = -getHeight() / 2;
 	}
 
 	public boolean pointIsInTrash(final Point worldCoord) {
@@ -162,7 +159,7 @@ public class MainPanel extends JPanel {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
@@ -223,5 +220,32 @@ public class MainPanel extends JPanel {
 
 	public List<Piece> getSelectedPieces() {
 		return selectedPieces;
+	}
+
+	/**
+	 * If we have a filename, returns that. If not, we ask the user for one with a JFileChooser dialog.
+	 *
+	 * @return
+	 */
+	public Optional<File> getOrAskForFilename() {
+		if (filename.isPresent()) {
+			return filename;
+		}
+		return askForAndGetFilename();
+	}
+
+	/**
+	 * Asks the user for a filename with a JFileChooser dialog.
+	 *
+	 * @return
+	 */
+	public Optional<File> askForAndGetFilename() {
+		final JFileChooser chooser = new JFileChooser();
+		final int returnVal = chooser.showOpenDialog(this);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			filename = Optional.of(chooser.getSelectedFile());
+			return Optional.of(chooser.getSelectedFile());
+		}
+		return Optional.empty();
 	}
 }

@@ -7,7 +7,6 @@ import ide.tabs.TabPanel;
 import ide.toolbar.ToolbarPanel;
 
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.util.Enumeration;
@@ -58,6 +57,7 @@ public class WindowFrame extends JFrame {
 	/** The toolbar panel. */
 	private JPanel toolbarPanel;
 
+	public int currentMainPanel;
 	public JPanel mainPanelHolder;
 
 	/**
@@ -128,10 +128,6 @@ public class WindowFrame extends JFrame {
 		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(piecePickerAndMainSeperator));
 
 		pack();
-
-		getTabPanel().setPreferredSize(new Dimension(getWidth() / 2, GraphicsConstants.TOOLBAR_HEIGHT));
-
-		getMainPanel().centerOnOrigin();
 	}
 
 	/**
@@ -208,7 +204,7 @@ public class WindowFrame extends JFrame {
 		return tabPanel;
 	}
 
-	public void setTabPanel(TabPanel tabPanel) {
+	public void setTabPanel(final TabPanel tabPanel) {
 		this.tabPanel = tabPanel;
 	}
 

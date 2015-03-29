@@ -37,6 +37,7 @@ public class MainPanel extends JPanel {
 
 	/** The interpreter thread. This thread constantly updates every piece. */
 	private final transient Thread interpreterThread;
+	private final InterpreterTask interpreterTask;
 
 	/** The graphics handler. */
 	private final transient MainPanelGraphicsHandler graphicsHandler;
@@ -56,15 +57,22 @@ public class MainPanel extends JPanel {
 
 		graphicsHandler = new MainPanelGraphicsHandler(this);
 
-		interpreterThread = new Thread(new InterpreterTask());
-		start();
-	}
-
-	private MainPanel start() {
-		interpreterThread.start();
+		interpreterThread = new Thread(interpreterTask = new InterpreterTask());
 		setFocusable(true);
 		requestFocusInWindow();
+	}
+
+	/**
+	 * Starts the interpreter thread.
+	 *
+	 */
+	public MainPanel start() {
+		interpreterThread.start();
 		return this;
+	}
+
+	public void stop() {
+		interpreterTask.shouldStop = true;
 	}
 
 	/*
@@ -157,6 +165,8 @@ public class MainPanel extends JPanel {
 		private static final int FRAMES_PER_SECOND = 60;
 		private static final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
 
+		public boolean shouldStop = false;
+
 		/*
 		 * (non-Javadoc)
 		 *
@@ -167,7 +177,7 @@ public class MainPanel extends JPanel {
 			long nextTime = System.currentTimeMillis();
 			long sleepTime = 0;
 
-			while (true) {
+			while (!shouldStop) {
 				synchronized (getPieces()) {
 					for (final Piece p : getPieces()) {
 						if (p.shouldUpdateEveryTick() || p.shouldUpdateNextTick()) {
@@ -218,6 +228,11 @@ public class MainPanel extends JPanel {
 		return graphicsHandler;
 	}
 
+	/**
+	 * Returns a list of the currently selected pieces
+	 *
+	 * @return
+	 */
 	public List<Piece> getSelectedPieces() {
 		return selectedPieces;
 	}
@@ -225,7 +240,7 @@ public class MainPanel extends JPanel {
 	/**
 	 * If we have a filename, returns that. If not, we ask the user for one with a JFileChooser dialog.
 	 *
-	 * @return
+	 * @return the current filename or {@link MainPanel#askForAndGetFilename()}
 	 */
 	public Optional<File> getOrAskForFilename() {
 		if (filename.isPresent()) {
@@ -237,7 +252,7 @@ public class MainPanel extends JPanel {
 	/**
 	 * Asks the user for a filename with a JFileChooser dialog.
 	 *
-	 * @return
+	 * @return the file or empty if the user clicked cancel
 	 */
 	public Optional<File> askForAndGetFilename() {
 		final JFileChooser chooser = new JFileChooser();
@@ -248,4 +263,16 @@ public class MainPanel extends JPanel {
 		}
 		return Optional.empty();
 	}
+
+	/**
+	 * Saves the currently open file into the passed in file
+	 *
+	 * @param file
+	 *            the file to save to
+	 */
+	public void save(final File file) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

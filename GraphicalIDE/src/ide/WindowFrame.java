@@ -75,7 +75,7 @@ public class WindowFrame extends JFrame {
 		mainPanelHolder.setBorder(null);
 		mainPanelHolder.setLayout(new CardLayout());
 
-		setMainPanel(new MainPanel());
+		setMainPanel(new MainPanel().start());
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		piecePickerAndMainSeperator = new JSplitPane();

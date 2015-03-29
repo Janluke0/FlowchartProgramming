@@ -57,8 +57,7 @@ public class FilePopupMenu extends JPopupMenu {
 	}
 
 	private void closeClicked() {
-		// TODO Auto-generated method stub
-
+		frame.getTabPanel().closeTab();
 	}
 
 	private void saveAsClicked() {
@@ -72,7 +71,8 @@ public class FilePopupMenu extends JPopupMenu {
 	private void saveClicked() {
 		final Optional<File> file = frame.getMainPanel().getOrAskForFilename();
 		if (file.isPresent()) {
-
+			// Save the file
+			frame.getMainPanel().save(file.get());
 		}
 	}
 
@@ -81,7 +81,10 @@ public class FilePopupMenu extends JPopupMenu {
 
 	}
 
+	/**
+	 * Creates a new tab called "Untitled"
+	 */
 	private void newClicked() {
-		frame.getTabPanel().addTab("Untitled", new MainPanel());
+		frame.getTabPanel().addTab("Untitled", new MainPanel().start());
 	}
 }

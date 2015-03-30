@@ -63,7 +63,6 @@ public class FilePopupMenu extends JPopupMenu {
 	private void saveAsClicked() {
 		final Optional<File> file = frame.getMainPanel().askForAndGetFilename();
 		if (file.isPresent()) {
-			frame.getTabPanel().setFilename(file.get().getName());
 			saveClicked();
 		}
 	}
@@ -72,13 +71,16 @@ public class FilePopupMenu extends JPopupMenu {
 		final Optional<File> file = frame.getMainPanel().getOrAskForFilename();
 		if (file.isPresent()) {
 			// Save the file
+			frame.getTabPanel().setFilename(file.get().getName());
 			frame.getMainPanel().save(file.get());
 		}
 	}
 
 	private void openClicked() {
-		// TODO Auto-generated method stub
-
+		final Optional<File> file = frame.getMainPanel().askForAndGetFilename();
+		if (file.isPresent()) {
+			frame.getTabPanel().addTab(file.get().getName(), new MainPanel(file.get()));
+		}
 	}
 
 	/**

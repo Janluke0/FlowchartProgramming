@@ -30,12 +30,14 @@ public class TabPanel extends JPanel {
 		super();
 		this.frame = frame;
 
+		panel.setBackground(GraphicsConstants.MENU_BACKROUND_COLOR);
 		setBackground(GraphicsConstants.MENU_BACKROUND_COLOR);
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
 		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		setLayout(new BorderLayout());
+		scrollPane.setBorder(null);
 		add(scrollPane, BorderLayout.CENTER);
 	}
 
@@ -56,11 +58,20 @@ public class TabPanel extends JPanel {
 					final CardLayout cl = (CardLayout) frame.mainPanelHolder.getLayout();
 					cl.show(frame.mainPanelHolder, "" + i);
 					frame.currentMainPanel = i;
+
+					frame.revalidate();
+					frame.repaint();
 				} else {
 				}
 			}
 			highlightSelected();
 		});
+
+		// Select it if we're creating the only tab available
+		if (components.size() == 1) {
+			button.doClick();
+		}
+
 		revalidate();
 		repaint();
 	}
@@ -72,7 +83,8 @@ public class TabPanel extends JPanel {
 		components.remove(current);
 		panel.remove(current);
 		frame.mainPanelHolder.remove(current);
-		frame.currentMainPanel -= 1;
+
+		frame.currentMainPanel = Math.max(0, frame.currentMainPanel - 1);
 
 		highlightSelected();
 

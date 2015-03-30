@@ -26,9 +26,9 @@ public class MainPanelGraphicsHandler {
 	/** The Constant GRID_NUMBER_DISTANCE. */
 	private static final int GRID_NUMBER_DISTANCE = 200;
 
-	// if a user is dragging from a port, this is a line between the port and
-	// the mouse
-	/** The port to mouse line. */
+	/**
+	 * if a user is dragging from a port, this is a line between the port and the mouse
+	 */
 	public Optional<Line2D> portToMouseLine = Optional.empty();
 
 	/** The parent. */
@@ -50,10 +50,10 @@ public class MainPanelGraphicsHandler {
 	}
 
 	/**
-	 * Draw.
+	 * Draws the main panel.
 	 *
 	 * @param g
-	 *            the g
+	 *            the Graphics2D object
 	 */
 	public void draw(final Graphics2D g) {
 		GraphicsUtils.prettyGraphics(g);
@@ -98,10 +98,7 @@ public class MainPanelGraphicsHandler {
 
 	private void drawTrashCan(final Graphics2D g) {
 		final Image trash = GraphicsConstants.TRASH_ICON.getImage();
-		g.drawImage(trash, parent.getWidth() - trash.getWidth(null)
-				- GraphicsConstants.TRASH_BORDER_SIZE, parent.getHeight()
-				- trash.getHeight(null) - GraphicsConstants.TRASH_BORDER_SIZE,
-				null);
+		g.drawImage(trash, parent.getWidth() - trash.getWidth(null) - GraphicsConstants.TRASH_BORDER_SIZE, parent.getHeight() - trash.getHeight(null) - GraphicsConstants.TRASH_BORDER_SIZE, null);
 	}
 
 	/**
@@ -116,8 +113,7 @@ public class MainPanelGraphicsHandler {
 		g.setColor(GraphicsConstants.MAIN_GRID_COLOR);
 
 		// Draws vertical lines
-		for (int sepX = -(parent.getViewX() % GRID_SEPARATOR_DISTANCE)
-				- GRID_SEPARATOR_DISTANCE; sepX < parent.getWidth(); sepX += GRID_SEPARATOR_DISTANCE) {
+		for (int sepX = -(parent.getViewX() % GRID_SEPARATOR_DISTANCE) - GRID_SEPARATOR_DISTANCE; sepX < parent.getWidth(); sepX += GRID_SEPARATOR_DISTANCE) {
 			if (sepX + parent.getViewX() == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_ORIGIN_COLOR);
 			} else {
@@ -128,14 +124,11 @@ public class MainPanelGraphicsHandler {
 			// draws line coordinates if neccesary
 			if ((sepX + parent.getViewX()) % GRID_NUMBER_DISTANCE == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_COLOR);
-				g.drawString(String.valueOf(sepX + parent.getViewX()), sepX
-						+ textSpaceBuffer, g.getFontMetrics().getMaxAscent()
-						+ textSpaceBuffer);
+				g.drawString(String.valueOf(sepX + parent.getViewX()), sepX + textSpaceBuffer, g.getFontMetrics().getMaxAscent() + textSpaceBuffer);
 			}
 		}
 		// draws horizontal lines
-		for (int sepY = -(parent.getViewY() % GRID_SEPARATOR_DISTANCE); sepY < parent
-				.getHeight() + GRID_SEPARATOR_DISTANCE; sepY += GRID_SEPARATOR_DISTANCE) {
+		for (int sepY = -(parent.getViewY() % GRID_SEPARATOR_DISTANCE); sepY < parent.getHeight() + GRID_SEPARATOR_DISTANCE; sepY += GRID_SEPARATOR_DISTANCE) {
 			if (sepY + parent.getViewY() == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_ORIGIN_COLOR);
 			} else {
@@ -146,8 +139,7 @@ public class MainPanelGraphicsHandler {
 			// draws line coordinates if necessary
 			if ((sepY + parent.getViewY()) % GRID_NUMBER_DISTANCE == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_COLOR);
-				g.drawString(String.valueOf(sepY + parent.getViewY()),
-						textSpaceBuffer, sepY - textSpaceBuffer);
+				g.drawString(String.valueOf(sepY + parent.getViewY()), textSpaceBuffer, sepY - textSpaceBuffer);
 			}
 		}
 	}

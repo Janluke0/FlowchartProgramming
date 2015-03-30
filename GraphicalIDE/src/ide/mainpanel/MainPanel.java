@@ -62,6 +62,11 @@ public class MainPanel extends JPanel {
 		requestFocusInWindow();
 	}
 
+	public MainPanel(final File file) {
+		this();
+		load(file);
+	}
+
 	/**
 	 * Starts the interpreter thread.
 	 *
@@ -271,6 +276,17 @@ public class MainPanel extends JPanel {
 	 *            the file to save to
 	 */
 	public void save(final File file) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * Loads the passed in file into this main panel
+	 *
+	 * @param file
+	 *            the file to load from
+	 */
+	private void load(final File file) {
 		// TODO Auto-generated method stub
 
 	}

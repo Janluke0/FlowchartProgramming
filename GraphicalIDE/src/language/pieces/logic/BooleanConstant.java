@@ -55,7 +55,7 @@ public class BooleanConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
@@ -78,7 +78,7 @@ public class BooleanConstant extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
@@ -93,12 +93,15 @@ public class BooleanConstant extends Piece {
 
 	@Override
 	public boolean shouldUpdateEveryTick() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected Type getOutputType() {
 		return Type.BOOLEAN;
+	}
+
+	public boolean getValue() {
+		return value.getValue();
 	}
 }

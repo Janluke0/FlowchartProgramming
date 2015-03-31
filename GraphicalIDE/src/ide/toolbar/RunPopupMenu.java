@@ -21,7 +21,7 @@ public class RunPopupMenu extends JPopupMenu {
 		// Create a pop-up menu components
 		final JMenuItem runItem = new JMenuItem("Reset");
 		runItem.addActionListener((e) -> {
-			runClicked();
+			resetClicked();
 		});
 
 		final JMenuItem compileItem = new JMenuItem("Compile");
@@ -41,7 +41,7 @@ public class RunPopupMenu extends JPopupMenu {
 
 	}
 
-	private void runClicked() {
+	private void resetClicked() {
 		// TODO Auto-generated method stub
 
 	}

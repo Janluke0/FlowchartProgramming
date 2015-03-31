@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,8 +20,6 @@ import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 
-import org.reflections.Reflections;
-
 /**
  * Abstract class. To implement this class, you must add a method with the
  * signature<br>
@@ -32,73 +29,56 @@ import org.reflections.Reflections;
  * */
 public abstract class Piece {
 
-	// The longest piece name of all the pieces added in the static block. This
-	// is used for determining how big we have
-	// to make the list for picking pieces
-	/** The Constant LONGEST_PIECE_NAME. */
-	public static final String LONGEST_PIECE_NAME;
-	// Size of connection ports
-	/** The Constant PORT_SIZE. */
+	/**
+	 * The longest piece name of all the pieces added in the static block. This
+	 * is used for determining how big we have to make the list for picking
+	 * pieces
+	 */
+	public static String LONGEST_PIECE_NAME;
+	/** Size of connection ports. */
 	protected static final int PORT_SIZE = 20;
-	// Size of gap between connection ports
-	/** The Constant GAP_SIZE. */
+
+	/** Size of gap between connection ports */
 	protected static final int GAP_SIZE = 10;
-	// Size of the space border around the whole piece
-	/** The Constant BORDER_SPACE. */
+
+	/** Size of the space border around the whole piece */
 	protected static final int BORDER_SPACE = 5;
 
-	// A map of added piece classes to their names
-	/** The piece names. */
+	/** A map of added piece classes to their names */
 	private static List<PieceTreeRepresentation> pieces = new ArrayList<>();
 
+	/** Holds whether this piece should update next tick or not. */
 	private boolean shouldUpdateNextTick = false;
 
-	/** The inputs. */
+	/** The inputs values */
 	private final ProgramValue<?>[] inputs;
 
+	/** The strings to display the inputs */
 	private final String[] inputDisplays;
+	/** The strings to display the outputs */
 	private final String[] outputDisplays;
 
-	/** The outputs. */
+	/** The outputs connections. */
 	private final Connection[] outputs;
 
-	/** The x. */
+	/** The x position of the upper left corner of this piece. */
 	private int x;
 
-	/** The y. */
+	/** The y position of the upper right corner of this piece. */
 	private int y;
-	// Defaults to this so no null pointer exception, but changes in the draw
-	// method to the graphics' font metrics
-	/** The font metrics. */
+
+	/**
+	 * Defaults to this so no null pointer exception, but changes in the draw
+	 * method to the graphics' font metrics.
+	 */
 	protected FontMetrics fontMetrics = new Canvas()
 			.getFontMetrics(GraphicsConstants.APP_FONT);
 
 	/**
 	 * minimum width of a piece, definitely has to be at least 2 * port_size so
-	 * // that they don't overlap
+	 * that they don't overlap
 	 */
 	private int width = 2 * PORT_SIZE + 60;
-
-	static {
-		// For every signel class subtyping Piece, we add it
-		final Reflections reflections = new Reflections(Piece.class
-				.getPackage().getName());
-		for (final Class<? extends Piece> c : reflections
-				.getSubTypesOf(Piece.class)) {
-			addPiece(c);
-		}
-
-		// set the longest piece name
-		String longestString = "";
-		final Iterator<PieceTreeRepresentation> it = getPieceNames().iterator();
-		while (it.hasNext()) {
-			final PieceTreeRepresentation next = it.next();
-			if (next.name.length() > longestString.length()) {
-				longestString = next.name;
-			}
-		}
-		LONGEST_PIECE_NAME = longestString;
-	}
 
 	/**
 	 * Instantiates a new piece.
@@ -134,15 +114,21 @@ public abstract class Piece {
 		updateWidth();
 	}
 
-	// Piece should take inputs and figure out its output
 	/**
-	 * Update.
+	 * Piece should take inputs and figure out its output
 	 *
 	 * @param programContext
 	 *            the ProgramContext for this tick
 	 */
 	protected abstract void updatePiece();
 
+	/**
+	 * Pieces like time that take no inputs but decide outputs should update
+	 * every tick. Otherwise, the pieces should update only when they recieve
+	 * input.
+	 *
+	 * @return whether this piece should update every tick
+	 */
 	public abstract boolean shouldUpdateEveryTick();
 
 	public void update() {
@@ -151,7 +137,7 @@ public abstract class Piece {
 	}
 
 	/**
-	 * Double clicked.
+	 * Double click event.
 	 *
 	 * @param clickPoint
 	 *            the point in world coordinates
@@ -162,7 +148,7 @@ public abstract class Piece {
 	 * Assumes that this should draw at (0,0).
 	 *
 	 * @param g
-	 *            the g
+	 *            the graphics object
 	 */
 	public void draw(final Graphics2D g) {
 		// Store this variable so other methods can use it without accessing
@@ -334,25 +320,8 @@ public abstract class Piece {
 	 * @param p
 	 *            the p
 	 */
-	protected static void addPiece(final Class<? extends Piece> p) {
-		String name = "";
-
-		try {
-			// Assumes subclass has a static method called name
-			name = p.getMethod("name").invoke(null).toString();
-		} catch (final NoSuchMethodException e) {
-			e.printStackTrace();
-			// if they didn't supply a name method, use the class name instead
-			name = p.getSimpleName();
-		} catch (final SecurityException e) {
-			e.printStackTrace();
-		} catch (final IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (final InvocationTargetException e) {
-			e.printStackTrace();
-		}
+	public static void addPiece(final Class<? extends Piece> p,
+			final String name) {
 		final String[] parts = name.split("\\.");
 		final String[] packageString = new String[parts.length - 1];
 		// don't get the name, just the folders
@@ -362,6 +331,17 @@ public abstract class Piece {
 		getPieceNames().add(
 				new PieceTreeRepresentation(p, packageString,
 						parts[parts.length - 1]));
+
+		// set the longest piece name
+		String longestString = "";
+		final Iterator<PieceTreeRepresentation> it = getPieceNames().iterator();
+		while (it.hasNext()) {
+			final PieceTreeRepresentation next = it.next();
+			if (next.name.length() > longestString.length()) {
+				longestString = next.name;
+			}
+		}
+		LONGEST_PIECE_NAME = longestString;
 	}
 
 	/**

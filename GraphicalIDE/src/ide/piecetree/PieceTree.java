@@ -12,6 +12,20 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import language.Piece;
+import language.pieces.logic.BooleanConstant;
+import language.pieces.logic.operators.And;
+import language.pieces.logic.operators.FlipFlop;
+import language.pieces.logic.operators.Not;
+import language.pieces.logic.operators.Or;
+import language.pieces.numbers.NumberConstant;
+import language.pieces.numbers.operators.Addition;
+import language.pieces.numbers.operators.Division;
+import language.pieces.numbers.operators.Modulus;
+import language.pieces.numbers.operators.Multiplication;
+import language.pieces.utils.Display;
+import language.pieces.utils.Print;
+import language.pieces.utils.time.Time;
+import language.pieces.utils.time.Timer;
 
 @SuppressWarnings("serial")
 public class PieceTree extends JTree {
@@ -23,6 +37,8 @@ public class PieceTree extends JTree {
 	private static void initializePieceTree() {
 		// Initialize the root node and all the children node from
 		// Piece.getPieceNames()
+		addPieces();
+
 		root = new DefaultMutableTreeNode("Root");
 		for (final PieceTreeRepresentation cl : Piece.getPieceNames()) {
 			DefaultMutableTreeNode folderParent = root;
@@ -31,7 +47,8 @@ public class PieceTree extends JTree {
 			for (int i = 0; i < folder.length; i++) {
 				final String s = folder[i];
 				@SuppressWarnings("unchecked")
-				final Enumeration<DefaultMutableTreeNode> e = folderParent.children();
+				final Enumeration<DefaultMutableTreeNode> e = folderParent
+						.children();
 				DefaultMutableTreeNode sChild = null;
 				boolean hasSChild = false;
 				while (e.hasMoreElements()) {
@@ -50,7 +67,8 @@ public class PieceTree extends JTree {
 
 				} else {
 					// adds a folder node, stored as a string
-					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(s);
+					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(
+							s);
 					folderParent.add(newParent);
 					// recurse for next string with this as the parent
 					folderParent = newParent;
@@ -61,12 +79,37 @@ public class PieceTree extends JTree {
 		}
 	}
 
+	private static void addPieces() {
+		final Object[][] pieces = { //
+		{ And.class, And.name() }, //
+				{ FlipFlop.class, FlipFlop.name() },//
+				{ Not.class, Not.name() },//
+				{ Or.class, Or.name() },//
+				{ BooleanConstant.class, BooleanConstant.name() },//
+				{ Addition.class, Addition.name() },//
+				{ Division.class, Division.name() },//
+				{ Modulus.class, Modulus.name() },//
+				{ Multiplication.class, Multiplication.name() },//
+				{ NumberConstant.class, NumberConstant.name() },//
+				{ Time.class, Time.name() },//
+				{ Timer.class, Timer.name() },//
+				{ Display.class, Display.name() },//
+				{ Print.class, Print.name() } };//
+
+		for (final Object[] o : pieces) {
+			for (int i = 0; i < o.length; i += 2) {
+				Piece.addPiece((Class<? extends Piece>) o[i], (String) o[i + 1]);
+			}
+		}
+	}
+
 	public PieceTree(final WindowFrame frame) {
 		super(new AlphabeticalTreeModel(root));
 
 		setRootVisible(false);
 		setBackground(GraphicsConstants.PIECE_TREE_BACKGROUND_COLOR);
-		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		addTreeSelectionListener(new PieceTreeInputHandler(this, frame));
 		setCellRenderer(new PieceTreeDisplay());
 		setToggleClickCount(1);
@@ -85,7 +128,8 @@ public class PieceTree extends JTree {
 			for (int i = 0; i < cc - 1; i++) {
 				for (int j = i + 1; j <= cc - 1; j++) {
 					final DefaultMutableTreeNode here = sort(root.getChildAt(i));
-					final DefaultMutableTreeNode there = sort(root.getChildAt(j));
+					final DefaultMutableTreeNode there = sort(root
+							.getChildAt(j));
 
 					// If its a leaf, it is a PieceTreeRepresentation, else it
 					// is a string

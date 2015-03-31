@@ -50,6 +50,14 @@ public final class GraphicsConstants {
 	public static final Color TAB_PANEL_SCROLL_BAR_HIGHLIGHT_COLOR = new Color(
 			170, 90, 100);
 
+	public static final Color TAB_PANEL_SCROLL_BAR_TRACK_COLOR = new Color(140,
+			165, 160);
+
+	public static final Color TAB_PANEL_SCROLL_BAR_LIGHT_SHADOW = new Color(
+			130, 30, 40);
+	public static final Color TAB_PANEL_SCROLL_BAR_DARK_SHADOW = new Color(80,
+			20, 30);
+
 	/** The Default PIECE_BACKGROUND. */
 	public static final Color PIECE_BACKGROUND = new Color(190, 200, 200);
 

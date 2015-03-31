@@ -6,7 +6,6 @@ import ide.mainpanel.MainPanel;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -46,7 +45,9 @@ public class TabPanel extends JPanel {
 			protected void configureScrollBarColors() {
 				thumbColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_COLOR;
 				thumbHighlightColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_HIGHLIGHT_COLOR;
-				trackColor = Color.blue;
+				trackColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_TRACK_COLOR;
+				thumbLightShadowColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_LIGHT_SHADOW;
+				thumbDarkShadowColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_DARK_SHADOW;
 			}
 
 			@Override

@@ -25,7 +25,8 @@ public final class GraphicsConstants {
 	/** The Default APP_FONT. */
 	public static final Font APP_FONT = new Font("Arial", Font.PLAIN, 12);
 
-	public static final Color PIECE_TREE_BACKGROUND_COLOR = new Color(55, 85, 80);
+	public static final Color PIECE_TREE_BACKGROUND_COLOR = new Color(55, 85,
+			80);
 
 	public static final Color PIECE_TREE_TEXT_COLOR = Color.WHITE;
 
@@ -39,9 +40,15 @@ public final class GraphicsConstants {
 
 	public static final Color SELECTED_TAB_FOREGROUND = new Color(230, 230, 230);
 
-	public static final Color DESELECTED_TAB_BACKGROUND = new Color(200, 220, 200);
+	public static final Color DESELECTED_TAB_BACKGROUND = new Color(200, 220,
+			200);
 
 	public static final Color DESELECTED_TAB_FOREGROUND = new Color(50, 50, 50);
+
+	public static final Color TAB_PANEL_SCROLL_BAR_COLOR = new Color(150, 74,
+			89);
+	public static final Color TAB_PANEL_SCROLL_BAR_HIGHLIGHT_COLOR = new Color(
+			170, 90, 100);
 
 	/** The Default PIECE_BACKGROUND. */
 	public static final Color PIECE_BACKGROUND = new Color(190, 200, 200);
@@ -59,15 +66,16 @@ public final class GraphicsConstants {
 	public static final Color LINE_DRAG_COLOR = Color.GREEN;
 
 	@SuppressWarnings("serial")
-	public static final Map<Type, Color> TYPE_COLORS = Collections.unmodifiableMap(new HashMap<Type, Color>() {
-		{
-			put(Type.NUMBER, new Color(50, 150, 200));
-			put(Type.BOOLEAN, new Color(240, 100, 100));
+	public static final Map<Type, Color> TYPE_COLORS = Collections
+			.unmodifiableMap(new HashMap<Type, Color>() {
+				{
+					put(Type.NUMBER, new Color(50, 150, 200));
+					put(Type.BOOLEAN, new Color(240, 100, 100));
 
-			put(Type.ANY, Color.LIGHT_GRAY);
-			put(Type.NONE, Color.BLACK);
-		}
-	});
+					put(Type.ANY, Color.LIGHT_GRAY);
+					put(Type.NONE, Color.BLACK);
+				}
+			});
 
 	public static final Color SELECTION_COLOR = new Color(255, 200, 0, 100);
 	public static final int SELECTION_WIDTH = 3;
@@ -83,13 +91,18 @@ public final class GraphicsConstants {
 
 	public static final int TRASH_WIDTH = 50;
 	public static final int TRASH_BORDER_SIZE = 15;
-	public static final ImageIcon TRASH_ICON = resizeImage(loadImageIcon("/icons/trashcan.png"), TRASH_WIDTH);
+	public static final ImageIcon TRASH_ICON = resizeImage(
+			loadImageIcon("/icons/trashcan.png"), TRASH_WIDTH);
 	private static final int LEAF_WIDTH = 15;
-	public static final ImageIcon PIECE_TREE_LEAF_ICON = resizeImage(loadImageIcon("/icons/piecetree/circleicon.png"), LEAF_WIDTH);
+	public static final ImageIcon PIECE_TREE_LEAF_ICON = resizeImage(
+			loadImageIcon("/icons/piecetree/circleicon.png"), LEAF_WIDTH);
 	private static final int OPEN_FOLDER_WIDTH = 15;
-	public static final ImageIcon PIECE_TREE_OPEN_FOLDER_ICON = resizeImage(loadImageIcon("/icons/piecetree/circleicon.png"), OPEN_FOLDER_WIDTH);
+	public static final ImageIcon PIECE_TREE_OPEN_FOLDER_ICON = resizeImage(
+			loadImageIcon("/icons/piecetree/circleicon.png"), OPEN_FOLDER_WIDTH);
 	private static final int CLOSED_FOLDER_WIDTH = 15;
-	public static final ImageIcon PIECE_TREE_CLOSED_FOLDER_ICON = resizeImage(loadImageIcon("/icons/piecetree/closedcircleicon.png"), CLOSED_FOLDER_WIDTH);
+	public static final ImageIcon PIECE_TREE_CLOSED_FOLDER_ICON = resizeImage(
+			loadImageIcon("/icons/piecetree/closedcircleicon.png"),
+			CLOSED_FOLDER_WIDTH);
 
 	private static ImageIcon loadImageIcon(final String filename) {
 		ImageIcon icon;
@@ -102,7 +115,10 @@ public final class GraphicsConstants {
 		return icon;
 	}
 
-	private static ImageIcon resizeImage(final ImageIcon original, final int width) {
-		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width, (int) (original.getIconHeight() * ((double) width / original.getIconWidth()))));
+	private static ImageIcon resizeImage(final ImageIcon original,
+			final int width) {
+		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width,
+				(int) (original.getIconHeight() * ((double) width / original
+						.getIconWidth()))));
 	}
 }

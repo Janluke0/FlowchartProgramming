@@ -6,7 +6,9 @@ import ide.mainpanel.MainPanel;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
 @SuppressWarnings("serial")
 public class TabPanel extends JPanel {
@@ -35,7 +38,36 @@ public class TabPanel extends JPanel {
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		final JScrollPane scrollPane = new JScrollPane(panel,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected void configureScrollBarColors() {
+				thumbColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_COLOR;
+				thumbHighlightColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_HIGHLIGHT_COLOR;
+				trackColor = Color.blue;
+			}
+
+			@Override
+			protected JButton createDecreaseButton(final int orientation) {
+				return createZeroButton();
+			}
+
+			@Override
+			protected JButton createIncreaseButton(final int orientation) {
+				return createZeroButton();
+			}
+
+			private JButton createZeroButton() {
+				final JButton jbutton = new JButton();
+				jbutton.setPreferredSize(new Dimension(0, 0));
+				jbutton.setMinimumSize(new Dimension(0, 0));
+				jbutton.setMaximumSize(new Dimension(0, 0));
+				return jbutton;
+			}
+		});
+
 		setLayout(new BorderLayout());
 		scrollPane.setBorder(null);
 		add(scrollPane, BorderLayout.CENTER);
@@ -55,7 +87,8 @@ public class TabPanel extends JPanel {
 			for (int i = 0; i < components.size(); i++) {
 				if (components.get(i).button.equals(button)) {
 					frame.setMainPanel(components.get(i).panel);
-					final CardLayout cl = (CardLayout) frame.mainPanelHolder.getLayout();
+					final CardLayout cl = (CardLayout) frame.mainPanelHolder
+							.getLayout();
 					cl.show(frame.mainPanelHolder, "" + i);
 					frame.currentMainPanel = i;
 
@@ -98,11 +131,15 @@ public class TabPanel extends JPanel {
 	private void highlightSelected() {
 		for (int i = 0; i < components.size(); i++) {
 			if (i == frame.currentMainPanel) {
-				components.get(i).button.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
-				components.get(i).button.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
+				components.get(i).button
+				.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
+				components.get(i).button
+				.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
 			} else {
-				components.get(i).button.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
-				components.get(i).button.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
+				components.get(i).button
+				.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
+				components.get(i).button
+				.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
 			}
 		}
 	}

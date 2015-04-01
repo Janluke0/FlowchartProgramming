@@ -3,11 +3,14 @@ package ide.tabs;
 import ide.WindowFrame;
 import ide.graphics.GraphicsConstants;
 import ide.mainpanel.MainPanel;
+import ide.toolbar.FilePopupMenu;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 @SuppressWarnings("serial")
@@ -37,9 +41,7 @@ public class TabPanel extends JPanel {
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-		final JScrollPane scrollPane = new JScrollPane(panel,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
 			@Override
 			protected void configureScrollBarColors() {
@@ -77,29 +79,34 @@ public class TabPanel extends JPanel {
 	public void addTab(final String s, final MainPanel panel) {
 
 		final JButton button = new JButton(s);
+		button.addMouseListener(new MouseAdapter() {
+			FilePopupMenu filePopupMenu = new FilePopupMenu(frame);
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					button.getModel().setArmed(true);
+					button.getModel().setPressed(true);
+					filePopupMenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+				switchToPanel(button);
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				if (button.getModel().isPressed()) {
+					button.getModel().setArmed(false);
+					button.getModel().setPressed(false);
+				}
+			}
+		});
+
 		this.panel.add(button);
 
 		components.add(new MainPanelAndButton(button, panel));
 		frame.mainPanelHolder.add(panel, "" + (components.size() - 1));
 
 		highlightSelected();
-
-		button.addActionListener((e) -> {
-			for (int i = 0; i < components.size(); i++) {
-				if (components.get(i).button.equals(button)) {
-					frame.setMainPanel(components.get(i).panel);
-					final CardLayout cl = (CardLayout) frame.mainPanelHolder
-							.getLayout();
-					cl.show(frame.mainPanelHolder, "" + i);
-					frame.currentMainPanel = i;
-
-					frame.revalidate();
-					frame.repaint();
-				} else {
-				}
-			}
-			highlightSelected();
-		});
 
 		// Select it if we're creating the only tab available
 		if (components.size() == 1) {
@@ -108,6 +115,22 @@ public class TabPanel extends JPanel {
 
 		revalidate();
 		repaint();
+	}
+
+	private void switchToPanel(final JButton button) {
+		for (int i = 0; i < components.size(); i++) {
+			if (components.get(i).button.equals(button)) {
+				frame.setMainPanel(components.get(i).panel);
+				final CardLayout cl = (CardLayout) frame.mainPanelHolder.getLayout();
+				cl.show(frame.mainPanelHolder, "" + i);
+				frame.currentMainPanel = i;
+
+				frame.revalidate();
+				frame.repaint();
+			} else {
+			}
+		}
+		highlightSelected();
 	}
 
 	public void closeTab() {
@@ -132,15 +155,11 @@ public class TabPanel extends JPanel {
 	private void highlightSelected() {
 		for (int i = 0; i < components.size(); i++) {
 			if (i == frame.currentMainPanel) {
-				components.get(i).button
-				.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
-				components.get(i).button
-				.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
+				components.get(i).button.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
+				components.get(i).button.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
 			} else {
-				components.get(i).button
-				.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
-				components.get(i).button
-				.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
+				components.get(i).button.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
+				components.get(i).button.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
 			}
 		}
 	}

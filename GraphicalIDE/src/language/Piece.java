@@ -65,6 +65,8 @@ public abstract class Piece {
 	 */
 	private int width = 2 * PORT_SIZE + 60;
 
+	private String name;
+
 	/**
 	 * Instantiates a new piece.
 	 *
@@ -93,6 +95,14 @@ public abstract class Piece {
 			inputDisplays[i] = "";
 		}
 
+		// defaults to class name
+		name = getClass().getSimpleName();
+		for (final PieceTreeRepresentation p : PieceTree.getPieces()) {
+			if (p.clazz.equals(getClass())) {
+				name = p.name;
+			}
+		}
+
 		setX(x);
 		setY(y);
 		updateWidth();
@@ -108,7 +118,7 @@ public abstract class Piece {
 
 	/**
 	 * Pieces like time that take no inputs but decide outputs should update every tick. Otherwise, the pieces should
-	 * update only when they recieve input.
+	 * update only when they receive input.
 	 *
 	 * @return whether this piece should update every tick
 	 */
@@ -245,7 +255,7 @@ public abstract class Piece {
 	 * Output port containing point.
 	 *
 	 * @param worldCoord
-	 *            the world coord
+	 *            the world coordinate
 	 * @return the index of the connection that was clicked on
 	 */
 	public Optional<Integer> outputPortContainingPoint(final Point worldCoord) {
@@ -429,13 +439,6 @@ public abstract class Piece {
 	 * @return the name
 	 */
 	public String getName() {
-		// defaults to class name
-		String name = getClass().getSimpleName();
-		for (final PieceTreeRepresentation p : PieceTree.getPieces()) {
-			if (p.clazz.equals(getClass())) {
-				name = p.name;
-			}
-		}
 		return name;
 	}
 

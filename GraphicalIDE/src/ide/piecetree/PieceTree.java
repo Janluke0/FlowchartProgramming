@@ -3,7 +3,9 @@ package ide.piecetree;
 import ide.WindowFrame;
 import ide.graphics.GraphicsConstants;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,6 +32,10 @@ import language.pieces.utils.time.Timer;
 @SuppressWarnings("serial")
 public class PieceTree extends JTree {
 	private static DefaultMutableTreeNode root;
+
+	/** A map of added piece classes to their names */
+	private static List<PieceTreeRepresentation> pieces = new ArrayList<>();
+
 	static {
 		initializePieceTree();
 	}
@@ -40,15 +46,14 @@ public class PieceTree extends JTree {
 		addPieces();
 
 		root = new DefaultMutableTreeNode("Root");
-		for (final PieceTreeRepresentation cl : Piece.getPieceNames()) {
+		for (final PieceTreeRepresentation cl : getPieces()) {
 			DefaultMutableTreeNode folderParent = root;
 			final String[] folder = cl.packageString;
 			// Don't do the last one
 			for (int i = 0; i < folder.length; i++) {
 				final String s = folder[i];
 				@SuppressWarnings("unchecked")
-				final Enumeration<DefaultMutableTreeNode> e = folderParent
-						.children();
+				final Enumeration<DefaultMutableTreeNode> e = folderParent.children();
 				DefaultMutableTreeNode sChild = null;
 				boolean hasSChild = false;
 				while (e.hasMoreElements()) {
@@ -67,8 +72,7 @@ public class PieceTree extends JTree {
 
 				} else {
 					// adds a folder node, stored as a string
-					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(
-							s);
+					final DefaultMutableTreeNode newParent = new DefaultMutableTreeNode(s);
 					folderParent.add(newParent);
 					// recurse for next string with this as the parent
 					folderParent = newParent;
@@ -81,7 +85,7 @@ public class PieceTree extends JTree {
 
 	private static void addPieces() {
 		final Object[][] pieces = { //
-		{ And.class, And.name() }, //
+				{ And.class, And.name() }, //
 				{ FlipFlop.class, FlipFlop.name() },//
 				{ Not.class, Not.name() },//
 				{ Or.class, Or.name() },//
@@ -98,9 +102,26 @@ public class PieceTree extends JTree {
 
 		for (final Object[] o : pieces) {
 			for (int i = 0; i < o.length; i += 2) {
-				Piece.addPiece((Class<? extends Piece>) o[i], (String) o[i + 1]);
+				addPiece((Class<? extends Piece>) o[i], (String) o[i + 1]);
 			}
 		}
+	}
+
+	/**
+	 * Adds the piece.
+	 *
+	 *
+	 * @param p
+	 *            the p
+	 */
+	private static void addPiece(final Class<? extends Piece> p, final String name) {
+		final String[] parts = name.split("\\.");
+		final String[] packageString = new String[parts.length - 1];
+		// don't get the name, just the folders
+		for (int i = 0; i < packageString.length; i++) {
+			packageString[i] = parts[i];
+		}
+		getPieces().add(new PieceTreeRepresentation(p, packageString, parts[parts.length - 1]));
 	}
 
 	public PieceTree(final WindowFrame frame) {
@@ -108,11 +129,18 @@ public class PieceTree extends JTree {
 
 		setRootVisible(false);
 		setBackground(GraphicsConstants.PIECE_TREE_BACKGROUND_COLOR);
-		getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		addTreeSelectionListener(new PieceTreeInputHandler(this, frame));
 		setCellRenderer(new PieceTreeDisplay());
 		setToggleClickCount(1);
+	}
+
+	public static List<PieceTreeRepresentation> getPieces() {
+		return pieces;
+	}
+
+	public static void setPieces(final List<PieceTreeRepresentation> pieces) {
+		PieceTree.pieces = pieces;
 	}
 
 	private static class AlphabeticalTreeModel extends DefaultTreeModel {
@@ -128,8 +156,7 @@ public class PieceTree extends JTree {
 			for (int i = 0; i < cc - 1; i++) {
 				for (int j = i + 1; j <= cc - 1; j++) {
 					final DefaultMutableTreeNode here = sort(root.getChildAt(i));
-					final DefaultMutableTreeNode there = sort(root
-							.getChildAt(j));
+					final DefaultMutableTreeNode there = sort(root.getChildAt(j));
 
 					// If its a leaf, it is a PieceTreeRepresentation, else it
 					// is a string

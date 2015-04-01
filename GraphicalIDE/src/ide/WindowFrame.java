@@ -21,8 +21,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.FontUIResource;
 
-import language.Piece;
-
 /**
  * The Class WindowFrame.
  *
@@ -100,9 +98,7 @@ public class WindowFrame extends JFrame {
 		final GroupLayout piecePickerPanelLayout = new GroupLayout(piecePickerPanel);
 		piecePickerPanel.setLayout(piecePickerPanelLayout);
 
-		final int maxPixelWidthOfPieceNames = (int) (getMainPanel().getFontMetrics(GraphicsConstants.APP_FONT).stringWidth(Piece.LONGEST_PIECE_NAME) * 1.5);
-
-		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, maxPixelWidthOfPieceNames, Short.MAX_VALUE));
+		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, GraphicsConstants.PIECE_PICKER_WIDTH, Short.MAX_VALUE));
 		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE));
 
 		piecePickerAndMainSeperator.setLeftComponent(piecePickerPanel);

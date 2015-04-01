@@ -82,7 +82,7 @@ public class MainPanel extends JPanel {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
 	@Override
@@ -174,7 +174,7 @@ public class MainPanel extends JPanel {
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
@@ -185,7 +185,7 @@ public class MainPanel extends JPanel {
 			while (!shouldStop) {
 				synchronized (getPieces()) {
 					for (final Piece p : getPieces()) {
-						if (p.shouldUpdateEveryTick() || p.shouldUpdateNextTick()) {
+						if (p.shouldUpdateNextTick() || p.shouldUpdateEveryTick()) {
 							p.update();
 						}
 					}

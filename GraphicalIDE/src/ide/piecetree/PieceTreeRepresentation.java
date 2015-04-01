@@ -17,7 +17,7 @@ public class PieceTreeRepresentation {
 
 	@Override
 	public String toString() {
-		return clazz.getSimpleName();
+		return name;
 	}
 
 	@Override

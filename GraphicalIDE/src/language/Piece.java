@@ -1,50 +1,33 @@
 package language;
 
-import ide.graphics.GraphicsConstants;
-import ide.graphics.GraphicsUtils;
-import ide.piecetree.PieceTree;
-import ide.piecetree.PieceTreeRepresentation;
-
-import java.awt.Canvas;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.Shape;
 import java.util.Arrays;
 import java.util.Optional;
 
+import ide.graphics.PieceRenderer;
+import ide.piecetree.PieceTree;
+import ide.piecetree.PieceTreeRepresentation;
 import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 
 /**
- * Abstract class. To implement this class, you must add a method with the signature<br>
+ * Abstract class. To implement this class, you must add a method with the
+ * signature<br>
  * <code>public static String name()</code> <br>
  * and a default constructor with two int parameters (position)<br>
  * <code>public PieceXXX(int x, int y)</code>
- * */
+ */
 public abstract class Piece {
 
-	/** Size of connection ports. */
-	protected static final int PORT_SIZE = 20;
-
-	/** Size of gap between connection ports */
-	protected static final int GAP_SIZE = 10;
-
-	/** Size of the space border around the whole piece */
-	protected static final int BORDER_SPACE = 5;
 
 	/** Holds whether this piece should update next tick or not. */
 	private boolean shouldUpdateNextTick = false;
 
 	/** The inputs values */
 	private final ProgramValue<?>[] inputs;
-
-	/** The strings to display the inputs */
-	private final String[] inputDisplays;
-	/** The strings to display the outputs */
-	private final String[] outputDisplays;
 
 	/** The outputs connections. */
 	private final Connection[] outputs;
@@ -55,17 +38,9 @@ public abstract class Piece {
 	/** The y position of the upper right corner of this piece. */
 	private int y;
 
-	/**
-	 * Defaults to this so no null pointer exception, but changes in the draw method to the graphics' font metrics.
-	 */
-	protected FontMetrics fontMetrics = new Canvas().getFontMetrics(GraphicsConstants.APP_FONT);
-
-	/**
-	 * minimum width of a piece, definitely has to be at least 2 * port_size so that they don't overlap
-	 */
-	private int width = 2 * PORT_SIZE + 60;
-
 	private String name;
+	
+	private PieceRenderer renderer;
 
 	/**
 	 * Instantiates a new piece.
@@ -81,18 +56,13 @@ public abstract class Piece {
 	 */
 	protected Piece(final int inputs, final int outputs, final int x, final int y) {
 		this.inputs = new ProgramValue[inputs];
-		inputDisplays = new String[inputs];
-
 		this.outputs = new Connection[outputs];
-		outputDisplays = new String[outputs];
-
+		
 		for (int i = 0; i < outputs; i++) {
 			setOutput(i, new Connection(null, -1));
-			outputDisplays[i] = "";
 		}
 		for (int i = 0; i < inputs; i++) {
 			setInput(i, ProgramValueNothing.NOTHING);
-			inputDisplays[i] = "";
 		}
 
 		// defaults to class name
@@ -105,6 +75,8 @@ public abstract class Piece {
 
 		setX(x);
 		setY(y);
+		
+		renderer = new PieceRenderer(this);
 		updateWidth();
 	}
 
@@ -117,15 +89,21 @@ public abstract class Piece {
 	protected abstract void updatePiece();
 
 	/**
-	 * Pieces like time that take no inputs but decide outputs should update every tick. Otherwise, the pieces should
-	 * update only when they receive input.
+	 * Pieces like time that take no inputs but decide outputs should update
+	 * every tick. Otherwise, the pieces should update only when they receive
+	 * input.
 	 *
 	 * @return whether this piece should update every tick
 	 */
 	public abstract boolean shouldUpdateEveryTick();
 
 	public void update() {
-		updatePiece();
+		try {
+			updatePiece();
+		} catch (Exception e) {
+			// don't let any exception thrown by pieces crash the application
+			e.printStackTrace();
+		}
 		shouldUpdateNextTick = false;
 	}
 
@@ -144,111 +122,26 @@ public abstract class Piece {
 	 *            the graphics object
 	 */
 	public void draw(final Graphics2D g) {
-		// Store this variable so other methods can use it without accessing
-		// graphics
-		fontMetrics = g.getFontMetrics();
-
-		updateWidth();
-
-		final int nameHeight = fontMetrics.getMaxAscent();
-		final int nameWidth = Math.max(getStringWidth(getName()), width);
-
-		g.translate(getX(), getY());
-
-		g.setColor(GraphicsConstants.PIECE_BACKGROUND);
-		g.fill(getBodyShape());
-
-		g.setColor(GraphicsConstants.PORT_COLOR);
-		for (int i = 0; i < getInputs().length; i++) {
-			g.drawOval(BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
-		}
-
-		g.setColor(GraphicsConstants.PORT_COLOR);
-		for (int i = 0; i < outputs.length; i++) {
-			g.drawOval(nameWidth - PORT_SIZE - BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE);
-		}
-
-		g.setColor(GraphicsConstants.PIECE_TEXT);
-		g.drawString(getName(), BORDER_SPACE, nameHeight);
-
-		drawPortText(g);
-
-		g.translate(-getX(), -getY());
-
+		renderer.draw(g);
 	}
 
 	public void drawConnections(final Graphics2D g) {
-
-		final int nameWidth = Math.max(getStringWidth(getName()), width);
-		final int nameHeight = fontMetrics.getMaxAscent();
-
-		for (int i = 0; i < outputs.length; i++) {
-			if (outputs[i] != null && outputs[i].getOutput() != null) {
-				g.setColor(GraphicsConstants.TYPE_COLORS.get(getOutputType()));
-				final Point p1 = new Point(x + nameWidth - PORT_SIZE - BORDER_SPACE + PORT_SIZE / 2, y + nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
-				final Point p2 = outputs[i].getOutput().getPosition();
-				final int inputIndex = outputs[i].getOutputPort();
-				p2.translate(BORDER_SPACE + PORT_SIZE / 2, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * inputIndex + PORT_SIZE / 2);
-				GraphicsUtils.drawCurve(g, p1, p2);
-			}
-		}
+		renderer.drawConnections(g);
 	}
 
-	protected abstract Type getOutputType();
+	public abstract Type getOutputType();
 
 	protected void setInputText(final int port, final String text) {
-		inputDisplays[port] = text;
+		renderer.getInputDisplays()[port] = text;
 	}
 
 	protected void setOutputText(final int port, final String text) {
-		outputDisplays[port] = text;
+		renderer.getOutputDisplays()[port] = text;
 		shouldUpdateNextTick = true;
 	}
 
 	protected void updateWidth() {
-		int newWidth = 0;
-		newWidth += BORDER_SPACE;
-		if (inputs.length != 0) {
-			newWidth += PORT_SIZE + BORDER_SPACE;
-		}
-		int maxInputLength = 0;
-		for (final String s : inputDisplays) {
-			if (fontMetrics.stringWidth(s) > maxInputLength) {
-				maxInputLength = fontMetrics.stringWidth(s);
-			}
-		}
-		newWidth += maxInputLength + BORDER_SPACE;
-		int maxOutputLength = 0;
-		for (final String s : outputDisplays) {
-			if (fontMetrics.stringWidth(s) > maxInputLength) {
-				maxOutputLength = fontMetrics.stringWidth(s);
-			}
-		}
-		newWidth += maxOutputLength + BORDER_SPACE;
-		if (outputs.length != 0) {
-			newWidth += PORT_SIZE + BORDER_SPACE;
-		}
-		width = Math.max(newWidth, fontMetrics.stringWidth(getName()));
-	}
-
-	private void drawPortText(final Graphics2D g) {
-
-		for (int i = 0; i < inputDisplays.length; i++) {
-			int x = BORDER_SPACE;
-			if (inputs.length > 0) {
-				x += PORT_SIZE + BORDER_SPACE;
-			}
-
-			g.drawString(inputDisplays[i], x, (int) (fontMetrics.getMaxAscent() + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE * 1.5 - fontMetrics.getAscent()));
-		}
-		for (int i = 0; i < outputDisplays.length; i++) {
-			int portWidth = 0;
-			if (outputs.length != 0) {
-				portWidth = PORT_SIZE + BORDER_SPACE;
-			}
-
-			g.drawString(outputDisplays[i], width - fontMetrics.stringWidth(outputDisplays[i]) - BORDER_SPACE - portWidth, (int) (fontMetrics.getMaxAscent() + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE * 1.5 - fontMetrics.getAscent()));
-		}
+		renderer.updateWidth();
 	}
 
 	/**
@@ -259,46 +152,9 @@ public abstract class Piece {
 	 * @return the index of the connection that was clicked on
 	 */
 	public Optional<Integer> outputPortContainingPoint(final Point worldCoord) {
-		final Point worldCoordCopy = new Point(worldCoord);
-		// the body shape is at 0,0 so we have to translate that by its x and y
-		// OR translate our point by -x and -y
-		worldCoordCopy.translate(-getX(), -getY());
-
-		final int nameWidth = Math.max(getStringWidth(getName()), width);
-		final int nameHeight = fontMetrics.getMaxAscent();
-
-		for (int i = 0; i < outputs.length; i++) {
-			if (new Ellipse2D.Float(nameWidth - PORT_SIZE - BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE).contains(worldCoordCopy)) {
-				return Optional.of(i);
-			}
-		}
-		return Optional.empty();
+	return renderer.outputPortContainingPoint(worldCoord);
 	}
 
-	/**
-	 * Gets the string width + 2 * BORDER_SPACE
-	 *
-	 * @param name
-	 *            the name
-	 * @return the string width
-	 */
-	protected int getStringWidth(final String name) {
-		return fontMetrics.stringWidth(name) + 2 * BORDER_SPACE;
-	}
-
-	/**
-	 * Gets the body shape.
-	 *
-	 * @param width
-	 *            the width
-	 * @return the body shape
-	 */
-	public RoundRectangle2D getBodyShape() {
-		final int newWidth = Math.max(getStringWidth(getName()), width);
-		final int curve = 5;
-		final int height = fontMetrics.getMaxAscent() + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * Math.max(getInputs().length, outputs.length);
-		return new RoundRectangle2D.Float(0, 0, newWidth, height, curve, curve);
-	}
 
 	/**
 	 * Contains point.
@@ -308,11 +164,7 @@ public abstract class Piece {
 	 * @return true, if successful
 	 */
 	public boolean containsPoint(final Point worldCoord) {
-		final Point worldCoordCopy = new Point(worldCoord);
-		// the body shape is at 0,0 so we have to translate that by its x and y
-		// OR translate our point by -x and -y
-		worldCoordCopy.translate(-getX(), -getY());
-		return getBodyShape().contains(worldCoordCopy);
+		return renderer.containsPoint(worldCoord);
 	}
 
 	/**
@@ -370,7 +222,8 @@ public abstract class Piece {
 	}
 
 	/**
-	 * p is translated so that the origin is (0,0) and the top left corner of this piece.
+	 * p is translated so that the origin is (0,0) and the top left corner of
+	 * this piece.
 	 *
 	 * @param i
 	 *            the i
@@ -379,7 +232,7 @@ public abstract class Piece {
 	 * @return true, if successful
 	 */
 	public boolean inputContainsPoint(final int i, final Point p) {
-		return new Ellipse2D.Float(BORDER_SPACE, fontMetrics.getMaxAscent() + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE).contains(p);
+		return renderer.inputContainsPoint(i, p);
 	}
 
 	/**
@@ -448,6 +301,10 @@ public abstract class Piece {
 
 	public boolean shouldUpdateNextTick() {
 		return shouldUpdateNextTick;
+	}
+
+	public Shape getBodyShape() {
+		return renderer.getBodyShape();
 	}
 
 }

@@ -41,7 +41,7 @@ public class TabPanel extends JPanel {
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
 			@Override
 			protected void configureScrollBarColors() {
@@ -110,7 +110,7 @@ public class TabPanel extends JPanel {
 
 		// Select it if we're creating the only tab available
 		if (components.size() == 1) {
-			button.doClick();
+			switchToPanel(0);
 		}
 
 		revalidate();
@@ -120,16 +120,23 @@ public class TabPanel extends JPanel {
 	private void switchToPanel(final JButton button) {
 		for (int i = 0; i < components.size(); i++) {
 			if (components.get(i).button.equals(button)) {
-				frame.setMainPanel(components.get(i).panel);
-				final CardLayout cl = (CardLayout) frame.mainPanelHolder.getLayout();
-				cl.show(frame.mainPanelHolder, "" + i);
-				frame.currentMainPanel = i;
-
-				frame.revalidate();
-				frame.repaint();
-			} else {
+				switchToPanel(i);
 			}
 		}
+	}
+
+	private void switchToPanel(int i) {
+		if(components.size() <= i){
+			return;
+		}
+		frame.setMainPanel(components.get(i).panel);
+		final CardLayout cl = (CardLayout) frame.mainPanelHolder.getLayout();
+		cl.show(frame.mainPanelHolder, String.valueOf(i));
+		frame.currentMainPanel = i;
+
+		frame.revalidate();
+		frame.repaint();
+
 		highlightSelected();
 	}
 
@@ -140,13 +147,25 @@ public class TabPanel extends JPanel {
 		components.remove(current);
 		panel.remove(current);
 		frame.mainPanelHolder.remove(current);
-
-		frame.currentMainPanel = Math.max(0, frame.currentMainPanel - 1);
-
-		highlightSelected();
+		
+		//re-add components with correct indices
+		for(int i = 0; i < components.size(); i++){
+			MainPanelAndButton comp = components.get(i);
+			
+			frame.mainPanelHolder.remove(comp.panel);
+			frame.mainPanelHolder.add(comp.panel, String.valueOf(i));
+		}
+		
+		switchToPanel(Math.max(0, frame.currentMainPanel - 1));
 
 		revalidate();
 		repaint();
+	}
+
+	public void closeAllTab() {
+		while(components.size() > 0){
+			closeTab();
+		}
 	}
 
 	/**

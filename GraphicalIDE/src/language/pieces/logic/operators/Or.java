@@ -45,11 +45,9 @@ public class Or extends Piece {
 	public void updatePiece() {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
-		if (v1 instanceof ProgramValueBoolean
-				&& v2 instanceof ProgramValueBoolean) {
+		if (v1 instanceof ProgramValueBoolean && v2 instanceof ProgramValueBoolean) {
 			final ProgramValueBoolean v3 = new ProgramValueBoolean(
-					((ProgramValueBoolean) v1).getValue()
-							|| ((ProgramValueBoolean) v2).getValue());
+					((ProgramValueBoolean) v1).getValue() || ((ProgramValueBoolean) v2).getValue());
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
@@ -79,7 +77,7 @@ public class Or extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return Type.BOOLEAN;
 	}
 }

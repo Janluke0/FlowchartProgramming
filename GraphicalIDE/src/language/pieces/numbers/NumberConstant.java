@@ -101,7 +101,7 @@ public class NumberConstant extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return Type.NUMBER;
 	}
 

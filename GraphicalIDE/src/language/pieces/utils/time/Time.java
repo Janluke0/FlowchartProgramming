@@ -83,7 +83,7 @@ public class Time extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return Type.NUMBER;
 	}
 

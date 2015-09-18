@@ -72,7 +72,7 @@ public class Print extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return Type.NONE;
 	}
 }

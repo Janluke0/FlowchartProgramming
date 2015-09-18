@@ -83,6 +83,7 @@ public class PieceTree extends JTree {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void addPieces() {
 		final Object[][] pieces = { //
 				{ And.class, And.name() }, //

@@ -83,12 +83,11 @@ public class Division extends Piece {
 
 	@Override
 	public boolean shouldUpdateEveryTick() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return Type.NUMBER;
 	}
 

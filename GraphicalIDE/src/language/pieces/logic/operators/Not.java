@@ -76,7 +76,7 @@ public class Not extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return Type.BOOLEAN;
 	}
 

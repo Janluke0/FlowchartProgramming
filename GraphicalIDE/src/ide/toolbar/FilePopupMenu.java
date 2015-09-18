@@ -44,6 +44,10 @@ public class FilePopupMenu extends JPopupMenu {
 		closeItem.addActionListener((e) -> {
 			closeClicked();
 		});
+		final JMenuItem closeAllItem = new JMenuItem("Close all");
+		closeAllItem.addActionListener((e) -> {
+			closeAllClicked();
+		});
 
 		// Add components to pop-up menu
 		add(newItem);
@@ -53,7 +57,12 @@ public class FilePopupMenu extends JPopupMenu {
 		add(saveAsItem);
 		addSeparator();
 		add(closeItem);
+		add(closeAllItem);
 
+	}
+
+	private void closeAllClicked() {
+		frame.getTabPanel().closeAllTab();
 	}
 
 	private void closeClicked() {

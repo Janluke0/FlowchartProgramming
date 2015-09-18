@@ -1,6 +1,7 @@
 package language.pieces.numbers.operators;
 
 import java.awt.Point;
+import java.math.BigDecimal;
 
 import language.Connection;
 import language.Piece;
@@ -46,9 +47,13 @@ public class Modulus extends Piece {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueNum && v2 instanceof ProgramValueNum) {
-			final ProgramValueNum v3 = new ProgramValueNum(
-					((ProgramValueNum) v1).getValue().remainder(
-							((ProgramValueNum) v2).getValue()));
+			ProgramValue<?> v3;
+			if (((ProgramValueNum) v2).getValue().compareTo(BigDecimal.ZERO) == 0) {
+				v3 = ProgramValueNothing.NOTHING;
+			} else {
+				v3 = new ProgramValueNum(
+						((ProgramValueNum) v1).getValue().remainder(((ProgramValueNum) v2).getValue()));
+			}
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
@@ -78,7 +83,7 @@ public class Modulus extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return Type.NUMBER;
 	}
 

@@ -60,9 +60,10 @@ public class WindowFrame extends JFrame {
 
 	/**
 	 * Creates new form GUIFrame.
+	 * @param appName 
 	 */
-	public WindowFrame() {
-		super();
+	public WindowFrame(String appName) {
+		super(appName);
 		setUIFont(new FontUIResource(GraphicsConstants.APP_FONT));
 		initComponents();
 	}
@@ -171,7 +172,7 @@ public class WindowFrame extends JFrame {
 		}
 
 		EventQueue.invokeLater(() -> {
-			final WindowFrame frame = new WindowFrame();
+			final WindowFrame frame = new WindowFrame(GraphicsConstants.APP_NAME);
 			frame.setVisible(true);
 
 		});

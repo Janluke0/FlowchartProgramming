@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/Users/Kyran Adams/Desktop/Coding Stuff/Java/workspace/javaassist/javassist.jar" sourcepath="C:/Users/Kyran Adams/Desktop/Coding Stuff/Java/workspace/javaassist/javassist-rel_3_19_0_ga.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

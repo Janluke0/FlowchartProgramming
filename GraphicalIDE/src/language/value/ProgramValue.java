@@ -67,7 +67,7 @@ public abstract class ProgramValue<T> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final ProgramValue other = (ProgramValue) obj;
+		final ProgramValue<?> other = (ProgramValue<?>) obj;
 		if (value == null) {
 			if (other.value != null) {
 				return false;

@@ -71,7 +71,7 @@ public class Display extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		return getInputs()[0].getType();
 	}
 

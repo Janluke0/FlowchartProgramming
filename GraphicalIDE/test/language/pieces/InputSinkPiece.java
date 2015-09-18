@@ -37,7 +37,7 @@ public class InputSinkPiece extends Piece {
 	}
 
 	@Override
-	protected Type getOutputType() {
+	public Type getOutputType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

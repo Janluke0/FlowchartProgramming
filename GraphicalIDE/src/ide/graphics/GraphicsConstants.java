@@ -19,6 +19,8 @@ public final class GraphicsConstants {
 	private GraphicsConstants() {
 	}
 
+	public static final String APP_NAME = "Flowchart IDE";
+	
 	public static final int TOOLBAR_HEIGHT = 60;
 	public static final int TOOLBAR_PADDING = 5;
 

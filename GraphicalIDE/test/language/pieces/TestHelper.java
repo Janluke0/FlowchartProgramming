@@ -8,8 +8,8 @@ import org.junit.Assert;
 
 public class TestHelper {
 
-	public static void truthTable(final ProgramValue[][] inputs,
-			final ProgramValue[][] outputs, final Piece piece) {
+	public static void truthTable(final ProgramValue<?>[][] inputs,
+			final ProgramValue<?>[][] outputs, final Piece piece) {
 
 		final Piece inputSink = new InputSinkPiece();
 		piece.setOutput(0, new Connection(inputSink, 0));

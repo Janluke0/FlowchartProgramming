@@ -77,7 +77,6 @@ public abstract class Piece {
 		setY(y);
 		
 		renderer = new PieceRenderer(this);
-		updateWidth();
 	}
 
 	/**
@@ -138,10 +137,6 @@ public abstract class Piece {
 	protected void setOutputText(final int port, final String text) {
 		renderer.getOutputDisplays()[port] = text;
 		shouldUpdateNextTick = true;
-	}
-
-	protected void updateWidth() {
-		renderer.updateWidth();
 	}
 
 	/**

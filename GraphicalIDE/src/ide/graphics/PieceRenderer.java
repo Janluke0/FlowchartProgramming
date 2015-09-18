@@ -52,23 +52,24 @@ public class PieceRenderer {
 		for (int i = 0; i < getInputDisplays().length; i++) {
 			getInputDisplays()[i] = "";
 		}
+		updateWidth();
 	}
-	public void updateWidth() {
+	private void updateWidth() {
 		int newWidth = 0;
 		newWidth += BORDER_SPACE;
 		if (piece.getInputs().length != 0) {
 			newWidth += PORT_SIZE + BORDER_SPACE;
 		}
-		int maxInputLength = 0;
+		int maxInputWidth = 0;
 		for (final String s : getInputDisplays()) {
-			if (fontMetrics.stringWidth(s) > maxInputLength) {
-				maxInputLength = fontMetrics.stringWidth(s);
+			if (fontMetrics.stringWidth(s) > maxInputWidth) {
+				maxInputWidth = fontMetrics.stringWidth(s);
 			}
 		}
-		newWidth += maxInputLength + BORDER_SPACE;
+		newWidth += maxInputWidth + BORDER_SPACE;
 		int maxOutputLength = 0;
 		for (final String s : getOutputDisplays()) {
-			if (fontMetrics.stringWidth(s) > maxInputLength) {
+			if (fontMetrics.stringWidth(s) > maxInputWidth) {
 				maxOutputLength = fontMetrics.stringWidth(s);
 			}
 		}

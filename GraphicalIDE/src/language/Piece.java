@@ -1,27 +1,26 @@
 package language;
 
+import ide.graphics.PieceRenderer;
+import ide.piecetree.PieceTree;
+import ide.piecetree.PieceTreeRepresentation;
+
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.util.Arrays;
 import java.util.Optional;
 
-import ide.graphics.PieceRenderer;
-import ide.piecetree.PieceTree;
-import ide.piecetree.PieceTreeRepresentation;
 import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 
 /**
- * Abstract class. To implement this class, you must add a method with the
- * signature<br>
+ * Abstract class. To implement this class, you must add a method with the signature<br>
  * <code>public static String name()</code> <br>
  * and a default constructor with two int parameters (position)<br>
  * <code>public PieceXXX(int x, int y)</code>
  */
 public abstract class Piece {
-
 
 	/** Holds whether this piece should update next tick or not. */
 	private boolean shouldUpdateNextTick = false;
@@ -39,8 +38,8 @@ public abstract class Piece {
 	private int y;
 
 	private String name;
-	
-	private PieceRenderer renderer;
+
+	private final PieceRenderer renderer;
 
 	/**
 	 * Instantiates a new piece.
@@ -57,7 +56,7 @@ public abstract class Piece {
 	protected Piece(final int inputs, final int outputs, final int x, final int y) {
 		this.inputs = new ProgramValue[inputs];
 		this.outputs = new Connection[outputs];
-		
+
 		for (int i = 0; i < outputs; i++) {
 			setOutput(i, new Connection(null, -1));
 		}
@@ -75,7 +74,7 @@ public abstract class Piece {
 
 		setX(x);
 		setY(y);
-		
+
 		renderer = new PieceRenderer(this);
 	}
 
@@ -85,21 +84,20 @@ public abstract class Piece {
 	 * @param programContext
 	 *            the ProgramContext for this tick
 	 */
-	protected abstract void updatePiece();
+	protected abstract void updatePiece(ProgramContext context);
 
 	/**
-	 * Pieces like time that take no inputs but decide outputs should update
-	 * every tick. Otherwise, the pieces should update only when they receive
-	 * input.
+	 * Pieces like time that take no inputs but decide outputs should update every tick. Otherwise, the pieces should
+	 * update only when they receive input.
 	 *
 	 * @return whether this piece should update every tick
 	 */
 	public abstract boolean shouldUpdateEveryTick();
 
-	public void update() {
+	public void update(final ProgramContext context) {
 		try {
-			updatePiece();
-		} catch (Exception e) {
+			updatePiece(context);
+		} catch (final Exception e) {
 			// don't let any exception thrown by pieces crash the application
 			e.printStackTrace();
 		}
@@ -131,11 +129,11 @@ public abstract class Piece {
 	public abstract Type getOutputType();
 
 	protected void setInputText(final int port, final String text) {
-		renderer.getInputDisplays()[port] = text;
+		renderer.setInputDisplay(port, text);
 	}
 
 	protected void setOutputText(final int port, final String text) {
-		renderer.getOutputDisplays()[port] = text;
+		renderer.setOutputDisplay(port, text);
 		shouldUpdateNextTick = true;
 	}
 
@@ -147,9 +145,8 @@ public abstract class Piece {
 	 * @return the index of the connection that was clicked on
 	 */
 	public Optional<Integer> outputPortContainingPoint(final Point worldCoord) {
-	return renderer.outputPortContainingPoint(worldCoord);
+		return renderer.outputPortContainingPoint(worldCoord);
 	}
-
 
 	/**
 	 * Contains point.
@@ -217,8 +214,7 @@ public abstract class Piece {
 	}
 
 	/**
-	 * p is translated so that the origin is (0,0) and the top left corner of
-	 * this piece.
+	 * p is translated so that the origin is (0,0) and the top left corner of this piece.
 	 *
 	 * @param i
 	 *            the i

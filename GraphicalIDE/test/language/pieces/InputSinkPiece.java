@@ -3,11 +3,12 @@ package language.pieces;
 import java.awt.Point;
 
 import language.Piece;
+import language.ProgramContext;
 import language.type.Type;
 
 /**
  * A piece that makes testing easier because it can be used as a result piece.
- * 
+ *
  * @author s-KADAMS
  *
  */
@@ -19,7 +20,7 @@ public class InputSinkPiece extends Piece {
 	}
 
 	@Override
-	protected void updatePiece() {
+	protected void updatePiece(final ProgramContext context) {
 		// TODO Auto-generated method stub
 
 	}

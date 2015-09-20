@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import language.Piece;
+import language.ProgramContext;
 import language.type.Type;
 
 /**
@@ -34,7 +35,7 @@ public class Display extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#draw(java.awt.Graphics2D)
 	 */
 	@Override
@@ -45,17 +46,17 @@ public class Display extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece() {
+	public void updatePiece(final ProgramContext context) {
 		getOutputs()[0].changeInput(getInputs()[0]);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

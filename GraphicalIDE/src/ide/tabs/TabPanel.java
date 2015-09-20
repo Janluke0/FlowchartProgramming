@@ -42,34 +42,7 @@ public class TabPanel extends JPanel {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
 		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
-			@Override
-			protected void configureScrollBarColors() {
-				thumbColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_COLOR;
-				thumbHighlightColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_HIGHLIGHT_COLOR;
-				trackColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_TRACK_COLOR;
-				thumbLightShadowColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_LIGHT_SHADOW;
-				thumbDarkShadowColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_DARK_SHADOW;
-			}
-
-			@Override
-			protected JButton createDecreaseButton(final int orientation) {
-				return createZeroButton();
-			}
-
-			@Override
-			protected JButton createIncreaseButton(final int orientation) {
-				return createZeroButton();
-			}
-
-			private JButton createZeroButton() {
-				final JButton jbutton = new JButton();
-				jbutton.setPreferredSize(new Dimension(0, 0));
-				jbutton.setMinimumSize(new Dimension(0, 0));
-				jbutton.setMaximumSize(new Dimension(0, 0));
-				return jbutton;
-			}
-		});
+		scrollPane.getHorizontalScrollBar().setUI(new TabPanelScrollBarUI());
 
 		setLayout(new BorderLayout());
 		scrollPane.setBorder(null);
@@ -197,6 +170,35 @@ public class TabPanel extends JPanel {
 		}
 		revalidate();
 		repaint();
+	}
+
+	private static final class TabPanelScrollBarUI extends BasicScrollBarUI {
+		@Override
+		protected void configureScrollBarColors() {
+			thumbColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_COLOR;
+			thumbHighlightColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_HIGHLIGHT_COLOR;
+			trackColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_TRACK_COLOR;
+			thumbLightShadowColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_LIGHT_SHADOW;
+			thumbDarkShadowColor = GraphicsConstants.TAB_PANEL_SCROLL_BAR_DARK_SHADOW;
+		}
+
+		@Override
+		protected JButton createDecreaseButton(final int orientation) {
+			return createZeroButton();
+		}
+
+		@Override
+		protected JButton createIncreaseButton(final int orientation) {
+			return createZeroButton();
+		}
+
+		private JButton createZeroButton() {
+			final JButton jbutton = new JButton();
+			jbutton.setPreferredSize(new Dimension(0, 0));
+			jbutton.setMinimumSize(new Dimension(0, 0));
+			jbutton.setMaximumSize(new Dimension(0, 0));
+			return jbutton;
+		}
 	}
 
 	private static class MainPanelAndButton {

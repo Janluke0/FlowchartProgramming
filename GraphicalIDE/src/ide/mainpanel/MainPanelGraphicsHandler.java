@@ -89,7 +89,7 @@ public class MainPanelGraphicsHandler {
 		if (portToMouseLine.isPresent()) {
 			g.setColor(GraphicsConstants.LINE_DRAG_COLOR);
 			final Line2D line = portToMouseLine.get();
-			GraphicsUtils.drawCurve(g, line.getP1(), line.getP2());
+			GraphicsUtils.drawCurve(g, line.getP1(), line.getP2(), GraphicsConstants.DRAG_STROKE);
 		}
 		if (draggingPiece) {
 			drawTrashCan(g);
@@ -98,7 +98,8 @@ public class MainPanelGraphicsHandler {
 
 	private void drawTrashCan(final Graphics2D g) {
 		final Image trash = GraphicsConstants.TRASH_ICON.getImage();
-		g.drawImage(trash, parent.getWidth() - trash.getWidth(null) - GraphicsConstants.TRASH_BORDER_SIZE, parent.getHeight() - trash.getHeight(null) - GraphicsConstants.TRASH_BORDER_SIZE, null);
+		g.drawImage(trash, parent.getWidth() - trash.getWidth(null) - GraphicsConstants.TRASH_BORDER_SIZE, parent.getHeight() - trash.getHeight(null)
+				- GraphicsConstants.TRASH_BORDER_SIZE, null);
 	}
 
 	/**

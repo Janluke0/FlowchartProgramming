@@ -1,7 +1,9 @@
 package ide.graphics;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Stroke;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +22,7 @@ public final class GraphicsConstants {
 	}
 
 	public static final String APP_NAME = "Flowchart IDE";
-	
+
 	public static final int TOOLBAR_HEIGHT = 60;
 	public static final int TOOLBAR_PADDING = 5;
 
@@ -99,8 +101,19 @@ public final class GraphicsConstants {
 	private static final int OPEN_FOLDER_WIDTH = 15;
 	public static final ImageIcon PIECE_TREE_OPEN_FOLDER_ICON = resizeImage(loadImageIcon("/icons/piecetree/circleicon.png"), OPEN_FOLDER_WIDTH);
 	private static final int CLOSED_FOLDER_WIDTH = 15;
-	public static final ImageIcon PIECE_TREE_CLOSED_FOLDER_ICON = resizeImage(loadImageIcon("/icons/piecetree/closedcircleicon.png"), CLOSED_FOLDER_WIDTH);
+	public static final ImageIcon PIECE_TREE_CLOSED_FOLDER_ICON = resizeImage(loadImageIcon("/icons/piecetree/closedcircleicon.png"),
+			CLOSED_FOLDER_WIDTH);
 	public static final int PIECE_PICKER_WIDTH = 150;
+
+	public static final Stroke DRAG_STROKE = new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10, new float[] { 5 }, 50);
+	public static final float DASH_LENGTH = 20;
+	public static final float DASH_SPEED = 0.25f;
+
+	public static final Stroke getConnectionUpdateStroke(final int offset) {
+		return new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10, new float[] { DASH_LENGTH / 2 }, offset);
+	}
+
+	public static final Stroke CONNECTION_NON_UPDATE_STROKE = new BasicStroke(2);
 
 	private static ImageIcon loadImageIcon(final String filename) {
 		ImageIcon icon;
@@ -114,6 +127,7 @@ public final class GraphicsConstants {
 	}
 
 	private static ImageIcon resizeImage(final ImageIcon original, final int width) {
-		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width, (int) (original.getIconHeight() * ((double) width / original.getIconWidth()))));
+		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width,
+				(int) (original.getIconHeight() * ((double) width / original.getIconWidth()))));
 	}
 }

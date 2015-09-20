@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import language.Piece;
+import language.ProgramContext;
 
 /**
  * The Class MainPanel.
@@ -42,6 +43,8 @@ public class MainPanel extends JPanel {
 	/** The graphics handler. */
 	private final transient MainPanelGraphicsHandler graphicsHandler;
 
+	final ProgramContext context = new ProgramContext();
+
 	/**
 	 * Instantiates a new main panel.
 	 */
@@ -57,7 +60,7 @@ public class MainPanel extends JPanel {
 
 		graphicsHandler = new MainPanelGraphicsHandler(this);
 
-		interpreterThread = new Thread(interpreterTask = new InterpreterTask());
+		interpreterThread = new Thread(interpreterTask = new InterpreterTask(this));
 		setFocusable(true);
 		requestFocusInWindow();
 	}
@@ -77,12 +80,12 @@ public class MainPanel extends JPanel {
 	}
 
 	public void stop() {
-		interpreterTask.shouldStop = true;
+		interpreterTask.stop();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
 	@Override
@@ -97,7 +100,8 @@ public class MainPanel extends JPanel {
 		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage().getWidth(null);
 		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage().getHeight(null);
 
-		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE, getHeight() - imageHeight - GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight).contains(screenCoord)) {
+		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE, getHeight() - imageHeight
+				- GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight).contains(screenCoord)) {
 			return true;
 		}
 		return false;
@@ -163,51 +167,8 @@ public class MainPanel extends JPanel {
 		return pieces;
 	}
 
-	/**
-	 * The Class InterpreterTask.
-	 */
-	private class InterpreterTask implements Runnable {
-		private static final int FRAMES_PER_SECOND = 60;
-		private static final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
-
-		public boolean shouldStop = false;
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Runnable#run()
-		 */
-		@Override
-		public void run() {
-			long nextTime = System.currentTimeMillis();
-			long sleepTime = 0;
-
-			while (!shouldStop) {
-				synchronized (getPieces()) {
-					for (final Piece p : getPieces()) {
-						if (p.shouldUpdateNextTick() || p.shouldUpdateEveryTick()) {
-							p.update();
-						}
-					}
-				}
-
-				nextTime += SKIP_TICKS;
-				sleepTime = nextTime - System.currentTimeMillis();
-
-				repaint(sleepTime);
-
-				if (sleepTime >= 0) {
-					try {
-						Thread.sleep(sleepTime);
-					} catch (final InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					// we are running behind!
-				}
-			}
-		}
-
+	public void reset() {
+		context.reset();
 	}
 
 	/**

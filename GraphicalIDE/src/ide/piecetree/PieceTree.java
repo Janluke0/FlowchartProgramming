@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
@@ -86,7 +87,7 @@ public class PieceTree extends JTree {
 	@SuppressWarnings("unchecked")
 	private static void addPieces() {
 		final Object[][] pieces = { //
-				{ And.class, And.name() }, //
+		{ And.class, And.name() }, //
 				{ FlipFlop.class, FlipFlop.name() },//
 				{ Not.class, Not.name() },//
 				{ Or.class, Or.name() },//
@@ -132,7 +133,15 @@ public class PieceTree extends JTree {
 		setBackground(GraphicsConstants.PIECE_TREE_BACKGROUND_COLOR);
 		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		addTreeSelectionListener(new PieceTreeInputHandler(this, frame));
-		setCellRenderer(new PieceTreeDisplay());
+
+		final DefaultTreeCellRenderer treeRenderer = new DefaultTreeCellRenderer();
+		treeRenderer.setTextNonSelectionColor(GraphicsConstants.PIECE_TREE_TEXT_COLOR);
+		treeRenderer.setFont(GraphicsConstants.APP_FONT);
+		treeRenderer.setLeafIcon(GraphicsConstants.PIECE_TREE_LEAF_ICON);
+		treeRenderer.setOpenIcon(GraphicsConstants.PIECE_TREE_OPEN_FOLDER_ICON);
+		treeRenderer.setClosedIcon(GraphicsConstants.PIECE_TREE_CLOSED_FOLDER_ICON);
+		setCellRenderer(treeRenderer);
+
 		setToggleClickCount(1);
 	}
 

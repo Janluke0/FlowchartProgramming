@@ -42,7 +42,6 @@ public class RunPopupMenu extends JPopupMenu {
 	}
 
 	private void resetClicked() {
-		// TODO Auto-generated method stub
-
+		frame.getMainPanel().reset();
 	}
 }

@@ -40,7 +40,7 @@ public class Timer extends Piece {
 	 *            the y
 	 */
 	public Timer(final int x, final int y) {
-		this(1000, 0, 0);
+		this(1000, x, y);
 	}
 
 	/**
@@ -58,9 +58,9 @@ public class Timer extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece() {
-		if (ProgramContext.getTime() > lastTime + interval) {
-			lastTime = ProgramContext.getTime();
+	public void updatePiece(final ProgramContext context) {
+		if (context.getTime() > lastTime + interval) {
+			lastTime = context.getTime();
 			for (final Connection c : getOutputs()) {
 				c.changeInput(ProgramValueBoolean.TRUE);
 			}
@@ -80,8 +80,7 @@ public class Timer extends Piece {
 	@Override
 	public void doubleClicked(final Point p) {
 		try {
-			final String input = JOptionPane.showInputDialog("Set Value: ",
-					String.valueOf(interval));
+			final String input = JOptionPane.showInputDialog("Set Value: ", String.valueOf(interval));
 			if (input != null) {
 				setInterval(Integer.parseInt(input));
 			}

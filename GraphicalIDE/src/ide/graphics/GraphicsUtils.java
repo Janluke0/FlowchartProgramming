@@ -6,6 +6,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.Transparency;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
@@ -30,8 +31,7 @@ public final class GraphicsUtils {
 	private static final Random RAND = new Random();
 
 	/** The Constant GFX_CONFIG. */
-	private static final GraphicsConfiguration GFX_CONFIG = GraphicsEnvironment
-			.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+	private static final GraphicsConfiguration GFX_CONFIG = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 			.getDefaultConfiguration();
 
 	// Utility class, cannot instantiate
@@ -47,10 +47,8 @@ public final class GraphicsUtils {
 	 *            the similarity
 	 * @return the random similar color
 	 */
-	public static Color getRandomSimilarColor(final Color c,
-			final int similarity) {
-		final float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(),
-				c.getBlue(), null);
+	public static Color getRandomSimilarColor(final Color c, final int similarity) {
+		final float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
 		hsb[0] += RAND.nextFloat() * similarity;
 		hsb[1] += RAND.nextFloat() * similarity;
 		hsb[2] += RAND.nextFloat() * similarity;
@@ -88,16 +86,14 @@ public final class GraphicsUtils {
 	 */
 	public static BufferedImage toCompatibleImage(final BufferedImage image) {
 		/*
-		 * if image is already compatible and optimized for current system
-		 * settings, simply return it
+		 * if image is already compatible and optimized for current system settings, simply return it
 		 */
 		if (image.getColorModel().equals(GFX_CONFIG.getColorModel())) {
 			return image;
 		}
 
 		// image is not optimized, so create a new image that is
-		final BufferedImage new_image = GFX_CONFIG.createCompatibleImage(
-				image.getWidth(), image.getHeight(), image.getTransparency());
+		final BufferedImage new_image = GFX_CONFIG.createCompatibleImage(image.getWidth(), image.getHeight(), image.getTransparency());
 
 		// get the graphics context of the new image to draw the old image on
 		final Graphics2D g2d = (Graphics2D) new_image.getGraphics();
@@ -121,23 +117,18 @@ public final class GraphicsUtils {
 	 *            the transparency
 	 * @return the buffered image
 	 */
-	public static BufferedImage createImage(final int width, final int height,
-			final int transparency) {
-		BufferedImage image = GFX_CONFIG.createCompatibleImage(width, height,
-				transparency);
+	public static BufferedImage createImage(final int width, final int height, final int transparency) {
+		BufferedImage image = GFX_CONFIG.createCompatibleImage(width, height, transparency);
 		if (image.getRaster().getDataBuffer().getDataType() != DataBuffer.TYPE_INT) {
 			switch (transparency) {
 			case Transparency.TRANSLUCENT:
-				image = new BufferedImage(width, height,
-						BufferedImage.TYPE_INT_ARGB);
+				image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				break;
 			case Transparency.OPAQUE:
-				image = new BufferedImage(width, height,
-						BufferedImage.TYPE_INT_RGB);
+				image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				break;
 			case Transparency.BITMASK:
-				image = new BufferedImage(width, height,
-						BufferedImage.TYPE_INT_ARGB_PRE);
+				image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB_PRE);
 				break;
 			default:
 				break;
@@ -146,10 +137,8 @@ public final class GraphicsUtils {
 		return image;
 	}
 
-	public static BufferedImage loadImage(final String filename)
-			throws IOException {
-		final InputStream in = GraphicsUtils.class
-				.getResourceAsStream(filename);
+	public static BufferedImage loadImage(final String filename) throws IOException {
+		final InputStream in = GraphicsUtils.class.getResourceAsStream(filename);
 		return toCompatibleImage(ImageIO.read(in));
 	}
 
@@ -174,10 +163,8 @@ public final class GraphicsUtils {
 	 * @param height
 	 * @return a new image of width and height
 	 */
-	public static BufferedImage resize(final Image image, final int width,
-			final int height) {
-		final BufferedImage bi = new BufferedImage(width, height,
-				Transparency.TRANSLUCENT);
+	public static BufferedImage resize(final Image image, final int width, final int height) {
+		final BufferedImage bi = new BufferedImage(width, height, Transparency.TRANSLUCENT);
 		final Graphics2D g2d = bi.createGraphics();
 		prettyGraphics(g2d);
 		g2d.drawImage(image, 0, 0, width, height, null);
@@ -192,8 +179,7 @@ public final class GraphicsUtils {
 	 * @param height
 	 * @return a new image icon of size width and height
 	 */
-	public static ImageIcon resize(final ImageIcon fileIcon, final int width,
-			final int height) {
+	public static ImageIcon resize(final ImageIcon fileIcon, final int width, final int height) {
 		return new ImageIcon(resize(fileIcon.getImage(), width, height));
 	}
 
@@ -208,8 +194,7 @@ public final class GraphicsUtils {
 	public static void glowFilter(final BufferedImage src, final float amount) {
 		final int width = src.getWidth();
 		final int height = src.getHeight();
-		final int[] inPixels = ((DataBufferInt) src.getRaster().getDataBuffer())
-				.getData();
+		final int[] inPixels = ((DataBufferInt) src.getRaster().getDataBuffer()).getData();
 
 		final float a = amount * 8;
 		int index = 0;
@@ -217,15 +202,15 @@ public final class GraphicsUtils {
 			for (int x = 0; x < width; x++) {
 				final int rgb1 = inPixels[index];
 				int r1 = rgb1 >> 16 & 0xff;
-			int g1 = rgb1 >> 8 & 0xff;
-			int b1 = rgb1 & 0xff;
+				int g1 = rgb1 >> 8 & 0xff;
+				int b1 = rgb1 & 0xff;
 
-			r1 = clampPixel((int) (r1 * a));
-			g1 = clampPixel((int) (g1 * a));
-			b1 = clampPixel((int) (b1 * a));
+				r1 = clampPixel((int) (r1 * a));
+				g1 = clampPixel((int) (g1 * a));
+				b1 = clampPixel((int) (b1 * a));
 
-			inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
-			index++;
+				inPixels[index] = rgb1 & 0xff000000 | r1 << 16 | g1 << 8 | b1;
+				index++;
 			}
 		}
 	}
@@ -250,10 +235,8 @@ public final class GraphicsUtils {
 	/**
 	 * Draws a curve. The curve is between p1 and p2, using two control points. <br>
 	 * Both of the x values of the control points are equal to<br>
-	 * <code>Math.min(p1.getX(), p2.getX()) + Math.abs(p2.getX() - p1.getX()) / 2f;</code>
-	 * <br>
-	 * or halfway between the two points. The y values each correspond to the y
-	 * values of the two points.
+	 * <code>Math.min(p1.getX(), p2.getX()) + Math.abs(p2.getX() - p1.getX()) / 2f;</code> <br>
+	 * or halfway between the two points. The y values each correspond to the y values of the two points.
 	 *
 	 * @param g
 	 *            the g
@@ -262,15 +245,17 @@ public final class GraphicsUtils {
 	 * @param p2
 	 *            the p2
 	 */
-	public static void drawCurve(final Graphics2D g, final Point2D p1,
-			final Point2D p2) {
+	public static void drawCurve(final Graphics2D g, final Point2D p1, final Point2D p2, final Stroke stroke) {
+		final Stroke old = g.getStroke();
+		g.setStroke(stroke);
+
 		final CubicCurve2D curve = new CubicCurve2D.Double();
 		// right in between the two pieces on the x axis
 		final double lessX = Math.min(p1.getX(), p2.getX());
 		final double midX = lessX + Math.abs(p2.getX() - p1.getX()) / 2f;
-		curve.setCurve(p1.getX(), p1.getY(), midX, p1.getY(), midX, p2.getY(),
-				p2.getX(), p2.getY());
+		curve.setCurve(p1.getX(), p1.getY(), midX, p1.getY(), midX, p2.getY(), p2.getX(), p2.getY());
 		g.draw(curve);
+		g.setStroke(old);
 	}
 
 	/**
@@ -280,12 +265,9 @@ public final class GraphicsUtils {
 	 *            the g
 	 */
 	public static void prettyGraphics(final Graphics2D g) {
-		g.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON));
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING,
-				RenderingHints.VALUE_RENDER_QUALITY);
+		g.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 	}
 
 }

@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import language.Connection;
 import language.Piece;
+import language.ProgramContext;
 import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
@@ -42,16 +43,15 @@ public class FlipFlop extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece() {
+	public void updatePiece(final ProgramContext context) {
 		final ProgramValue<?> v1 = getInputs()[0];
 		if (v1 instanceof ProgramValueBoolean) {
 			if (((ProgramValueBoolean) v1).getValue() == true) {
-				setCurrentValue(new ProgramValueBoolean(
-						!currentValue.getValue()));
+				setCurrentValue(new ProgramValueBoolean(!currentValue.getValue()));
 			}
 
 		}
@@ -62,13 +62,12 @@ public class FlipFlop extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override
 	public void doubleClicked(final Point p) {
-		final String input = JOptionPane.showInputDialog("Set Value: ",
-				String.valueOf(currentValue.getValue()));
+		final String input = JOptionPane.showInputDialog("Set Value: ", String.valueOf(currentValue.getValue()));
 		if (input != null) {
 			setCurrentValue(new ProgramValueBoolean(Boolean.valueOf(input)));
 		}

@@ -4,10 +4,10 @@ import java.awt.Point;
 
 import language.Connection;
 import language.Piece;
+import language.ProgramContext;
 import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
-import language.value.ProgramValueNothing;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -42,17 +42,16 @@ public class Not extends Piece {
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece() {
+	public void updatePiece(final ProgramContext context) {
 		final ProgramValue<?> v1 = getInputs()[0];
 		if (v1 instanceof ProgramValueBoolean) {
-			final ProgramValueBoolean v3 = new ProgramValueBoolean(
-					!((ProgramValueBoolean) v1).getValue());
+			final ProgramValueBoolean v3 = new ProgramValueBoolean(!((ProgramValueBoolean) v1).getValue());
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
 		} else {
 			for (final Connection c : getOutputs()) {
-				c.changeInput(ProgramValueNothing.NOTHING);
+				c.changeInput(ProgramValueBoolean.FALSE);
 			}
 		}
 

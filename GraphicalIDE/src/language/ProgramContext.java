@@ -5,12 +5,16 @@ package language;
  */
 public class ProgramContext {
 
-	public static final long START_TIME = System.currentTimeMillis();
+	private long startTime = System.currentTimeMillis();
 
-	private ProgramContext() {
+	public ProgramContext() {
 	}
 
-	public static long getTime() {
-		return System.currentTimeMillis() - START_TIME;
+	public long getTime() {
+		return System.currentTimeMillis() - startTime;
+	}
+
+	public void reset() {
+		startTime = System.currentTimeMillis();
 	}
 }

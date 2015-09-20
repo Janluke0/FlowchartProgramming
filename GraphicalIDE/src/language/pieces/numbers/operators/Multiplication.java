@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import language.Connection;
 import language.Piece;
+import language.ProgramContext;
 import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
@@ -38,17 +39,15 @@ public class Multiplication extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#update(language.ProgramContext)
 	 */
 	@Override
-	public void updatePiece() {
+	public void updatePiece(final ProgramContext context) {
 		final ProgramValue<?> v1 = getInputs()[0];
 		final ProgramValue<?> v2 = getInputs()[1];
 		if (v1 instanceof ProgramValueNum && v2 instanceof ProgramValueNum) {
-			final ProgramValueNum v3 = new ProgramValueNum(
-					((ProgramValueNum) v1).getValue().multiply(
-							((ProgramValueNum) v2).getValue()));
+			final ProgramValueNum v3 = new ProgramValueNum(((ProgramValueNum) v1).getValue().multiply(((ProgramValueNum) v2).getValue()));
 			for (final Connection c : getOutputs()) {
 				c.changeInput(v3);
 			}
@@ -62,7 +61,7 @@ public class Multiplication extends Piece {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see language.Piece#doubleClicked(java.awt.Point)
 	 */
 	@Override

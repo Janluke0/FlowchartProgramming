@@ -2,6 +2,7 @@ package ide.mainpanel;
 
 import ide.graphics.GraphicsConstants;
 import ide.graphics.GraphicsUtils;
+import ide.graphics.PieceRenderer;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
@@ -27,7 +28,8 @@ public class MainPanelGraphicsHandler {
 	private static final int GRID_NUMBER_DISTANCE = 200;
 
 	/**
-	 * if a user is dragging from a port, this is a line between the port and the mouse
+	 * if a user is dragging from a port, this is a line between the port and
+	 * the mouse
 	 */
 	public Optional<Line2D> portToMouseLine = Optional.empty();
 
@@ -86,6 +88,18 @@ public class MainPanelGraphicsHandler {
 
 		g.translate(parent.getViewX(), parent.getViewY());
 
+		if (parent.isFunction()) {
+			g.setColor(GraphicsConstants.PORT_COLOR);
+			for (int i = 0; i < parent.getFunctionData().getInputNumber(); i++) {
+				g.fillOval(PieceRenderer.BORDER_SPACE, PieceRenderer.GAP_SIZE + (PieceRenderer.PORT_SIZE + PieceRenderer.GAP_SIZE) * i, PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+			}
+
+			g.setColor(GraphicsConstants.PORT_COLOR);
+			for (int i = 0; i < parent.getFunctionData().getOutputNumber(); i++) {
+				g.fillOval(parent.getWidth() - PieceRenderer.PORT_SIZE - PieceRenderer.BORDER_SPACE, PieceRenderer.GAP_SIZE + (PieceRenderer.PORT_SIZE + PieceRenderer.GAP_SIZE) * i, PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+			}
+		}
+
 		if (portToMouseLine.isPresent()) {
 			g.setColor(GraphicsConstants.LINE_DRAG_COLOR);
 			final Line2D line = portToMouseLine.get();
@@ -98,8 +112,8 @@ public class MainPanelGraphicsHandler {
 
 	private void drawTrashCan(final Graphics2D g) {
 		final Image trash = GraphicsConstants.TRASH_ICON.getImage();
-		g.drawImage(trash, parent.getWidth() - trash.getWidth(null) - GraphicsConstants.TRASH_BORDER_SIZE, parent.getHeight() - trash.getHeight(null)
-				- GraphicsConstants.TRASH_BORDER_SIZE, null);
+		g.drawImage(trash, parent.getWidth() - trash.getWidth(null) - GraphicsConstants.TRASH_BORDER_SIZE,
+				parent.getHeight() - trash.getHeight(null) - GraphicsConstants.TRASH_BORDER_SIZE, null);
 	}
 
 	/**
@@ -114,7 +128,8 @@ public class MainPanelGraphicsHandler {
 		g.setColor(GraphicsConstants.MAIN_GRID_COLOR);
 
 		// Draws vertical lines
-		for (int sepX = -(parent.getViewX() % GRID_SEPARATOR_DISTANCE) - GRID_SEPARATOR_DISTANCE; sepX < parent.getWidth(); sepX += GRID_SEPARATOR_DISTANCE) {
+		for (int sepX = -(parent.getViewX() % GRID_SEPARATOR_DISTANCE) - GRID_SEPARATOR_DISTANCE; sepX < parent
+				.getWidth(); sepX += GRID_SEPARATOR_DISTANCE) {
 			if (sepX + parent.getViewX() == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_ORIGIN_COLOR);
 			} else {
@@ -125,11 +140,13 @@ public class MainPanelGraphicsHandler {
 			// draws line coordinates if neccesary
 			if ((sepX + parent.getViewX()) % GRID_NUMBER_DISTANCE == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_COLOR);
-				g.drawString(String.valueOf(sepX + parent.getViewX()), sepX + textSpaceBuffer, g.getFontMetrics().getMaxAscent() + textSpaceBuffer);
+				g.drawString(String.valueOf(sepX + parent.getViewX()), sepX + textSpaceBuffer,
+						g.getFontMetrics().getMaxAscent() + textSpaceBuffer);
 			}
 		}
 		// draws horizontal lines
-		for (int sepY = -(parent.getViewY() % GRID_SEPARATOR_DISTANCE); sepY < parent.getHeight() + GRID_SEPARATOR_DISTANCE; sepY += GRID_SEPARATOR_DISTANCE) {
+		for (int sepY = -(parent.getViewY() % GRID_SEPARATOR_DISTANCE); sepY < parent.getHeight()
+				+ GRID_SEPARATOR_DISTANCE; sepY += GRID_SEPARATOR_DISTANCE) {
 			if (sepY + parent.getViewY() == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_ORIGIN_COLOR);
 			} else {

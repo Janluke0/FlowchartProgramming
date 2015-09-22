@@ -27,6 +27,8 @@ public final class GraphicsConstants {
 	public static final int TOOLBAR_HEIGHT = 60;
 	public static final int TOOLBAR_PADDING = 5;
 
+	public static final int TAB_PANEL_HEIGHT = 40;
+
 	/** The Default APP_FONT. */
 	public static final Font APP_FONT = new Font("Arial", Font.PLAIN, 12);
 
@@ -116,7 +118,7 @@ public final class GraphicsConstants {
 
 	public static final Stroke CONNECTION_NON_UPDATE_STROKE = new BasicStroke(2);
 
-	public static final double CONSOLE_PANEL_DIVIDER_LOCATION = .6;
+	public static final int CONSOLE_PANEL_DIVIDER_LOCATION = 450;
 
 	public static final int CONSOLE_PANEL_DIVIER_SIZE = 5;
 

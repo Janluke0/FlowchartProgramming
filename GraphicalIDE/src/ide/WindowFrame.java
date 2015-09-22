@@ -89,14 +89,14 @@ public class WindowFrame extends JFrame {
 		mainAndToolbarSeperator = new JSplitPane();
 		toolbarPanel = new ToolbarPanel(this);
 		pieceList = new PieceTree(this);
-		toolbarAndTabSeperator = new JSplitPane();
+		toolbarAndTabSeperator = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 		setTabPanel(new TabPanel(this));
 		getTabPanel().addTab("Untitled", getMainPanel(), console);
 
 		toolbarAndTabSeperator.setDividerSize(0);
-		toolbarAndTabSeperator.setRightComponent(getTabPanel());
-		toolbarAndTabSeperator.setLeftComponent(toolbarPanel);
+		toolbarAndTabSeperator.setBottomComponent(getTabPanel());
+		toolbarAndTabSeperator.setTopComponent(toolbarPanel);
 
 		piecePickerAndMainSeperator.setDividerSize(0);
 
@@ -110,7 +110,7 @@ public class WindowFrame extends JFrame {
 
 		piecePickerAndMainSeperator.setLeftComponent(piecePickerPanel);
 
-		mainAndToolbarSeperator.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT);
+		mainAndToolbarSeperator.setDividerLocation(GraphicsConstants.TOOLBAR_HEIGHT + GraphicsConstants.TAB_PANEL_HEIGHT);
 		mainAndToolbarSeperator.setDividerSize(0);
 		mainAndToolbarSeperator.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
@@ -122,10 +122,10 @@ public class WindowFrame extends JFrame {
 		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 472, Short.MAX_VALUE));
 
 		JSplitPane consoleMainPanelSeperator = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		consoleMainPanelSeperator.setDividerLocation(GraphicsConstants.CONSOLE_PANEL_DIVIDER_LOCATION);
-		consoleMainPanelSeperator.setDividerSize(GraphicsConstants.CONSOLE_PANEL_DIVIER_SIZE);
 		consoleMainPanelSeperator.setTopComponent(mainPanelHolder);
 		consoleMainPanelSeperator.setBottomComponent(consoleHolder);
+		consoleMainPanelSeperator.setDividerSize(GraphicsConstants.CONSOLE_PANEL_DIVIER_SIZE);
+		consoleMainPanelSeperator.setDividerLocation(GraphicsConstants.CONSOLE_PANEL_DIVIDER_LOCATION);
 		
 		mainAndToolbarSeperator.setRightComponent(consoleMainPanelSeperator);
 

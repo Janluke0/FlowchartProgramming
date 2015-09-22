@@ -2,16 +2,15 @@ package language;
 
 import language.value.ProgramValue;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Connection.
  */
 public class Connection {
 
-	/** The output. */
+	/** The piece to output to. */
 	private Piece output;
 
-	/** The output port. */
+	/** The port on the output to output to. */
 	private final int outputPort;
 
 	/**

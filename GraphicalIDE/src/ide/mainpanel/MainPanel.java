@@ -17,6 +17,7 @@ import javax.swing.JTextArea;
 import ide.graphics.GraphicsConstants;
 import language.Piece;
 import language.ProgramContext;
+import language.type.Type;
 
 /**
  * The Class MainPanel.
@@ -43,6 +44,10 @@ public class MainPanel extends JPanel {
 
 	/** The graphics handler. */
 	private final transient MainPanelGraphicsHandler graphicsHandler;
+
+	// whether this panel is a function or a program (does it have inputs and
+	// outputs)
+	private Optional<FunctionData> functionData = Optional.empty();
 
 	final ProgramContext context;
 
@@ -255,6 +260,20 @@ public class MainPanel extends JPanel {
 	private void load(final File file) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public boolean isFunction() {
+		return functionData.isPresent();
+	}
+
+	public FunctionData getFunctionData() {
+		if (!isFunction())
+			throw new RuntimeException("This panel is not a function");
+		return functionData.get();
+	}
+
+	public void setFunction(Optional<FunctionData> function) {
+		this.functionData = function;
 	}
 
 }

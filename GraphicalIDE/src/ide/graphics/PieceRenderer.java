@@ -13,13 +13,13 @@ import language.Piece;
 public class PieceRenderer {
 
 	/** Size of connection ports. */
-	protected static final int PORT_SIZE = 20;
+	public static final int PORT_SIZE = 20;
 
 	/** Size of gap between connection ports */
-	protected static final int GAP_SIZE = 10;
+	public static final int GAP_SIZE = 10;
 
 	/** Size of the space border around the whole piece */
-	protected static final int BORDER_SPACE = 5;
+	public static final int BORDER_SPACE = 5;
 
 	/**
 	 * Defaults to this so no null pointer exception, but changes in the draw method to the graphics' font metrics.

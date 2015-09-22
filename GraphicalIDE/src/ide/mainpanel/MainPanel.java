@@ -1,19 +1,20 @@
 package ide.mainpanel;
 
-import ide.graphics.GraphicsConstants;
-
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
+import ide.graphics.GraphicsConstants;
 import language.Piece;
 import language.ProgramContext;
 
@@ -43,12 +44,12 @@ public class MainPanel extends JPanel {
 	/** The graphics handler. */
 	private final transient MainPanelGraphicsHandler graphicsHandler;
 
-	final ProgramContext context = new ProgramContext();
+	final ProgramContext context;
 
 	/**
 	 * Instantiates a new main panel.
 	 */
-	public MainPanel() {
+	public MainPanel(JTextArea console) {
 		super();
 		x = y = 0;
 		pieces = new ArrayList<>();
@@ -60,13 +61,15 @@ public class MainPanel extends JPanel {
 
 		graphicsHandler = new MainPanelGraphicsHandler(this);
 
+		context = new ProgramContext(new TextAreaOutputStream(console));
+
 		interpreterThread = new Thread(interpreterTask = new InterpreterTask(this));
 		setFocusable(true);
 		requestFocusInWindow();
 	}
 
-	public MainPanel(final File file) {
-		this();
+	public MainPanel(final File file, JTextArea console) {
+		this(console);
 		load(file);
 	}
 
@@ -100,8 +103,9 @@ public class MainPanel extends JPanel {
 		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage().getWidth(null);
 		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage().getHeight(null);
 
-		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE, getHeight() - imageHeight
-				- GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight).contains(screenCoord)) {
+		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE,
+				getHeight() - imageHeight - GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight)
+						.contains(screenCoord)) {
 			return true;
 		}
 		return false;
@@ -204,7 +208,8 @@ public class MainPanel extends JPanel {
 	}
 
 	/**
-	 * If we have a filename, returns that. If not, we ask the user for one with a JFileChooser dialog.
+	 * If we have a filename, returns that. If not, we ask the user for one with
+	 * a JFileChooser dialog.
 	 *
 	 * @return the current filename or {@link MainPanel#askForAndGetFilename()}
 	 */

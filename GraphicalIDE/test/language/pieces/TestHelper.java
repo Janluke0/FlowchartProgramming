@@ -16,7 +16,7 @@ public class TestHelper {
 
 		assert inputs.length == outputs.length;
 
-		final ProgramContext context = new ProgramContext();
+		final ProgramContext context = new ProgramContext(null);
 
 		for (int i = 0; i < inputs.length; i++) {
 			for (int j = 0; j < inputs[i].length; j++) {

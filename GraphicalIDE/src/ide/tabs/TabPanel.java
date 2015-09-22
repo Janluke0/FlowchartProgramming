@@ -1,10 +1,5 @@
 package ide.tabs;
 
-import ide.WindowFrame;
-import ide.graphics.GraphicsConstants;
-import ide.mainpanel.MainPanel;
-import ide.toolbar.FilePopupMenu;
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -19,9 +14,15 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+
+import ide.WindowFrame;
+import ide.graphics.GraphicsConstants;
+import ide.mainpanel.MainPanel;
+import ide.toolbar.FilePopupMenu;
 
 @SuppressWarnings("serial")
 public class TabPanel extends JPanel {
@@ -49,7 +50,7 @@ public class TabPanel extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 	}
 
-	public void addTab(final String s, final MainPanel panel) {
+	public void addTab(final String s, final MainPanel panel, JTextArea console) {
 
 		final JButton button = new JButton(s);
 		button.addMouseListener(new MouseAdapter() {
@@ -76,8 +77,9 @@ public class TabPanel extends JPanel {
 
 		this.panel.add(button);
 
-		components.add(new MainPanelAndButton(button, panel));
-		frame.mainPanelHolder.add(panel, "" + (components.size() - 1));
+		components.add(new MainPanelAndButton(button, panel, console));
+		frame.mainPanelHolder.add(panel, String.valueOf(components.size() - 1));
+		frame.consoleHolder.add(new JScrollPane(console,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),  String.valueOf(components.size() - 1));
 
 		highlightSelected();
 
@@ -103,8 +105,10 @@ public class TabPanel extends JPanel {
 			return;
 		}
 		frame.setMainPanel(components.get(i).panel);
-		final CardLayout cl = (CardLayout) frame.mainPanelHolder.getLayout();
-		cl.show(frame.mainPanelHolder, String.valueOf(i));
+		final CardLayout cl = (CardLayout) frame.consoleHolder.getLayout();
+		cl.show(frame.consoleHolder, String.valueOf(i));
+		final CardLayout cl2 = (CardLayout) frame.mainPanelHolder.getLayout();
+		cl2.show(frame.mainPanelHolder, String.valueOf(i));
 		frame.currentMainPanel = i;
 
 		frame.revalidate();
@@ -120,6 +124,7 @@ public class TabPanel extends JPanel {
 		components.remove(current);
 		panel.remove(current);
 		frame.mainPanelHolder.remove(current);
+		frame.consoleHolder.remove(current);
 		
 		//re-add components with correct indices
 		for(int i = 0; i < components.size(); i++){
@@ -127,6 +132,8 @@ public class TabPanel extends JPanel {
 			
 			frame.mainPanelHolder.remove(comp.panel);
 			frame.mainPanelHolder.add(comp.panel, String.valueOf(i));
+			frame.consoleHolder.remove(comp.console);
+			frame.consoleHolder.add(comp.console, String.valueOf(i));
 		}
 		
 		switchToPanel(Math.max(0, frame.currentMainPanel - 1));
@@ -146,12 +153,13 @@ public class TabPanel extends JPanel {
 	 */
 	private void highlightSelected() {
 		for (int i = 0; i < components.size(); i++) {
+			JComponent button = components.get(i).button;
 			if (i == frame.currentMainPanel) {
-				components.get(i).button.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
-				components.get(i).button.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
+				button.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
+				button.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
 			} else {
-				components.get(i).button.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
-				components.get(i).button.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
+				button.setBackground(GraphicsConstants.DESELECTED_TAB_BACKGROUND);
+				button.setForeground(GraphicsConstants.DESELECTED_TAB_FOREGROUND);
 			}
 		}
 	}
@@ -204,10 +212,12 @@ public class TabPanel extends JPanel {
 	private static class MainPanelAndButton {
 		public JComponent button;
 		public MainPanel panel;
+		public JTextArea console;
 
-		public MainPanelAndButton(final JComponent button, final MainPanel panel) {
+		public MainPanelAndButton(final JComponent button, final MainPanel panel, JTextArea console) {
 			this.button = button;
 			this.panel = panel;
+			this.console = console;
 		}
 
 	}

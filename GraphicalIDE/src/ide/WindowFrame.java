@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -57,6 +58,7 @@ public class WindowFrame extends JFrame {
 
 	public int currentMainPanel;
 	public JPanel mainPanelHolder;
+	public JPanel consoleHolder;
 
 	/**
 	 * Creates new form GUIFrame.
@@ -73,8 +75,12 @@ public class WindowFrame extends JFrame {
 		mainPanelHolder = new JPanel();
 		mainPanelHolder.setBorder(null);
 		mainPanelHolder.setLayout(new CardLayout());
+		consoleHolder = new JPanel();
+		consoleHolder.setBorder(null);
+		consoleHolder.setLayout(new CardLayout());
 
-		setMainPanel(new MainPanel().start());
+		JTextArea console = GraphicsConstants.createConsole();
+		setMainPanel(new MainPanel(console).start());
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		piecePickerAndMainSeperator = new JSplitPane();
@@ -86,7 +92,7 @@ public class WindowFrame extends JFrame {
 		toolbarAndTabSeperator = new JSplitPane();
 
 		setTabPanel(new TabPanel(this));
-		getTabPanel().addTab("Untitled", getMainPanel());
+		getTabPanel().addTab("Untitled", getMainPanel(), console);
 
 		toolbarAndTabSeperator.setDividerSize(0);
 		toolbarAndTabSeperator.setRightComponent(getTabPanel());
@@ -115,7 +121,13 @@ public class WindowFrame extends JFrame {
 		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
 		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 472, Short.MAX_VALUE));
 
-		mainAndToolbarSeperator.setRightComponent(mainPanelHolder);
+		JSplitPane consoleMainPanelSeperator = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		consoleMainPanelSeperator.setDividerLocation(GraphicsConstants.CONSOLE_PANEL_DIVIDER_LOCATION);
+		consoleMainPanelSeperator.setDividerSize(GraphicsConstants.CONSOLE_PANEL_DIVIER_SIZE);
+		consoleMainPanelSeperator.setTopComponent(mainPanelHolder);
+		consoleMainPanelSeperator.setBottomComponent(consoleHolder);
+		
+		mainAndToolbarSeperator.setRightComponent(consoleMainPanelSeperator);
 
 		piecePickerAndMainSeperator.setRightComponent(mainAndToolbarSeperator);
 

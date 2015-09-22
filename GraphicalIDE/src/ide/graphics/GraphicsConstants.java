@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+import javax.swing.JTextArea;
 
 import language.type.Type;
 
@@ -115,6 +116,10 @@ public final class GraphicsConstants {
 
 	public static final Stroke CONNECTION_NON_UPDATE_STROKE = new BasicStroke(2);
 
+	public static final double CONSOLE_PANEL_DIVIDER_LOCATION = .6;
+
+	public static final int CONSOLE_PANEL_DIVIER_SIZE = 5;
+
 	private static ImageIcon loadImageIcon(final String filename) {
 		ImageIcon icon;
 		try {
@@ -129,5 +134,10 @@ public final class GraphicsConstants {
 	private static ImageIcon resizeImage(final ImageIcon original, final int width) {
 		return new ImageIcon(GraphicsUtils.resize(original.getImage(), width,
 				(int) (original.getIconHeight() * ((double) width / original.getIconWidth()))));
+	}
+
+	public static JTextArea createConsole() {
+		JTextArea console = new JTextArea();
+		return console;
 	}
 }

@@ -15,8 +15,6 @@ public class Print extends Piece {
 	private static final int INPUT_SHOULD_PRINT = 0;
 	private static final int INPUT_TO_PRINT = 1;
 
-	private static final int OUTPUT_PRINTED = 0;
-
 	/**
 	 * Instantiates a new number constant.
 	 *
@@ -28,7 +26,7 @@ public class Print extends Piece {
 	 *            the y
 	 */
 	public Print(final int x, final int y) {
-		super(2, 1, x, y);
+		super(2, 0, x, y);
 	}
 
 	/**
@@ -49,10 +47,7 @@ public class Print extends Piece {
 	public void updatePiece(final ProgramContext context) {
 		if (getInputs()[INPUT_SHOULD_PRINT] instanceof ProgramValueBoolean
 				&& ((ProgramValueBoolean) getInputs()[INPUT_SHOULD_PRINT]).getValue() == true) {
-			System.out.println(getInputs()[INPUT_TO_PRINT]);
-			getOutputs()[OUTPUT_PRINTED].changeInput(ProgramValueBoolean.TRUE);
-		} else {
-			getOutputs()[OUTPUT_PRINTED].changeInput(ProgramValueBoolean.FALSE);
+			context.println(getInputs()[INPUT_TO_PRINT].toString());
 		}
 	}
 

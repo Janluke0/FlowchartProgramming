@@ -1,14 +1,16 @@
 package ide.toolbar;
 
-import ide.WindowFrame;
-import ide.mainpanel.MainPanel;
-
 import java.awt.HeadlessException;
 import java.io.File;
 import java.util.Optional;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
+
+import ide.WindowFrame;
+import ide.graphics.GraphicsConstants;
+import ide.mainpanel.MainPanel;
 
 @SuppressWarnings("serial")
 public class FilePopupMenu extends JPopupMenu {
@@ -88,7 +90,8 @@ public class FilePopupMenu extends JPopupMenu {
 	private void openClicked() {
 		final Optional<File> file = frame.getMainPanel().askForAndGetFilename();
 		if (file.isPresent()) {
-			frame.getTabPanel().addTab(file.get().getName(), new MainPanel(file.get()));
+			JTextArea console = GraphicsConstants.createConsole();
+			frame.getTabPanel().addTab(file.get().getName(), new MainPanel(file.get(), console), console);
 		}
 	}
 
@@ -96,6 +99,7 @@ public class FilePopupMenu extends JPopupMenu {
 	 * Creates a new tab called "Untitled"
 	 */
 	private void newClicked() {
-		frame.getTabPanel().addTab("Untitled", new MainPanel().start());
+		JTextArea console = GraphicsConstants.createConsole();
+		frame.getTabPanel().addTab("Untitled", new MainPanel(console).start(),console);
 	}
 }

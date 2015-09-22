@@ -59,6 +59,11 @@ public class Timer extends Piece {
 	 */
 	@Override
 	public void updatePiece(final ProgramContext context) {
+		if(context.getTime() < lastTime){
+			// we reset
+			lastTime = context.getTime();
+		}
+		
 		if (context.getTime() > lastTime + interval) {
 			lastTime = context.getTime();
 			for (final Connection c : getOutputs()) {

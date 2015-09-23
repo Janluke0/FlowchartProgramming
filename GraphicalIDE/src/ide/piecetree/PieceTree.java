@@ -16,6 +16,8 @@ import javax.swing.tree.TreeSelectionModel;
 
 import language.Piece;
 import language.pieces.logic.BooleanConstant;
+import language.pieces.logic.control.Equals;
+import language.pieces.logic.control.If;
 import language.pieces.logic.operators.And;
 import language.pieces.logic.operators.FlipFlop;
 import language.pieces.logic.operators.Not;
@@ -26,8 +28,9 @@ import language.pieces.numbers.operators.Division;
 import language.pieces.numbers.operators.Modulus;
 import language.pieces.numbers.operators.Multiplication;
 import language.pieces.utils.Display;
-import language.pieces.utils.Print;
 import language.pieces.utils.InputSplitter;
+import language.pieces.utils.Print;
+import language.pieces.utils.VarStore;
 import language.pieces.utils.time.Time;
 import language.pieces.utils.time.Timer;
 
@@ -102,7 +105,10 @@ public class PieceTree extends JTree {
 				{ Timer.class, Timer.name() },//
 				{ Display.class, Display.name() },//
 				{ Print.class, Print.name() }, //
-				{ InputSplitter.class, InputSplitter.name() }, };//
+				{ InputSplitter.class, InputSplitter.name() }, //
+				{ If.class, If.name() },//
+				{ Equals.class, Equals.name() }, //
+				{ VarStore.class, VarStore.name() } };//
 
 		for (final Object[] o : pieces) {
 			for (int i = 0; i < o.length; i += 2) {

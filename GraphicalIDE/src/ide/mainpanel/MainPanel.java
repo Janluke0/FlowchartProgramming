@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +16,6 @@ import javax.swing.JTextArea;
 import ide.graphics.GraphicsConstants;
 import language.Piece;
 import language.ProgramContext;
-import language.type.Type;
 
 /**
  * The Class MainPanel.

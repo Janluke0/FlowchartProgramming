@@ -1,8 +1,5 @@
 package ide.piecetree;
 
-import ide.WindowFrame;
-import ide.graphics.GraphicsConstants;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -14,8 +11,12 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import ide.WindowFrame;
+import ide.graphics.GraphicsConstants;
 import language.Piece;
 import language.pieces.logic.BooleanConstant;
+import language.pieces.logic.control.Equals;
+import language.pieces.logic.control.If;
 import language.pieces.logic.operators.And;
 import language.pieces.logic.operators.FlipFlop;
 import language.pieces.logic.operators.Not;
@@ -27,6 +28,7 @@ import language.pieces.numbers.operators.Modulus;
 import language.pieces.numbers.operators.Multiplication;
 import language.pieces.utils.Display;
 import language.pieces.utils.Print;
+import language.pieces.utils.VarStore;
 import language.pieces.utils.time.Time;
 import language.pieces.utils.time.Timer;
 
@@ -87,20 +89,23 @@ public class PieceTree extends JTree {
 	@SuppressWarnings("unchecked")
 	private static void addPieces() {
 		final Object[][] pieces = { //
-		{ And.class, And.name() }, //
-				{ FlipFlop.class, FlipFlop.name() },//
-				{ Not.class, Not.name() },//
-				{ Or.class, Or.name() },//
-				{ BooleanConstant.class, BooleanConstant.name() },//
-				{ Addition.class, Addition.name() },//
-				{ Division.class, Division.name() },//
-				{ Modulus.class, Modulus.name() },//
-				{ Multiplication.class, Multiplication.name() },//
-				{ NumberConstant.class, NumberConstant.name() },//
-				{ Time.class, Time.name() },//
-				{ Timer.class, Timer.name() },//
-				{ Display.class, Display.name() },//
-				{ Print.class, Print.name() } };//
+				{ And.class, And.name() }, //
+				{ FlipFlop.class, FlipFlop.name() }, //
+				{ Not.class, Not.name() }, //
+				{ Or.class, Or.name() }, //
+				{ BooleanConstant.class, BooleanConstant.name() }, //
+				{ Addition.class, Addition.name() }, //
+				{ Division.class, Division.name() }, //
+				{ Modulus.class, Modulus.name() }, //
+				{ Multiplication.class, Multiplication.name() }, //
+				{ NumberConstant.class, NumberConstant.name() }, //
+				{ Time.class, Time.name() }, //
+				{ Timer.class, Timer.name() }, //
+				{ Display.class, Display.name() }, //
+				{ Print.class, Print.name() }, //
+				{ If.class, If.name() },//
+				{Equals.class, Equals.name()}, //
+				{VarStore.class, VarStore.name()}};//
 
 		for (final Object[] o : pieces) {
 			for (int i = 0; i < o.length; i += 2) {

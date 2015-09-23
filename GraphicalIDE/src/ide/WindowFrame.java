@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -62,9 +61,10 @@ public class WindowFrame extends JFrame {
 
 	/**
 	 * Creates new form GUIFrame.
-	 * @param appName 
+	 *
+	 * @param appName
 	 */
-	public WindowFrame(String appName) {
+	public WindowFrame(final String appName) {
 		super(appName);
 		setUIFont(new FontUIResource(GraphicsConstants.APP_FONT));
 		initComponents();
@@ -79,8 +79,6 @@ public class WindowFrame extends JFrame {
 		consoleHolder.setBorder(null);
 		consoleHolder.setLayout(new CardLayout());
 
-		JTextArea console = GraphicsConstants.createConsole();
-		setMainPanel(new MainPanel(console).start());
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		piecePickerAndMainSeperator = new JSplitPane();
@@ -92,7 +90,6 @@ public class WindowFrame extends JFrame {
 		toolbarAndTabSeperator = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 		setTabPanel(new TabPanel(this));
-		getTabPanel().addTab("Untitled", getMainPanel(), console);
 
 		toolbarAndTabSeperator.setDividerSize(0);
 		toolbarAndTabSeperator.setBottomComponent(getTabPanel());
@@ -105,8 +102,10 @@ public class WindowFrame extends JFrame {
 		final GroupLayout piecePickerPanelLayout = new GroupLayout(piecePickerPanel);
 		piecePickerPanel.setLayout(piecePickerPanelLayout);
 
-		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, GraphicsConstants.PIECE_PICKER_WIDTH, Short.MAX_VALUE));
-		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE));
+		piecePickerPanelLayout.setHorizontalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(
+				jScrollPane1, GroupLayout.DEFAULT_SIZE, GraphicsConstants.PIECE_PICKER_WIDTH, Short.MAX_VALUE));
+		piecePickerPanelLayout.setVerticalGroup(piecePickerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane1,
+				GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE));
 
 		piecePickerAndMainSeperator.setLeftComponent(piecePickerPanel);
 
@@ -121,12 +120,12 @@ public class WindowFrame extends JFrame {
 		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 454, Short.MAX_VALUE));
 		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 472, Short.MAX_VALUE));
 
-		JSplitPane consoleMainPanelSeperator = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		final JSplitPane consoleMainPanelSeperator = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		consoleMainPanelSeperator.setTopComponent(mainPanelHolder);
 		consoleMainPanelSeperator.setBottomComponent(consoleHolder);
 		consoleMainPanelSeperator.setDividerSize(GraphicsConstants.CONSOLE_PANEL_DIVIER_SIZE);
 		consoleMainPanelSeperator.setDividerLocation(GraphicsConstants.CONSOLE_PANEL_DIVIDER_LOCATION);
-		
+
 		mainAndToolbarSeperator.setRightComponent(consoleMainPanelSeperator);
 
 		piecePickerAndMainSeperator.setRightComponent(mainAndToolbarSeperator);

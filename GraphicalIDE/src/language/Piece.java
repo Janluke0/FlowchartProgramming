@@ -42,6 +42,11 @@ public abstract class Piece {
 	private final PieceRenderer renderer;
 
 	/**
+	 * Only for rendering purposes!
+	 */
+	public boolean updatedThisTick;
+
+	/**
 	 * Instantiates a new piece.
 	 *
 	 * @param inputs
@@ -101,6 +106,9 @@ public abstract class Piece {
 			// don't let any exception thrown by pieces crash the application
 			e.printStackTrace();
 		}
+		if (shouldUpdateNextTick) {
+			updatedThisTick = true;
+		}
 		shouldUpdateNextTick = false;
 	}
 
@@ -134,7 +142,6 @@ public abstract class Piece {
 
 	protected void setOutputText(final int port, final String text) {
 		renderer.setOutputDisplay(port, text);
-		shouldUpdateNextTick = true;
 	}
 
 	/**
@@ -274,7 +281,6 @@ public abstract class Piece {
 	 */
 	public void setOutput(final int index, final Connection connection) {
 		outputs[index] = connection;
-		shouldUpdateNextTick = true;
 	}
 
 	/**
@@ -297,5 +303,4 @@ public abstract class Piece {
 	public Shape getBodyShape() {
 		return renderer.getBodyShape();
 	}
-
 }

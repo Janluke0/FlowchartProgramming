@@ -1,5 +1,10 @@
 package ide.tabs;
 
+import ide.WindowFrame;
+import ide.graphics.GraphicsConstants;
+import ide.mainpanel.MainPanel;
+import ide.toolbar.FilePopupMenu;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -19,11 +24,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import ide.WindowFrame;
-import ide.graphics.GraphicsConstants;
-import ide.mainpanel.MainPanel;
-import ide.toolbar.FilePopupMenu;
-
 @SuppressWarnings("serial")
 public class TabPanel extends JPanel {
 
@@ -33,28 +33,34 @@ public class TabPanel extends JPanel {
 
 	private final WindowFrame frame;
 
+	private final FilePopupMenu filePopupMenu;
+
 	public TabPanel(final WindowFrame frame) {
 		super();
 		this.frame = frame;
+		filePopupMenu = new FilePopupMenu(frame);
 
 		panel.setBackground(GraphicsConstants.MENU_BACKROUND_COLOR);
 		setBackground(GraphicsConstants.MENU_BACKROUND_COLOR);
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		final JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.getHorizontalScrollBar().setUI(new TabPanelScrollBarUI());
 
 		setLayout(new BorderLayout());
 		scrollPane.setBorder(null);
 		add(scrollPane, BorderLayout.CENTER);
+
+		// initialize our tabs
+		filePopupMenu.newClicked(this);
 	}
 
-	public void addTab(final String s, final MainPanel panel, JTextArea console) {
+	public void addTab(final String s, final MainPanel panel, final JTextArea console) {
 
 		final JButton button = new JButton(s);
 		button.addMouseListener(new MouseAdapter() {
-			FilePopupMenu filePopupMenu = new FilePopupMenu(frame);
 
 			@Override
 			public void mousePressed(final MouseEvent e) {
@@ -79,7 +85,8 @@ public class TabPanel extends JPanel {
 
 		components.add(new MainPanelAndButton(button, panel, console));
 		frame.mainPanelHolder.add(panel, String.valueOf(components.size() - 1));
-		frame.consoleHolder.add(new JScrollPane(console,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),  String.valueOf(components.size() - 1));
+		frame.consoleHolder.add(new JScrollPane(console, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), String.valueOf(components.size() - 1));
 
 		highlightSelected();
 
@@ -100,8 +107,8 @@ public class TabPanel extends JPanel {
 		}
 	}
 
-	private void switchToPanel(int i) {
-		if(components.size() <= i){
+	private void switchToPanel(final int i) {
+		if (components.size() <= i) {
 			return;
 		}
 		frame.setMainPanel(components.get(i).panel);
@@ -125,17 +132,17 @@ public class TabPanel extends JPanel {
 		panel.remove(current);
 		frame.mainPanelHolder.remove(current);
 		frame.consoleHolder.remove(current);
-		
-		//re-add components with correct indices
-		for(int i = 0; i < components.size(); i++){
-			MainPanelAndButton comp = components.get(i);
-			
+
+		// re-add components with correct indices
+		for (int i = 0; i < components.size(); i++) {
+			final MainPanelAndButton comp = components.get(i);
+
 			frame.mainPanelHolder.remove(comp.panel);
 			frame.mainPanelHolder.add(comp.panel, String.valueOf(i));
 			frame.consoleHolder.remove(comp.console);
 			frame.consoleHolder.add(comp.console, String.valueOf(i));
 		}
-		
+
 		switchToPanel(Math.max(0, frame.currentMainPanel - 1));
 
 		revalidate();
@@ -143,7 +150,7 @@ public class TabPanel extends JPanel {
 	}
 
 	public void closeAllTab() {
-		while(components.size() > 0){
+		while (components.size() > 0) {
 			closeTab();
 		}
 	}
@@ -153,7 +160,7 @@ public class TabPanel extends JPanel {
 	 */
 	private void highlightSelected() {
 		for (int i = 0; i < components.size(); i++) {
-			JComponent button = components.get(i).button;
+			final JComponent button = components.get(i).button;
 			if (i == frame.currentMainPanel) {
 				button.setBackground(GraphicsConstants.SELECTED_TAB_BACKGROUND);
 				button.setForeground(GraphicsConstants.SELECTED_TAB_FOREGROUND);
@@ -214,7 +221,7 @@ public class TabPanel extends JPanel {
 		public MainPanel panel;
 		public JTextArea console;
 
-		public MainPanelAndButton(final JComponent button, final MainPanel panel, JTextArea console) {
+		public MainPanelAndButton(final JComponent button, final MainPanel panel, final JTextArea console) {
 			this.button = button;
 			this.panel = panel;
 			this.console = console;

@@ -1,16 +1,23 @@
 package ide.toolbar;
 
-import java.awt.HeadlessException;
-import java.io.File;
-import java.util.Optional;
-
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextArea;
-
 import ide.WindowFrame;
 import ide.graphics.GraphicsConstants;
 import ide.mainpanel.MainPanel;
+import ide.tabs.TabPanel;
+
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.Optional;
+
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
 @SuppressWarnings("serial")
 public class FilePopupMenu extends JPopupMenu {
@@ -26,7 +33,7 @@ public class FilePopupMenu extends JPopupMenu {
 		// Create a pop-up menu components
 		final JMenuItem newItem = new JMenuItem("New");
 		newItem.addActionListener((e) -> {
-			newClicked();
+			newClicked(frame.getTabPanel());
 		});
 
 		final JMenuItem openItem = new JMenuItem("Open");
@@ -90,7 +97,7 @@ public class FilePopupMenu extends JPopupMenu {
 	private void openClicked() {
 		final Optional<File> file = frame.getMainPanel().askForAndGetFilename();
 		if (file.isPresent()) {
-			JTextArea console = GraphicsConstants.createConsole();
+			final JTextArea console = GraphicsConstants.createConsole();
 			frame.getTabPanel().addTab(file.get().getName(), new MainPanel(file.get(), console), console);
 		}
 	}
@@ -98,8 +105,28 @@ public class FilePopupMenu extends JPopupMenu {
 	/**
 	 * Creates a new tab called "Untitled"
 	 */
-	private void newClicked() {
-		JTextArea console = GraphicsConstants.createConsole();
-		frame.getTabPanel().addTab("Untitled", new MainPanel(console).start(),console);
+	public void newClicked(final TabPanel panel) {
+		final JTextArea console = GraphicsConstants.createConsole();
+		final MainPanel mainPanel = new MainPanel(console);
+		addKeybindings(mainPanel);
+		panel.addTab("Untitled", mainPanel.start(), console);
+	}
+
+	private void addKeybindings(final MainPanel mainPanel) {
+		final String SAVE = "save";
+		mainPanel.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), SAVE);
+		final AbstractAction saveAction = new AbstractAction() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				final Optional<File> file = frame.getMainPanel().getOrAskForFilename();
+				if (file.isPresent()) {
+					// Save the file
+					frame.getTabPanel().setFilename(file.get().getName());
+					frame.getMainPanel().save(file.get());
+				}
+			}
+		};
+		mainPanel.getActionMap().put(SAVE, saveAction);
 	}
 }

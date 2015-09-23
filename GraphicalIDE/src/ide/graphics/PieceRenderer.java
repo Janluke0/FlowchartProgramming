@@ -81,9 +81,13 @@ public class PieceRenderer {
 	}
 
 	float connectionStrokeOffset = GraphicsConstants.DASH_LENGTH * 2;
+	long lastDrawTime = System.currentTimeMillis();
 
 	public void drawConnections(final Graphics2D g) {
-		connectionStrokeOffset -= GraphicsConstants.DASH_SPEED;
+		final long deltaTime = System.currentTimeMillis() - lastDrawTime;
+		lastDrawTime = System.currentTimeMillis();
+
+		connectionStrokeOffset -= GraphicsConstants.DASH_SPEED * deltaTime;
 		if (connectionStrokeOffset <= 0) {
 			connectionStrokeOffset = GraphicsConstants.DASH_LENGTH * 2;
 		}
@@ -100,7 +104,8 @@ public class PieceRenderer {
 				final int inputIndex = piece.getOutput(i).getOutputPort();
 				p2.translate(BORDER_SPACE + PORT_SIZE / 2, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * inputIndex + PORT_SIZE / 2);
 
-				if (piece.shouldUpdateEveryTick() || piece.shouldUpdateNextTick()) {
+				if (piece.shouldUpdateEveryTick() || piece.shouldUpdateNextTick() || piece.updatedThisTick) {
+					piece.updatedThisTick = false;
 					GraphicsUtils.drawCurve(g, p1, p2, GraphicsConstants.getConnectionUpdateStroke((int) connectionStrokeOffset));
 
 				} else {
@@ -183,7 +188,7 @@ public class PieceRenderer {
 
 		for (int i = 0; i < piece.getOutputs().length; i++) {
 			if (new Ellipse2D.Float(nameWidth - PORT_SIZE - BORDER_SPACE, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE)
-			.contains(worldCoordCopy)) {
+					.contains(worldCoordCopy)) {
 				return Optional.of(i);
 			}
 		}
@@ -233,7 +238,7 @@ public class PieceRenderer {
 
 	public boolean inputContainsPoint(final int i, final Point p) {
 		return new Ellipse2D.Float(BORDER_SPACE, fontMetrics.getMaxAscent() + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * i, PORT_SIZE, PORT_SIZE)
-		.contains(p);
+				.contains(p);
 	}
 
 	public void setInputDisplay(final int port, final String text) {

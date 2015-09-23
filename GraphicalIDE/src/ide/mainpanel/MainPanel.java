@@ -1,23 +1,22 @@
 package ide.mainpanel;
 
+import ide.graphics.GraphicsConstants;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import ide.graphics.GraphicsConstants;
 import language.Piece;
 import language.ProgramContext;
-import language.type.Type;
 
 /**
  * The Class MainPanel.
@@ -25,7 +24,7 @@ import language.type.Type;
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel {
 
-	private Optional<File> filename = Optional.empty();
+	private final Optional<File> filename = Optional.empty();
 
 	/** The pieces. */
 	private final List<Piece> pieces;
@@ -54,7 +53,7 @@ public class MainPanel extends JPanel {
 	/**
 	 * Instantiates a new main panel.
 	 */
-	public MainPanel(JTextArea console) {
+	public MainPanel(final JTextArea console) {
 		super();
 		x = y = 0;
 		pieces = new ArrayList<>();
@@ -73,7 +72,7 @@ public class MainPanel extends JPanel {
 		requestFocusInWindow();
 	}
 
-	public MainPanel(final File file, JTextArea console) {
+	public MainPanel(final File file, final JTextArea console) {
 		this(console);
 		load(file);
 	}
@@ -108,9 +107,8 @@ public class MainPanel extends JPanel {
 		final int imageWidth = GraphicsConstants.TRASH_ICON.getImage().getWidth(null);
 		final int imageHeight = GraphicsConstants.TRASH_ICON.getImage().getHeight(null);
 
-		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE,
-				getHeight() - imageHeight - GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight)
-						.contains(screenCoord)) {
+		if (new Rectangle(getWidth() - imageWidth - GraphicsConstants.TRASH_BORDER_SIZE, getHeight() - imageHeight
+				- GraphicsConstants.TRASH_BORDER_SIZE, imageWidth, imageHeight).contains(screenCoord)) {
 			return true;
 		}
 		return false;
@@ -213,8 +211,7 @@ public class MainPanel extends JPanel {
 	}
 
 	/**
-	 * If we have a filename, returns that. If not, we ask the user for one with
-	 * a JFileChooser dialog.
+	 * If we have a filename, returns that. If not, we ask the user for one with a JFileChooser dialog.
 	 *
 	 * @return the current filename or {@link MainPanel#askForAndGetFilename()}
 	 */
@@ -231,13 +228,18 @@ public class MainPanel extends JPanel {
 	 * @return the file or empty if the user clicked cancel
 	 */
 	public Optional<File> askForAndGetFilename() {
-		final JFileChooser chooser = new JFileChooser();
-		final int returnVal = chooser.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			filename = Optional.of(chooser.getSelectedFile());
-			return Optional.of(chooser.getSelectedFile());
-		}
+
+		JOptionPane.showMessageDialog(null, "Save not implemented");
 		return Optional.empty();
+
+		//
+		// final JFileChooser chooser = new JFileChooser();
+		// final int returnVal = chooser.showOpenDialog(null);
+		// if (returnVal == JFileChooser.APPROVE_OPTION) {
+		// filename = Optional.of(chooser.getSelectedFile());
+		// return Optional.of(chooser.getSelectedFile());
+		// }
+		// return Optional.empty();
 	}
 
 	/**
@@ -267,13 +269,14 @@ public class MainPanel extends JPanel {
 	}
 
 	public FunctionData getFunctionData() {
-		if (!isFunction())
+		if (!isFunction()) {
 			throw new RuntimeException("This panel is not a function");
+		}
 		return functionData.get();
 	}
 
-	public void setFunction(Optional<FunctionData> function) {
-		this.functionData = function;
+	public void setFunction(final Optional<FunctionData> function) {
+		functionData = function;
 	}
 
 }

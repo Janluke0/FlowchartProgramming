@@ -110,7 +110,7 @@ public final class GraphicsConstants {
 
 	public static final Stroke DRAG_STROKE = new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10, new float[] { 5 }, 50);
 	public static final float DASH_LENGTH = 20;
-	public static final float DASH_SPEED = 0.25f;
+	public static final float DASH_SPEED = 0.05f;
 
 	public static final Stroke getConnectionUpdateStroke(final int offset) {
 		return new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10, new float[] { DASH_LENGTH / 2 }, offset);
@@ -139,7 +139,7 @@ public final class GraphicsConstants {
 	}
 
 	public static JTextArea createConsole() {
-		JTextArea console = new JTextArea();
+		final JTextArea console = new JTextArea();
 		return console;
 	}
 }

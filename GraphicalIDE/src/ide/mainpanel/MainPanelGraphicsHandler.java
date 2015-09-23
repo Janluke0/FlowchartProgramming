@@ -9,13 +9,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Stroke;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Optional;
 
 import language.Piece;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MainPanelGraphicsHandler.
  */
@@ -28,8 +28,7 @@ public class MainPanelGraphicsHandler {
 	private static final int GRID_NUMBER_DISTANCE = 200;
 
 	/**
-	 * if a user is dragging from a port, this is a line between the port and
-	 * the mouse
+	 * if a user is dragging from a port, this is a line between the port and the mouse
 	 */
 	public Optional<Line2D> portToMouseLine = Optional.empty();
 
@@ -91,12 +90,12 @@ public class MainPanelGraphicsHandler {
 		if (parent.isFunction()) {
 			g.setColor(GraphicsConstants.PORT_COLOR);
 			for (int i = 0; i < parent.getFunctionData().getInputNumber(); i++) {
-				g.fillOval(PieceRenderer.BORDER_SPACE, PieceRenderer.GAP_SIZE + (PieceRenderer.PORT_SIZE + PieceRenderer.GAP_SIZE) * i, PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+				g.fill(getInputPortOnScreen(i));
 			}
 
 			g.setColor(GraphicsConstants.PORT_COLOR);
 			for (int i = 0; i < parent.getFunctionData().getOutputNumber(); i++) {
-				g.fillOval(parent.getWidth() - PieceRenderer.PORT_SIZE - PieceRenderer.BORDER_SPACE, PieceRenderer.GAP_SIZE + (PieceRenderer.PORT_SIZE + PieceRenderer.GAP_SIZE) * i, PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+				g.fill(getOutputPortOnScreen(i));
 			}
 		}
 
@@ -110,10 +109,20 @@ public class MainPanelGraphicsHandler {
 		}
 	}
 
+	public Ellipse2D getInputPortOnScreen(final int input) {
+		return new Ellipse2D.Double(PieceRenderer.BORDER_SPACE, parent.getHeight() / (parent.getFunctionData().getInputNumber() + 1) * (input + 1),
+				PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+	}
+
+	public Ellipse2D getOutputPortOnScreen(final int output) {
+		return new Ellipse2D.Double(parent.getWidth() - PieceRenderer.PORT_SIZE - PieceRenderer.BORDER_SPACE, parent.getHeight()
+				/ (parent.getFunctionData().getOutputNumber() + 1) * (output + 1), PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+	}
+
 	private void drawTrashCan(final Graphics2D g) {
 		final Image trash = GraphicsConstants.TRASH_ICON.getImage();
-		g.drawImage(trash, parent.getWidth() - trash.getWidth(null) - GraphicsConstants.TRASH_BORDER_SIZE,
-				parent.getHeight() - trash.getHeight(null) - GraphicsConstants.TRASH_BORDER_SIZE, null);
+		g.drawImage(trash, parent.getWidth() - trash.getWidth(null) - GraphicsConstants.TRASH_BORDER_SIZE, parent.getHeight() - trash.getHeight(null)
+				- GraphicsConstants.TRASH_BORDER_SIZE, null);
 	}
 
 	/**
@@ -128,8 +137,7 @@ public class MainPanelGraphicsHandler {
 		g.setColor(GraphicsConstants.MAIN_GRID_COLOR);
 
 		// Draws vertical lines
-		for (int sepX = -(parent.getViewX() % GRID_SEPARATOR_DISTANCE) - GRID_SEPARATOR_DISTANCE; sepX < parent
-				.getWidth(); sepX += GRID_SEPARATOR_DISTANCE) {
+		for (int sepX = -(parent.getViewX() % GRID_SEPARATOR_DISTANCE) - GRID_SEPARATOR_DISTANCE; sepX < parent.getWidth(); sepX += GRID_SEPARATOR_DISTANCE) {
 			if (sepX + parent.getViewX() == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_ORIGIN_COLOR);
 			} else {
@@ -140,13 +148,11 @@ public class MainPanelGraphicsHandler {
 			// draws line coordinates if neccesary
 			if ((sepX + parent.getViewX()) % GRID_NUMBER_DISTANCE == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_COLOR);
-				g.drawString(String.valueOf(sepX + parent.getViewX()), sepX + textSpaceBuffer,
-						g.getFontMetrics().getMaxAscent() + textSpaceBuffer);
+				g.drawString(String.valueOf(sepX + parent.getViewX()), sepX + textSpaceBuffer, g.getFontMetrics().getMaxAscent() + textSpaceBuffer);
 			}
 		}
 		// draws horizontal lines
-		for (int sepY = -(parent.getViewY() % GRID_SEPARATOR_DISTANCE); sepY < parent.getHeight()
-				+ GRID_SEPARATOR_DISTANCE; sepY += GRID_SEPARATOR_DISTANCE) {
+		for (int sepY = -(parent.getViewY() % GRID_SEPARATOR_DISTANCE); sepY < parent.getHeight() + GRID_SEPARATOR_DISTANCE; sepY += GRID_SEPARATOR_DISTANCE) {
 			if (sepY + parent.getViewY() == 0) {
 				g.setColor(GraphicsConstants.MAIN_GRID_ORIGIN_COLOR);
 			} else {

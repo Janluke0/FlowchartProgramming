@@ -27,6 +27,7 @@ import language.pieces.numbers.operators.Modulus;
 import language.pieces.numbers.operators.Multiplication;
 import language.pieces.utils.Display;
 import language.pieces.utils.Print;
+import language.pieces.utils.InputSplitter;
 import language.pieces.utils.time.Time;
 import language.pieces.utils.time.Timer;
 
@@ -100,7 +101,8 @@ public class PieceTree extends JTree {
 				{ Time.class, Time.name() },//
 				{ Timer.class, Timer.name() },//
 				{ Display.class, Display.name() },//
-				{ Print.class, Print.name() } };//
+				{ Print.class, Print.name() }, //
+				{ InputSplitter.class, InputSplitter.name() }, };//
 
 		for (final Object[] o : pieces) {
 			for (int i = 0; i < o.length; i += 2) {

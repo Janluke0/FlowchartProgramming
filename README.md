@@ -4,6 +4,8 @@ A program that allows you to write programs using a flowchart model. Similar to 
 TODO:
  - [ ] creatable functions
  - [ ] minimize nodes
+ - [ ] errors (warning popups + console writing)
+ - [ ] type checking
  - [ ] more functions
   - [ ] radio functions
   - [ ] conditionals

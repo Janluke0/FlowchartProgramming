@@ -75,6 +75,7 @@ public class BooleanConstant extends Piece {
 	public void setValue(final Boolean value) {
 		this.value = new ProgramValueBoolean(value);
 		setOutputText(0, value.toString());
+		this.updateNextTick();
 	}
 
 	/*

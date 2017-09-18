@@ -76,6 +76,7 @@ public class NumberConstant extends Piece {
 	public void setValue(final BigDecimal value) {
 		this.value = new ProgramValueNum(value);
 		setOutputText(0, value.toPlainString());
+		this.updateNextTick();
 	}
 
 	/*

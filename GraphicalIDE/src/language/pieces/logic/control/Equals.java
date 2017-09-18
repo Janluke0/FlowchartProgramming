@@ -45,7 +45,6 @@ public class Equals extends Piece {
 
 	@Override
 	public boolean shouldUpdateEveryTick() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

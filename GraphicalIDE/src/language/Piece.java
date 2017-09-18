@@ -15,7 +15,8 @@ import language.value.ProgramValue;
 import language.value.ProgramValueNothing;
 
 /**
- * Abstract class. To implement this class, you must add a method with the signature<br>
+ * Abstract class. To implement this class, you must add a method with the
+ * signature<br>
  * <code>public static String name()</code> <br>
  * and a default constructor with two int parameters (position)<br>
  * <code>public PieceXXX(int x, int y)</code>
@@ -92,8 +93,9 @@ public abstract class Piece {
 	protected abstract void updatePiece(ProgramContext context);
 
 	/**
-	 * Pieces like time that take no inputs but decide outputs should update every tick. Otherwise, the pieces should
-	 * update only when they receive input.
+	 * Pieces like time that take no inputs but decide outputs should update
+	 * every tick. Otherwise, the pieces should update only when they receive
+	 * input.
 	 *
 	 * @return whether this piece should update every tick
 	 */
@@ -221,7 +223,8 @@ public abstract class Piece {
 	}
 
 	/**
-	 * p is translated so that the origin is (0,0) and the top left corner of this piece.
+	 * p is translated so that the origin is (0,0) and the top left corner of
+	 * this piece.
 	 *
 	 * @param i
 	 *            the i
@@ -281,6 +284,7 @@ public abstract class Piece {
 	 */
 	public void setOutput(final int index, final Connection connection) {
 		outputs[index] = connection;
+		this.updateNextTick();
 	}
 
 	/**
@@ -298,6 +302,10 @@ public abstract class Piece {
 
 	public boolean shouldUpdateNextTick() {
 		return shouldUpdateNextTick;
+	}
+
+	protected void updateNextTick() {
+		this.shouldUpdateNextTick = true;
 	}
 
 	public Shape getBodyShape() {

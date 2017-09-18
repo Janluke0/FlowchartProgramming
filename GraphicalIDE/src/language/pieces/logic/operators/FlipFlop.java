@@ -11,7 +11,6 @@ import language.type.Type;
 import language.value.ProgramValue;
 import language.value.ProgramValueBoolean;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Add.
  */
@@ -80,6 +79,7 @@ public class FlipFlop extends Piece {
 	public void setCurrentValue(final ProgramValueBoolean currentValue) {
 		this.currentValue = currentValue;
 		setInputText(0, String.valueOf(currentValue.getValue()));
+		this.updateNextTick();
 	}
 
 	@Override

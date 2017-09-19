@@ -1,6 +1,6 @@
 package language;
 
-import ide.graphics.PieceRenderer;
+import ide.graphics.PieceGraphics;
 import ide.piecetree.PieceTree;
 import ide.piecetree.PieceTreeRepresentation;
 
@@ -32,15 +32,9 @@ public abstract class Piece {
 	/** The outputs connections. */
 	private final Connection[] outputs;
 
-	/** The x position of the upper left corner of this piece. */
-	private int x;
-
-	/** The y position of the upper right corner of this piece. */
-	private int y;
-
 	private String name;
 
-	private final PieceRenderer renderer;
+	private final PieceGraphics graphics;
 
 	/**
 	 * Only for rendering purposes!
@@ -78,10 +72,7 @@ public abstract class Piece {
 			}
 		}
 
-		setX(x);
-		setY(y);
-
-		renderer = new PieceRenderer(this);
+		graphics = new PieceGraphics(this, x, y);
 	}
 
 	/**
@@ -129,21 +120,21 @@ public abstract class Piece {
 	 *            the graphics object
 	 */
 	public void draw(final Graphics2D g) {
-		renderer.draw(g);
+		graphics.draw(g);
 	}
 
 	public void drawConnections(final Graphics2D g) {
-		renderer.drawConnections(g);
+		graphics.drawConnections(g);
 	}
 
 	public abstract Type getOutputType();
 
 	protected void setInputText(final int port, final String text) {
-		renderer.setInputDisplay(port, text);
+		graphics.setInputDisplay(port, text);
 	}
 
 	protected void setOutputText(final int port, final String text) {
-		renderer.setOutputDisplay(port, text);
+		graphics.setOutputDisplay(port, text);
 	}
 
 	/**
@@ -154,7 +145,7 @@ public abstract class Piece {
 	 * @return the index of the connection that was clicked on
 	 */
 	public Optional<Integer> outputPortContainingPoint(final Point worldCoord) {
-		return renderer.outputPortContainingPoint(worldCoord);
+		return graphics.outputPortContainingPoint(worldCoord);
 	}
 
 	/**
@@ -165,7 +156,7 @@ public abstract class Piece {
 	 * @return true, if successful
 	 */
 	public boolean containsPoint(final Point worldCoord) {
-		return renderer.containsPoint(worldCoord);
+		return graphics.containsPoint(worldCoord);
 	}
 
 	/**
@@ -191,27 +182,7 @@ public abstract class Piece {
 		return Arrays.copyOf(outputs, outputs.length);
 	}
 
-	/**
-	 * Sets the position.
-	 *
-	 * @param x
-	 *            the x
-	 * @param y
-	 *            the y
-	 */
-	public void setPosition(final int x, final int y) {
-		setX(x);
-		setY(y);
-	}
 
-	/**
-	 * Gets the position.
-	 *
-	 * @return the position
-	 */
-	public Point getPosition() {
-		return new Point(getX(), getY());
-	}
 
 	/**
 	 * Gets the inputs.
@@ -233,45 +204,11 @@ public abstract class Piece {
 	 * @return true, if successful
 	 */
 	public boolean inputContainsPoint(final int i, final Point p) {
-		return renderer.inputContainsPoint(i, p);
+		return graphics.inputContainsPoint(i, p);
 	}
 
-	/**
-	 * Gets the x.
-	 *
-	 * @return the x
-	 */
-	public int getX() {
-		return x;
-	}
-
-	/**
-	 * Sets the x.
-	 *
-	 * @param x
-	 *            the new x
-	 */
-	public void setX(final int x) {
-		this.x = x;
-	}
-
-	/**
-	 * Gets the y.
-	 *
-	 * @return the y
-	 */
-	public int getY() {
-		return y;
-	}
-
-	/**
-	 * Sets the y.
-	 *
-	 * @param y
-	 *            the new y
-	 */
-	public void setY(final int y) {
-		this.y = y;
+	public PieceGraphics getPieceGraphics(){
+		return this.graphics;
 	}
 
 	/**
@@ -309,6 +246,6 @@ public abstract class Piece {
 	}
 
 	public Shape getBodyShape() {
-		return renderer.getBodyShape();
+		return graphics.getBodyShape();
 	}
 }

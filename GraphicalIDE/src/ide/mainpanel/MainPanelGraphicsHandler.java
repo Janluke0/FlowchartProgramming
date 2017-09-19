@@ -1,19 +1,19 @@
 package ide.mainpanel;
 
-import ide.graphics.GraphicsConstants;
-import ide.graphics.GraphicsUtils;
-import ide.graphics.PieceRenderer;
-
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Optional;
 
+import ide.graphics.GraphicsConstants;
+import ide.graphics.GraphicsUtils;
+import ide.graphics.PieceGraphics;
 import language.Piece;
 
 /**
@@ -72,13 +72,14 @@ public class MainPanelGraphicsHandler {
 		}
 		g.setColor(GraphicsConstants.SELECTION_COLOR);
 		for (final Piece p : parent.getSelectedPieces()) {
-			g.translate(p.getX(), p.getY());
+			Point upperLeft = p.getPieceGraphics().getPosition();
+			g.translate(upperLeft.getX(), upperLeft.getY());
 			final Stroke oldStroke = g.getStroke();
 			g.setStroke(new BasicStroke(GraphicsConstants.SELECTION_WIDTH));
 
 			g.draw(p.getBodyShape());
 			g.setStroke(oldStroke);
-			g.translate(-p.getX(), -p.getY());
+			g.translate(-upperLeft.getX(), -upperLeft.getY());
 		}
 		if (selectionRectangle.isPresent()) {
 			g.setColor(GraphicsConstants.SELECTION_COLOR);
@@ -110,13 +111,13 @@ public class MainPanelGraphicsHandler {
 	}
 
 	public Ellipse2D getInputPortOnScreen(final int input) {
-		return new Ellipse2D.Double(PieceRenderer.BORDER_SPACE, parent.getHeight() / (parent.getFunctionData().getInputNumber() + 1) * (input + 1),
-				PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+		return new Ellipse2D.Double(PieceGraphics.BORDER_SPACE, parent.getHeight() / (parent.getFunctionData().getInputNumber() + 1) * (input + 1),
+				PieceGraphics.PORT_SIZE, PieceGraphics.PORT_SIZE);
 	}
 
 	public Ellipse2D getOutputPortOnScreen(final int output) {
-		return new Ellipse2D.Double(parent.getWidth() - PieceRenderer.PORT_SIZE - PieceRenderer.BORDER_SPACE, parent.getHeight()
-				/ (parent.getFunctionData().getOutputNumber() + 1) * (output + 1), PieceRenderer.PORT_SIZE, PieceRenderer.PORT_SIZE);
+		return new Ellipse2D.Double(parent.getWidth() - PieceGraphics.PORT_SIZE - PieceGraphics.BORDER_SPACE, parent.getHeight()
+				/ (parent.getFunctionData().getOutputNumber() + 1) * (output + 1), PieceGraphics.PORT_SIZE, PieceGraphics.PORT_SIZE);
 	}
 
 	private void drawTrashCan(final Graphics2D g) {

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import language.Piece;
 
-public class PieceRenderer {
+public class PieceGraphics {
 
 	/** Size of connection ports. */
 	public static final int PORT_SIZE = 20;
@@ -33,12 +33,18 @@ public class PieceRenderer {
 
 	private final Piece piece;
 
+	/** The x position of the upper left corner of this piece. */
+	private int x;
+
+	/** The y position of the upper right corner of this piece. */
+	private int y;
+
 	/** The strings to display the inputs */
 	private final String[] inputDisplays;
 	/** The strings to display the outputs */
 	private final String[] outputDisplays;
 
-	public PieceRenderer(final Piece piece) {
+	public PieceGraphics(final Piece piece, int x, int y) {
 		this.piece = piece;
 		inputDisplays = new String[piece.getInputs().length];
 		outputDisplays = new String[piece.getOutputs().length];
@@ -50,8 +56,44 @@ public class PieceRenderer {
 			inputDisplays[i] = "";
 		}
 		updateWidth();
+		setX(x);
+		setY(y);
+	}
+	/**
+	 * Sets the position.
+	 *
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
+	 */
+	public void setPosition(final int x, final int y) {
+		setX(x);
+		setY(y);
 	}
 
+	/**
+	 * Gets the position.
+	 *
+	 * @return the position
+	 */
+	public Point getPosition() {
+		return new Point(getX(), getY());
+	}
+	
+
+	public int getX() {
+		return x;
+	}
+	public void setX(int upperLeftX) {
+		this.x = upperLeftX;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int upperLeftY) {
+		this.y = upperLeftY;
+	}
 	private void updateWidth() {
 		int newWidth = 0;
 		newWidth += BORDER_SPACE;
@@ -98,9 +140,9 @@ public class PieceRenderer {
 		for (int i = 0; i < piece.getOutputs().length; i++) {
 			if (piece.getOutput(i) != null && piece.getOutput(i).getOutput() != null) {
 				g.setColor(GraphicsConstants.TYPE_COLORS.get(piece.getOutputType()));
-				final Point p1 = new Point(piece.getX() + nameWidth - PORT_SIZE - BORDER_SPACE + PORT_SIZE / 2, piece.getY() + nameHeight + GAP_SIZE
+				final Point p1 = new Point(x + nameWidth - PORT_SIZE - BORDER_SPACE + PORT_SIZE / 2, y + nameHeight + GAP_SIZE
 						+ (PORT_SIZE + GAP_SIZE) * i + PORT_SIZE / 2);
-				final Point p2 = piece.getOutput(i).getOutput().getPosition();
+				final Point p2 = piece.getOutput(i).getOutput().getPieceGraphics().getPosition();
 				final int inputIndex = piece.getOutput(i).getOutputPort();
 				p2.translate(BORDER_SPACE + PORT_SIZE / 2, nameHeight + GAP_SIZE + (PORT_SIZE + GAP_SIZE) * inputIndex + PORT_SIZE / 2);
 
@@ -147,7 +189,7 @@ public class PieceRenderer {
 		final int nameHeight = fontMetrics.getMaxAscent();
 		final int nameWidth = Math.max(getStringWidth(fontMetrics, piece.getName()), width);
 
-		g.translate(piece.getX(), piece.getY());
+		g.translate(x, y);
 
 		g.setColor(GraphicsConstants.PIECE_BACKGROUND);
 		g.fill(getBodyShape());
@@ -167,7 +209,7 @@ public class PieceRenderer {
 
 		drawPortText(g);
 
-		g.translate(-piece.getX(), -piece.getY());
+		g.translate(-x, -y);
 	}
 
 	/**
@@ -181,7 +223,7 @@ public class PieceRenderer {
 		final Point worldCoordCopy = new Point(worldCoord);
 		// the body shape is at 0,0 so we have to translate that by its x and y
 		// OR translate our point by -x and -y
-		worldCoordCopy.translate(-piece.getX(), -piece.getY());
+		worldCoordCopy.translate(-x, -y);
 
 		final int nameWidth = Math.max(getStringWidth(fontMetrics, piece.getName()), width);
 		final int nameHeight = fontMetrics.getMaxAscent();
@@ -232,7 +274,7 @@ public class PieceRenderer {
 		final Point worldCoordCopy = new Point(worldCoord);
 		// the body shape is at 0,0 so we have to translate that by its x and y
 		// OR translate our point by -x and -y
-		worldCoordCopy.translate(-piece.getX(), -piece.getY());
+		worldCoordCopy.translate(-x, -y);
 		return getBodyShape().contains(worldCoordCopy);
 	}
 

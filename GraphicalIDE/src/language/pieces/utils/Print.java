@@ -15,6 +15,10 @@ public class Print extends Piece {
 	private static final int INPUT_SHOULD_PRINT = 0;
 	private static final int INPUT_TO_PRINT = 1;
 
+	// the last input command value. Makes sure that this doesn't fire
+	// continuously if the command doesn't change.
+	private boolean lastValue = false;
+
 	/**
 	 * Instantiates a new number constant.
 	 *
@@ -27,6 +31,8 @@ public class Print extends Piece {
 	 */
 	public Print(final int x, final int y) {
 		super(2, 0, x, y);
+		setInputText(0, "Command");
+		setInputText(1, "Value");
 	}
 
 	/**
@@ -47,7 +53,12 @@ public class Print extends Piece {
 	public void updatePiece(final ProgramContext context) {
 		if (getInputs()[INPUT_SHOULD_PRINT] instanceof ProgramValueBoolean
 				&& ((ProgramValueBoolean) getInputs()[INPUT_SHOULD_PRINT]).getValue() == true) {
-			context.println(getInputs()[INPUT_TO_PRINT].toString());
+			if (!lastValue) {
+				context.println(getInputs()[INPUT_TO_PRINT].toString());
+				lastValue = true;
+			}
+		} else {
+			lastValue = false;
 		}
 	}
 
